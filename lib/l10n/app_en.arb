@@ -1,0 +1,464 @@
+{
+  "@@locale": "en",
+  "appTitle": "LifeRadar",
+  "tabHome": "Home",
+  "tabMap": "Map",
+  "tabPlans": "My Plans",
+  "tabDiscover": "Discover",
+  "homeGreeting": "Signals for you",
+  "homeSubtitle": "What changed around your plans and interests",
+  "whyItMatters": "Why it matters",
+  "aiWritten": "Written with Gemini",
+  "errOffline": "No internet connection. Check your connection and try again.",
+  "errBusy": "The service is busy right now. Please try again in a minute.",
+  "errService": "This service isn't available right now.",
+  "errNoRoute": "Couldn't find a route between these places.",
+  "errGeneric": "Something went wrong. Please try again.",
+  "eventsUpdated": "Real public data · {count} events · updated {date}",
+  "@eventsUpdated": {"placeholders": {"count": {"type": "int"}, "date": {"type": "String"}}},
+  "notifyDeniedApp": "Notifications are blocked. Turn on notifications for LifeRadar in Settings, then try again.",
+  "planLinkNearby": "{km} km from your plan · while you're there",
+  "@planLinkNearby": {"placeholders": {"km": {"type": "String"}}},
+  "planLinkCrowd": "Same day · {km} km away",
+  "@planLinkCrowd": {"placeholders": {"km": {"type": "String"}}},
+  "planLinkTraffic": "Before your plan starts · official road control",
+  "sources": "Sources",
+  "confidence": "Confidence {percent}%",
+  "@confidence": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "showOnMap": "Show on map",
+  "feedbackThanks": "Thanks! We'll tune your signals.",
+  "layerPlans": "My Plans",
+  "layerRecommended": "Recommended",
+  "layerRoute": "Route",
+  "modeExplore": "Explore",
+  "modeMyMap": "My Map",
+  "modeRoute": "Route",
+  "mapKeyMissing": "Kakao Map key is missing.\nRun with --dart-define-from-file=env.json",
+  "mapError": "Map failed to load: {message}",
+  "@mapError": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "plansEmpty": "No upcoming plans yet. Connect Google Calendar to import them.",
+  "connectCalendar": "Connect Google Calendar",
+  "comingSoon": "Coming soon",
+  "discoverAll": "All",
+  "whyForYou": "Why for you",
+  "register": "Register",
+  "addToCalendar": "Add to calendar",
+  "noRegisterLink": "No registration link yet",
+  "sampleData": "Sample data",
+  "matchesInterests": "Matches your interests: {tags}",
+  "@matchesInterests": {
+    "placeholders": {
+      "tags": {
+        "type": "String"
+      }
+    }
+  },
+  "language": "Language",
+  "categoryConference": "Conference",
+  "categoryHackathon": "Hackathon",
+  "categoryConcert": "Concert",
+  "categoryFestival": "Festival",
+  "categoryMeetup": "Meetup",
+  "categoryJob": "Job",
+  "categoryScholarship": "Scholarship",
+  "mapSdkNotLoaded": "Kakao Map SDK did not load.\nRegister this address as a Web domain in Kakao Developers:\n{origin}",
+  "@mapSdkNotLoaded": {
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "routeFrom": "From",
+  "routeTo": "To",
+  "routeDate": "Date",
+  "routeFind": "Find opportunities",
+  "routeDemo": "Demo: Seoul St. → Busan St.",
+  "routeSearchHint": "Search a place (e.g. 부산역, BEXCO)",
+  "routeNoResults": "No places found",
+  "routeSummary": "{distance} km · {duration} by car",
+  "@routeSummary": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "routeAlongTheWay": "Along the way ({count})",
+  "@routeAlongTheWay": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routeNoOpportunities": "No matching events within 15 km of this route on that day.",
+  "routeDetour": "+{km} km · +{minutes} min",
+  "@routeDetour": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "routeFromRoute": "{km} km from route",
+  "@routeFromRoute": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "routeError": "Route failed: {message}",
+  "@routeError": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "onYourWay": "On your way",
+  "hoursMinutes": "{h}h {m}m",
+  "@hoursMinutes": {
+    "placeholders": {
+      "h": {
+        "type": "int"
+      },
+      "m": {
+        "type": "int"
+      }
+    }
+  },
+  "travelCar": "Car",
+  "travelTransit": "Transit",
+  "routeSummaryTransit": "{distance} km · {duration} · {lines}",
+  "@routeSummaryTransit": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      },
+      "duration": {
+        "type": "String"
+      },
+      "lines": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarConnecting": "Connecting to Google…",
+  "calendarSyncing": "Syncing calendar…",
+  "calendarConnectedCount": "Google Calendar · {count} upcoming plans",
+  "@calendarConnectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "calendarSync": "Sync",
+  "calendarDisconnect": "Disconnect",
+  "calendarExpired": "Google session expired. Please connect again.",
+  "calendarNotConfigured": "Google sign-in isn't set up on this platform yet (web only for now).",
+  "calendarError": "Calendar error: {message}",
+  "@calendarError": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarPrivacy": "LifeRadar only reads upcoming events and adds events you choose. Disconnect anytime.",
+  "noLocation": "No location",
+  "sourceCalendar": "Google Calendar",
+  "addedToCalendar": "Added to Google Calendar",
+  "addingToCalendar": "Adding…",
+  "weatherLater": "Forecast appears ~10 days before",
+  "onboardingTagline": "Finds the opportunities around your plans — before you search.",
+  "onboardingTitle": "What are you into?",
+  "onboardingSubtitle": "Pick a few. LifeRadar ranks events and route suggestions by these.",
+  "onboardingPickOne": "Pick at least one",
+  "onboardingContinue": "Continue ({count} selected)",
+  "@onboardingContinue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingPrivacy": "Saved only on this device. You can change it anytime.",
+  "interestsEdit": "My interests",
+  "save": "Save",
+  "homeEmptyTitle": "No signals yet",
+  "homeEmptyBody": "Connect your calendar or add more interests — LifeRadar will connect your plans with events and weather.",
+  "tabProfile": "Profile",
+  "loginError": "Google sign-in failed. Please try again.",
+  "or": "or",
+  "continueAsGuest": "Look around as a guest",
+  "loginPrivacy": "Your calendar is connected separately, only with your consent.",
+  "guestName": "Guest",
+  "guestSubtitle": "Sign in to use your own account",
+  "signIn": "Sign in",
+  "edit": "Edit",
+  "ok": "OK",
+  "sectionConnections": "Connected services",
+  "connected": "Connected",
+  "notConnected": "Not connected",
+  "connect": "Connect",
+  "sectionSettings": "Settings",
+  "theme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "sectionAbout": "About",
+  "privacy": "Privacy",
+  "version": "Version",
+  "logout": "Sign out",
+  "exitGuest": "Back to start",
+  "homeHello": "Hello",
+  "homeHelloName": "Hi, {name}",
+  "@homeHelloName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "statPlans": "Plans",
+  "statSignals": "Signals",
+  "statDeadlines": "Deadlines",
+  "kindPlanAlert": "Plan alert",
+  "kindOpportunity": "Opportunity",
+  "kindDeadline": "Deadline",
+  "kindRoute": "Route",
+  "helpful": "Helpful",
+  "notForMe": "Not for me",
+  "hide": "Hide",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "upcoming": "Upcoming",
+  "discoverSubtitle": "Sorted by how well they match your interests",
+  "matchBadge": "Match",
+  "eventDetails": "Details",
+  "openSource": "Source",
+  "searching": "Searching…",
+  "rainChance": "Rain",
+  "showLess": "Show less",
+  "planNew": "New plan",
+  "planEdit": "Edit plan",
+  "planTitle": "Title",
+  "planTitleHint": "e.g. Busan business trip",
+  "planTitleRequired": "Enter a title",
+  "planDate": "Date",
+  "planStart": "Starts",
+  "planEnd": "Ends",
+  "planAllDay": "All day",
+  "planLocation": "Location",
+  "planLocationAdd": "Add a place",
+  "planLocationRemove": "Remove place",
+  "planNote": "Note",
+  "planNoteHint": "Anything to remember",
+  "planSaveToCalendar": "Also save to Google Calendar",
+  "planCalendarSynced": "Changes are saved to your Google Calendar too.",
+  "planSampleHint": "Sample plan — saving makes it your own plan.",
+  "planDelete": "Delete plan",
+  "planDeleteConfirm": "Delete \"{title}\"?",
+  "@planDeleteConfirm": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "planSaved": "Plan saved",
+  "planDeleted": "Plan deleted",
+  "planEndBeforeStart": "End time must be after the start",
+  "planSaveError": "Couldn't save: {message}",
+  "@planSaveError": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "openInCalendar": "Open in Google Calendar",
+  "plansEmptyAdd": "Add your first plan, or connect Google Calendar to import them.",
+  "interestsSelectedCount": "{count} selected",
+  "@interestsSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "categoryPerformance": "Shows",
+  "categoryExhibition": "Exhibition",
+  "categoryClasses": "Classes",
+  "free": "Free",
+  "dataSource": "Data: {name}",
+  "@dataSource": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "showMore": "Show more",
+  "realData": "Live data",
+  "ongoing": "Ongoing",
+  "categoryStartupSupport": "Startup programs",
+  "applicationPeriod": "Applications {from} – {to}",
+  "@applicationPeriod": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "nationwide": "Nationwide",
+  "applyNow": "Apply",
+  "aiTranslated": "Translated from Korean with Gemini",
+  "statForPlans": "My plans",
+  "statAll": "All signals",
+  "statSoon": "Due soon",
+  "homeSectionPlans": "Around your plans",
+  "homeSectionDeadlines": "Deadlines coming up",
+  "homeFilterEmpty": "Nothing here right now",
+  "dislikeConfirmTitle": "Not for you?",
+  "dislikeConfirmBody": "We'll show fewer signals like this one.",
+  "yes": "Yes",
+  "no": "No",
+  "feedbackLiked": "Thanks! You'll see more like this",
+  "feedbackDisliked": "Got it — fewer signals like this",
+  "untilDate": "Until {date}",
+  "@untilDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "openEvent": "Event details",
+  "signalWhy": "Why this signal",
+  "calendarAddFailed": "Couldn't add to calendar",
+  "interestsCount": "{count} selected",
+  "@interestsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "next": "Next",
+  "back": "Back",
+  "getStarted": "Get started",
+  "themeTitle": "Pick a look",
+  "themeSubtitle": "You can change this anytime in Profile.",
+  "themeSystemDesc": "Follows your device",
+  "themeLightDesc": "Bright and clear",
+  "themeDarkDesc": "Easy on the eyes at night",
+  "nameTitle": "What should we call you?",
+  "nameSubtitle": "We'll greet you with this on the home screen. You can change it later in Profile.",
+  "nameHint": "Your name",
+  "nameRequired": "Please enter a name",
+  "editName": "Edit name",
+  "stepOf": "Step {n} of {total}",
+  "@stepOf": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "welcomeTagline": "Signals from your plans and interests",
+  "loginF1Title": "Plans meet the world",
+  "loginF1Body": "Calendar × events × weather × deadlines",
+  "loginF2Title": "Opportunities on your way",
+  "loginF2Body": "KTX or car — see the detour in km and minutes",
+  "loginF3Title": "Know why it matters",
+  "loginF3Body": "Every signal comes with reasons and sources",
+  "loginPanelTitle": "Let's get started",
+  "loginPanelBody": "Your Google account is all you need — no extra sign-up.",
+  "myLocation": "My location",
+  "locationDenied": "Location is blocked. Allow it in your browser or device settings.",
+  "locationUnavailable": "Couldn't get your location right now.",
+  "planViewMonth": "Month view",
+  "planViewList": "List view",
+  "noPlansThisDay": "No plans on this day",
+  "planSignalRain": "Rain likely — bring an umbrella",
+  "planSignalCrowd": "{event} nearby — expect crowds",
+  "@planSignalCrowd": {
+    "placeholders": {
+      "event": {
+        "type": "String"
+      }
+    }
+  },
+  "planSignalNearby": "Nearby: {event}",
+  "@planSignalNearby": {
+    "placeholders": {
+      "event": {
+        "type": "String"
+      }
+    }
+  },
+  "planAround": "Around this plan",
+  "planNothingAround": "Nothing unusual around this plan right now.",
+  "myPlanBadge": "My plan",
+  "calendarOpenGoogle": "Open Google Calendar",
+  "planWhen": "When",
+  "planWhere": "Where",
+  "likeUndoTitle": "Remove your like?",
+  "likeUndoBody": "This signal will be ranked like any other again.",
+  "dislikeUndoTitle": "Show signals like this again?",
+  "dislikeUndoBody": "We'll stop pushing this one down.",
+  "removeLike": "Remove like",
+  "showAgain": "Show again",
+  "keep": "Keep",
+  "notForMeConfirm": "Not for me",
+  "feedbackCleared": "Feedback removed",
+  "notifications": "Notifications",
+  "notifyDesc": "Deadlines, plan alerts and rain — as system notifications",
+  "notifyUnsupported": "Not available on this device yet",
+  "notifyDenied": "Notifications are blocked. Allow them in your browser settings.",
+  "notifyOn": "Notifications on",
+  "notifyTest": "Send a test notification",
+  "notifyTestBody": "Notifications are working. We'll tell you when something affects your plans.",
+  "accountData": "Account & data",
+  "accountDataSubtitle": "Delete your account and everything stored on this device",
+  "deleteAccount": "Delete account",
+  "deleteAccountTitle": "Delete your account?",
+  "deleteAccountBody": "Your name, interests, your own plans, feedback and settings will be erased from this device, Google access will be revoked, and the app will start over from the beginning. This can't be undone.",
+  "deleteAccountInfo": "LifeRadar keeps your data only on this device. Deleting removes it all and disconnects Google Calendar.",
+  "accountDeleted": "Account deleted. Starting fresh.",
+  "eventAbout": "About",
+  "eventPrice": "Price",
+  "applicationLabel": "Applications",
+  "organizer": "Organizer",
+  "matchesYou": "Matches your interests"
+}
