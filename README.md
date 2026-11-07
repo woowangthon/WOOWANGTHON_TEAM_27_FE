@@ -180,9 +180,9 @@ flutter build apk --release --split-per-abi --dart-define-from-file=env.json   #
 
 2026-11-05부터 개인 작업 저장소에서 개발했고, 2026-11-08 팀 저장소(FE·BE·AI)로 이전했습니다.
 
-## 팀
+## 팀 — DALAB (Team 27)
 
 | 이름 | 역할 |
 |---|---|
 | Abbos Aliboev | 기획 · 아키텍처 · 디자인 · 개발 (FE·BE·AI) |
-| (팀원) | 데이터 조사 · 교통 영향 판별 규칙 설계 · 레퍼런스 디자인 |
+| 전영우 (Jeon Yeongwoo) | 데이터 조사 · 교통 영향 판별 규칙 설계 · 레퍼런스 디자인 |
