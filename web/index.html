@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="LifeRadar AI — personal signal intelligence">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="LifeRadar">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>LifeRadar</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#F6F8F9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0B1215" media="(prefers-color-scheme: dark)">
+  <style>
+    /* Flutter가 로드될 때까지 보이는 스플래시 (흰 화면 대신). 색상 = AppPalette. */
+    :root { --bg: #F6F8F9; --soft: #E3F2EF; --primary: #0F766E; --text: #0F172A; --muted: #586878; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #0B1215; --soft: #123230; --primary: #2DD4BF; --text: #E6EDF0; --muted: #9AABB6; }
+    }
+    html, body { margin: 0; height: 100%; background: var(--bg); }
+    #splash {
+      position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 18px; background: linear-gradient(180deg, var(--soft) 0%, var(--bg) 45%);
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+      transition: opacity .35s ease;
+    }
+    #splash.hide { opacity: 0; pointer-events: none; }
+    #splash .ring {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 3px solid color-mix(in srgb, var(--primary) 18%, transparent); border-top-color: var(--primary);
+      animation: spin .9s linear infinite;
+    }
+    #splash .name { color: var(--text); font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { #splash .ring { animation: none; } }
+    /* 다크 모드의 Kakao 지도: 타일(mts.kakaocdn.net)과 배경만 — 마커(data:)는 바뀌지 않는다. */
+    html.lr-dark-map img[src*="mts.kakaocdn.net"] {
+      filter: invert(0.92) hue-rotate(180deg) saturate(0.75) brightness(0.92) contrast(0.92);
+    }
+    /* 지도 컨테이너 (마커도 안에 있음) — 필터가 아니라 배경색만. */
+    html.lr-dark-map [style*="bg_tile.png"] { background: #0E1A1E !important; }
+  </style>
+</head>
+<body>
+  <div id="splash" role="status" aria-label="LifeRadar loading">
+    <div class="ring"></div>
+    <div class="name">LifeRadar</div>
+  </div>
+  <script>
+    // Flutter 첫 프레임이 그려지면 스플래시가 부드럽게 사라진다.
+    window.addEventListener('flutter-first-frame', function () {
+      var el = document.getElementById('splash');
+      if (!el) return;
+      el.classList.add('hide');
+      setTimeout(function () { el.remove(); }, 400);
+    });
+  </script>
+  <!--
+    You can customize the "flutter_bootstrap.js" script.
+    This is useful to provide a custom configuration to the Flutter loader
+    or to give the user feedback during the initialization process.
+
+    For more details:
+    * https://docs.flutter.dev/platform-integration/web/initialization
+  -->
+  <!-- Kakao Maps JS SDK는 Flutter보다 먼저 로드해야 한다.
+       kakao_config.js는 git에 포함하지 않는다: `dart run tool/gen_web_env.dart`가 env.json으로 생성한다. -->
+  <script src="kakao_config.js"></script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
