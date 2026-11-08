@@ -35,6 +35,7 @@ flutter build apk --release --split-per-abi --dart-define-from-file=env.json
 | `GOOGLE_API_KEY` | 대중교통 경로(Routes), 날씨(Weather) | Google Cloud Console | Routes · Weather API 사용 설정 |
 | `GOOGLE_OAUTH_WEB_CLIENT_ID` | Google 로그인 → 캘린더 | Google Auth Platform → 웹 클라이언트 | 승인된 JS 원본 `http://localhost:8080`, 테스트 사용자 등록, 범위 `calendar.events` |
 | `GEMINI_API_KEY` | 홈 카드 설명 문장 (없으면 규칙 문장) | [Google AI Studio](https://aistudio.google.com/apikey) | `AQ.` 형식 키는 `?key=` 쿼리로 전달 |
+| `ITS_API_KEY` | 전국 교통 통제 (국가교통정보센터) — 없으면 서울(TOPIS)만 | [ITS 오픈 API](https://www.its.go.kr/opendata/) | ITS는 해외 IP를 차단하므로 서버가 아닌 앱에서 조회. CORS 허용 |
 
 **Android Google 로그인**: `GOOGLE_OAUTH_WEB_CLIENT_ID`를 `serverClientId`로 사용합니다. 같은 프로젝트에 패키지 `com.liferadar.liferadar` + 서명 인증서 SHA-1로 Android OAuth 클라이언트를 만들어야 합니다 (ID는 env에 넣지 않음).
 
@@ -55,7 +56,7 @@ lib/
 ├── data/                     # Riverpod 상태
 │   ├── providers.dart        # 행사·일정·인사이트·취향·교통 통제 provider
 │   ├── live_events.dart      # events.json: 캐시 → 다운로드 → 검증 → 교체
-│   ├── live_traffic.dart     # traffic.json (공식 도로 통제)
+│   ├── live_traffic.dart     # traffic.json(서울 TOPIS) + ITS 직접 조회(전국) → 합쳐서 캐시
 │   ├── ai_insights.dart      # Gemini 카드 문장 (상위 6개, 캐시, 실패 시 규칙 문장)
 │   ├── calendar_controller.dart  # Google 로그인·캘린더 읽기/쓰기
 │   ├── notifications.dart    # 중요 신호 → 시스템 알림 (신호당 1회)
@@ -75,6 +76,9 @@ test/                         # 위젯·상태·API 파싱 테스트
 1. 앱 시작: 앱에 포함된 스냅숏과 마지막으로 받은 캐시 중 최신 것을 즉시 표시 (오프라인 동작)
 2. 백그라운드: BE `data` 브랜치의 `events.json` 다운로드 → **더 최신이고 20건 이상일 때만** 교체·캐시
 3. 발견 화면 상단에 "실제 공공데이터 · 행사 N개 · 업데이트 시각" 표시
+
+**교통 통제**
+`traffic.json`(BE, 서울 TOPIS)과 ITS 전국 돌발상황(앱이 직접 조회 — ITS는 해외 서버를 차단)을 동시에 받아 각각 캐시하고, `TrafficNotice.isRelevantAt`으로 끝난 공지를 거른 뒤 합칩니다. 하나가 실패해도 다른 쪽은 그대로 씁니다.
 
 **홈 인사이트**
 `plans × events × interests × weather × taste × traffic` → `InsightEngine.build` (규칙) → 상위 6개를 `InsightWriter`로 Gemini에 요청 → 검증 통과 문장만 교체 (`aiModel` 표시) → 피드백 반영 정렬.

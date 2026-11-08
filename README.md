@@ -70,7 +70,8 @@
 | 데이터 | 출처 | 갱신 | 앱이 받는 방법 |
 |---|---|---|---|
 | 실제 행사 635건 (11/8) | 서울 열린데이터광장 문화행사 · 한국관광공사 TourAPI 축제 · 창업진흥원 K-Startup 공고 | 매일 06:00 KST | BE가 게시한 `events.json` (캐시 → 최신 다운로드 → 검증 후 교체, 오프라인 동작) |
-| 공식 도로 통제 | 서울시 TOPIS 실시간 돌발정보 · 국가교통정보센터(ITS) 돌발상황정보 (11/8 기준 191건) | 3시간마다 | BE가 게시한 `traffic.json` |
+| 공식 도로 통제 (서울) | 서울시 TOPIS 실시간 돌발정보 | 3시간마다 | BE가 게시한 `traffic.json` |
+| 공식 도로 통제 (전국) | 국가교통정보센터(ITS) 돌발상황정보 — 공사·행사·기상·재난 (11/8 기준 약 190건) | 앱 실행 시 | **앱이 기기에서 직접 조회** — ITS가 해외 IP(GitHub Actions)를 차단하기 때문 |
 | 내 일정 | Google Calendar API | 연결·새로고침 시 | 사용자 OAuth 동의 후 직접 호출 |
 | 경로 | Google Routes (대중교통) · Kakao Mobility (자동차) | 요청 시 | 직접 호출 |
 | 날씨 | Google Weather | 일정 10일 전부터 | 직접 호출 (장소별 캐시) |
@@ -152,7 +153,7 @@ flutter build apk --release --split-per-abi --dart-define-from-file=env.json   #
 | 일정·로그인·날씨 | Google Calendar API, Google Sign-In (Android·웹), Google Weather |
 | 알림 | Android `flutter_local_notifications`, 웹 Notification API |
 | 디자인 | 자체 디자인 시스템 (라이트/다크, 대비 ≥ 4.5:1, 동작 줄이기 지원), Pretendard 서브셋 글꼴 |
-| 품질 | 테스트 — FE 38 · AI 43 · BE 24개, 3개 저장소 모두 GitHub Actions CI |
+| 품질 | 테스트 — FE 41 · AI 49 · BE 19개, 3개 저장소 모두 GitHub Actions CI |
 
 ## 10. 구현 범위와 한계 (정직하게)
 

@@ -7,14 +7,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/env.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 
-/// 공식 교통 영향 목록 (`traffic.json`, GitHub Actions가 3시간마다 갱신).
+/// 공식 교통 영향 목록.
+/// - [notices]: BE가 3시간마다 게시하는 `traffic.json` (서울 TOPIS)
+/// - [its]: 앱이 기기에서 직접 조회한 국가교통정보센터 전국 돌발상황 (해외 서버에서는 차단됨)
 class TrafficFeed {
-  const TrafficFeed({this.notices = const [], this.generatedAt});
+  const TrafficFeed({this.notices = const [], this.generatedAt, this.its = const [], this.itsFetchedAt});
 
   static const empty = TrafficFeed();
 
   final List<TrafficNotice> notices;
   final DateTime? generatedAt;
+  final List<TrafficNotice> its;
+  final DateTime? itsFetchedAt;
+
+  TrafficFeed copyWith({TrafficFeed? feed, List<TrafficNotice>? its, DateTime? itsFetchedAt}) => TrafficFeed(
+        notices: feed?.notices ?? notices,
+        generatedAt: feed?.generatedAt ?? generatedAt,
+        its: its ?? this.its,
+        itsFetchedAt: itsFetchedAt ?? this.itsFetchedAt,
+      );
 
   static TrafficFeed parse(String raw) {
     final j = jsonDecode(raw) as Map<String, dynamic>;
@@ -29,23 +40,66 @@ class TrafficFeed {
     return TrafficFeed(notices: notices, generatedAt: DateTime.tryParse(j['generatedAt'] as String? ?? ''));
   }
 
-  /// [now] 기준 아직 끝나지 않은 공지.
-  List<TrafficNotice> activeAt(DateTime now) => [
-        for (final n in notices)
-          if (n.end == null ? !n.start.isBefore(DateTime(now.year, now.month, now.day)) : n.end!.isAfter(now)) n,
-      ];
+  /// [now] 기준으로 보여줄 공지 (두 출처 합침, id 중복 제거). 기준은 수집기와 같은
+  /// [TrafficNotice.isRelevantAt].
+  List<TrafficNotice> activeAt(DateTime now) => {
+        for (final n in [...notices, ...its])
+          if (n.isRelevantAt(now)) n.id: n,
+      }.values.toList();
 }
 
 abstract final class LiveTraffic {
   static const prefsKey = 'traffic_feed_cache';
 
+  static const itsPrefsKey = 'its_traffic_cache';
+
   static TrafficFeed cached(SharedPreferences prefs) {
+    var feed = TrafficFeed.empty;
     final raw = prefs.getString(prefsKey);
-    if (raw == null) return TrafficFeed.empty;
+    if (raw != null) {
+      try {
+        feed = TrafficFeed.parse(raw);
+      } catch (_) {}
+    }
+    final itsRaw = prefs.getString(itsPrefsKey);
+    if (itsRaw != null) {
+      try {
+        final j = jsonDecode(itsRaw) as Map<String, dynamic>;
+        feed = feed.copyWith(
+          its: [for (final n in j['notices'] as List) TrafficNotice.fromJson((n as Map).cast<String, dynamic>())],
+          itsFetchedAt: DateTime.tryParse(j['fetchedAt'] as String? ?? ''),
+        );
+      } catch (_) {}
+    }
+    return feed;
+  }
+
+  /// 국가교통정보센터 전국 돌발상황을 기기에서 직접 조회한다. 성공하면 현재 유효한 공지만
+  /// 캐시하고 반환하며, 실패(키 없음·오프라인·오류)하면 null — 이전 캐시를 그대로 쓴다.
+  static Future<List<TrafficNotice>?> fetchIts(
+    SharedPreferences prefs, {
+    http.Client? client,
+    String key = Env.itsApiKey,
+    DateTime? now,
+  }) async {
+    if (key.isEmpty) return null;
+    final c = client ?? http.Client();
+    final at = now ?? DateTime.now();
     try {
-      return TrafficFeed.parse(raw);
-    } catch (_) {
-      return TrafficFeed.empty;
+      final res = await c.get(ItsTraffic.uri(key)).timeout(const Duration(seconds: 20));
+      if (res.statusCode != 200) return null;
+      final rows = ItsTraffic.rows(jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>);
+      final notices = [for (final r in rows) ?ItsTraffic.parse(r)].where((n) => n.isRelevantAt(at)).toList();
+      await prefs.setString(
+        itsPrefsKey,
+        jsonEncode({'fetchedAt': at.toUtc().toIso8601String(), 'notices': [for (final n in notices) n.toJson()]}),
+      );
+      return notices;
+    } catch (e) {
+      debugPrint('LiveTraffic ITS: $e');
+      return null;
+    } finally {
+      if (client == null) c.close();
     }
   }
 

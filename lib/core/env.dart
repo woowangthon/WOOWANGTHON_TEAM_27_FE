@@ -22,6 +22,10 @@ abstract final class Env {
     defaultValue: 'https://raw.githubusercontent.com/woowangthon/WOOWANGTHON_TEAM_27_BE/data/events.json',
   );
 
+  /// 국가교통정보센터(ITS) 키 — 전국 돌발상황. ITS는 해외 IP를 차단해 서버(GitHub Actions)가
+  /// 수집할 수 없으므로 앱이 한국 내 기기에서 직접 조회한다. 비어 있으면 서울(TOPIS)만.
+  static const itsApiKey = String.fromEnvironment('ITS_API_KEY');
+
   /// 도로 통제 정보 (TOPIS) — GitHub Actions가 3시간마다 업데이트.
   static const trafficUrl = String.fromEnvironment(
     'TRAFFIC_URL',
