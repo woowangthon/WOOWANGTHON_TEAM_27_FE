@@ -31,7 +31,7 @@
 
 ```
  내 일정 (Google 캘린더)        실제 행사 (공공 API 3종, 매일)        이동 (KTX·자동차 경로)
- 내 관심사 · 👍/👎 취향         공식 도로 통제 (TOPIS, 3시간마다)     날씨 예보
+ 내 관심사 · 👍/👎 취향         공식 도로 통제 (TOPIS·ITS, 3시간마다) 날씨 예보
                 \                          |                          /
                  └──────────  판단 엔진 (규칙, 결정론적)  ─────────────┘
                                          │  "무엇을, 왜 보여줄지"
@@ -59,7 +59,7 @@
 | **AI가 쓴 이유** | Gemini가 엔진이 고른 사실로 이유를 한국어·영어 문장으로 작성 (✨ AI 표시, 실패 시 규칙 문장) | 기계적인 "관심사와 일치" 대신 내 상황에 맞는 설명 |
 | **취향 학습** | 👍/👎/숨기기가 태그·카테고리 가중치를 바꿔 홈·발견·지도·경로를 다시 정렬 | 한 번 "이건 아니야"라고 하면 실제로 줄어들어야 한다 |
 | **경로 기반 발견** | 출발·도착·날짜 → KTX(대중교통)·자동차 경로와 15 km 안의 같은 날 행사, 추가 거리·시간 | 이미 정해진 이동 시간 안에서 "조금만 돌아가면 되는 기회" |
-| **공식 교통 통제** | 서울시 TOPIS의 집회·행사·공사 통제가 일정 장소 1 km 이내·시작 전 2시간이면 경고 | 행사 개최만으로 혼잡을 단정하지 않고, 공식 정보가 있을 때만 경고 |
+| **공식 교통 통제** | 서울 시내(TOPIS)와 전국 고속도로·국도(ITS)의 행사·공사·기상·재난 통제가 일정 장소 1 km 이내·시작 전 2시간이면 경고 (같은 도로는 한 번만, 일정당 최대 2개) | 행사 개최만으로 혼잡을 단정하지 않고, 공식 정보가 있을 때만 경고 |
 | **Google 캘린더** | 향후 90일 일정 읽기, 행사 추가, 일정 수정·삭제. Android는 Google 캘린더 앱으로 열기 | 사용자의 실제 계획이 있어야 "나와 관련된" 신호가 된다 |
 | **발견** | 관심사·취향 순의 실제 행사 목록, 데이터 갱신 시각 표시 | 홈 카드 밖의 기회도 둘러볼 수 있게 |
 | **알림** | 2일 이내 마감·3일 이내 일정 경고를 시스템 알림으로 (Android·웹) | 시간이 중요한 신호는 앱을 열 때까지 기다리면 늦다 |
@@ -70,7 +70,7 @@
 | 데이터 | 출처 | 갱신 | 앱이 받는 방법 |
 |---|---|---|---|
 | 실제 행사 635건 (11/8) | 서울 열린데이터광장 문화행사 · 한국관광공사 TourAPI 축제 · 창업진흥원 K-Startup 공고 | 매일 06:00 KST | BE가 게시한 `events.json` (캐시 → 최신 다운로드 → 검증 후 교체, 오프라인 동작) |
-| 공식 도로 통제 | 서울시 TOPIS 실시간 돌발정보 | 3시간마다 | BE가 게시한 `traffic.json` |
+| 공식 도로 통제 | 서울시 TOPIS 실시간 돌발정보 · 국가교통정보센터(ITS) 돌발상황정보 (11/8 기준 191건) | 3시간마다 | BE가 게시한 `traffic.json` |
 | 내 일정 | Google Calendar API | 연결·새로고침 시 | 사용자 OAuth 동의 후 직접 호출 |
 | 경로 | Google Routes (대중교통) · Kakao Mobility (자동차) | 요청 시 | 직접 호출 |
 | 날씨 | Google Weather | 일정 10일 전부터 | 직접 호출 (장소별 캐시) |
@@ -111,7 +111,7 @@
 ```mermaid
 flowchart LR
   subgraph BE["BE · GitHub Actions"]
-    SRC["공공 API 4종"] --> NORM["정규화·검증"] --> EN["Gemini 번역·태그"]
+    SRC["공공 API 5종"] --> NORM["정규화·검증"] --> EN["Gemini 번역·태그"]
     EN --> DATA["data 브랜치<br/>events.json · traffic.json"]
   end
   subgraph AI["AI · liferadar_core"]
@@ -147,22 +147,22 @@ flutter build apk --release --split-per-abi --dart-define-from-file=env.json   #
 |---|---|
 | 앱 | Flutter 3.41 (Android · Web), Riverpod 3, go_router, gen_l10n, shared_preferences |
 | 판단·AI | `liferadar_core` (AI 저장소) — 규칙 엔진, Gemini `gemini-3.5-flash-lite` (예비 `3.1-flash-lite`) |
-| 데이터 | BE 저장소 — 공공 API 4종, GitHub Actions 스케줄, 정적 JSON (raw.githubusercontent.com) |
+| 데이터 | BE 저장소 — 공공 API 5종, GitHub Actions 스케줄, 정적 JSON (raw.githubusercontent.com) |
 | 지도·경로 | Kakao Maps SDK, Kakao Local · Mobility, Google Routes |
 | 일정·로그인·날씨 | Google Calendar API, Google Sign-In (Android·웹), Google Weather |
 | 알림 | Android `flutter_local_notifications`, 웹 Notification API |
 | 디자인 | 자체 디자인 시스템 (라이트/다크, 대비 ≥ 4.5:1, 동작 줄이기 지원), Pretendard 서브셋 글꼴 |
-| 품질 | 테스트 — FE 38 · AI 41 · BE 19개, 3개 저장소 모두 GitHub Actions CI |
+| 품질 | 테스트 — FE 38 · AI 43 · BE 24개, 3개 저장소 모두 GitHub Actions CI |
 
 ## 10. 구현 범위와 한계 (정직하게)
 
 **직접 구현**: 앱 전체 UI·상태·캐시, 규칙 엔진, AI 프롬프트·검증, 수집기와 스케줄 게시, 디자인 시스템, 테스트.
-**외부 기술**: Google(Calendar·Routes·Weather·Gemini·Sign-In), Kakao(Maps·Local·Mobility), 공공 API 4종.
+**외부 기술**: Google(Calendar·Routes·Weather·Gemini·Sign-In), Kakao(Maps·Local·Mobility), 공공 API 5종.
 **AI 코딩 도구**: 개발 과정에서 AI 코딩 도우미(Claude)를 사용했고 커밋에 공동 작성자로 표시했습니다.
 
 **샘플·미검증 범위**
 - IT 컨퍼런스·해커톤(대전 AI 세미나, 벡스코 AI 엑스포 등)은 공개 API가 없어 **샘플** — 화면에 `샘플` 배지로 표시
-- 공식 교통 통제는 **서울만** (전국: ITS·경찰청 UTIC API 신청 중)
+- 공식 교통 통제: 서울은 시내 도로까지, 그 외 지역은 **고속도로·국도 위주** (도시 내부 집회 통제는 경찰청 UTIC API 신청 중)
 - 알림은 **앱 실행 중**에만 — 앱이 닫혀 있을 때의 서버 푸시(FCM)는 설계만
 - 지도·경로·날씨·Gemini 키가 **데모를 위해 앱 안에** 있음 → 다음 단계: BE의 API 프록시
 - 관심사·일정·피드백은 **기기에만** 저장 (기기 간 동기화 없음)
@@ -176,7 +176,7 @@ flutter build apk --release --split-per-abi --dart-define-from-file=env.json   #
 | 11/5 | 기획, MVP 계획, Flutter 골격, 카카오 지도 |
 | 11/6 | 경로 기반 발견(KTX·자동차), Google 캘린더 연동, 날씨, 온보딩, 규칙 인사이트 엔진, 디자인 시스템 |
 | 11/7 | 실제 공공데이터 수집 + Gemini 번역, 첫 실행 설정·계정 삭제, liquid glass UI, Gemini 카드 문장 + 숫자 검증, 피드백 취향 학습, 시연 데이터 자동 이동, 친절한 오류 메시지 |
-| 11/8 | 매일 데이터 갱신, Android 알림·Google 캘린더 앱 연결, 공식 교통 통제(TOPIS) 판별, 일정 연결 줄, FE·BE·AI 팀 저장소로 분리 이전 |
+| 11/8 | 매일 데이터 갱신, Android 알림·Google 캘린더 앱 연결, 공식 교통 통제(TOPIS·전국 ITS) 판별, 일정 연결 줄, FE·BE·AI 팀 저장소로 분리 이전 |
 
 2026-11-05부터 개인 작업 저장소에서 개발했고, 2026-11-08 팀 저장소(FE·BE·AI)로 이전했습니다.
 
