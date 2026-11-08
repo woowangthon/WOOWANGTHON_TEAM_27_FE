@@ -186,10 +186,12 @@ class TrafficFeedController extends Notifier<TrafficFeed> {
     return cached;
   }
 
+  /// `traffic.json`(서울)과 ITS(전국)를 함께 받는다. 하나가 실패해도 다른 쪽은 반영한다.
   Future<bool> refresh() async {
-    final fresh = await LiveTraffic.fetch(ref.read(sharedPrefsProvider), state);
-    if (fresh == null || !ref.mounted) return false;
-    state = fresh;
+    final prefs = ref.read(sharedPrefsProvider);
+    final (feed, its) = await (LiveTraffic.fetch(prefs, state), LiveTraffic.fetchIts(prefs)).wait;
+    if ((feed == null && its == null) || !ref.mounted) return false;
+    state = state.copyWith(feed: feed, its: its, itsFetchedAt: its == null ? null : DateTime.now());
     return true;
   }
 }
