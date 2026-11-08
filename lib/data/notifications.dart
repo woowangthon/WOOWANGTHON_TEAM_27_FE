@@ -57,6 +57,8 @@ class SignalNotifier {
       if (i.feedback == InsightFeedback.dislike || i.feedback == InsightFeedback.hidden) return false;
       // 근처 대형 행사 — 참고 정보일 뿐 (교통 영향 미확인): 알림 없음.
       if (i.id.startsWith('crowd:')) return false;
+      // 뉴스 보도 기반 파업 — 공식 공지가 아니므로 참고 카드만, 알림 없음.
+      if (i.id.startsWith('strike:')) return false;
       if (i.kind == InsightKind.deadline) {
         final e = i.eventIds.isEmpty ? null : ref.read(eventByIdProvider(i.eventIds.first));
         final d = e?.deadline;

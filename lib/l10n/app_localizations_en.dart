@@ -76,6 +76,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Before your plan starts · official road control';
 
   @override
+  String get planLinkStrike => 'Same day · news report (for reference)';
+
+  @override
   String get sources => 'Sources';
 
   @override

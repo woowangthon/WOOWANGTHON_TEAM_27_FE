@@ -9,6 +9,7 @@ import 'ai_insights.dart';
 import 'event_feed.dart';
 import 'interests.dart';
 import 'live_events.dart';
+import 'live_news.dart';
 import 'live_traffic.dart';
 import 'package:liferadar_core/demo.dart';
 import 'session.dart';
@@ -196,6 +197,25 @@ class TrafficFeedController extends Notifier<TrafficFeed> {
   }
 }
 
+/// 뉴스 판독 파업: 먼저 캐시, 이후 인터넷의 더 최신 데이터.
+final newsFeedProvider = NotifierProvider<NewsFeedController, NewsFeed>(NewsFeedController.new);
+
+class NewsFeedController extends Notifier<NewsFeed> {
+  @override
+  NewsFeed build() {
+    final cached = LiveNews.cached(ref.read(sharedPrefsProvider));
+    if (ref.watch(liveEventsEnabledProvider)) Future.microtask(refresh);
+    return cached;
+  }
+
+  Future<bool> refresh() async {
+    final fresh = await LiveNews.fetch(ref.read(sharedPrefsProvider), state);
+    if (fresh == null || !ref.mounted) return false;
+    state = fresh;
+    return true;
+  }
+}
+
 /// 피드백으로 학습한 취향: 홈, 발견, 지도, 경로의 순서에 반영된다.
 final tasteProvider = Provider<Taste>((ref) {
   final events = {for (final e in ref.watch(eventsProvider)) e.id: e};
@@ -229,6 +249,7 @@ final baseInsightsProvider = Provider<List<Insight>>((ref) {
     weatherByPlanId: weather,
     taste: ref.watch(tasteProvider),
     traffic: ref.watch(trafficFeedProvider).activeAt(now),
+    strikes: ref.watch(newsFeedProvider).active,
   );
 });
 

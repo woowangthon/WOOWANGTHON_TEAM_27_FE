@@ -212,6 +212,12 @@ abstract class AppLocalizations {
   /// **'Before your plan starts · official road control'**
   String get planLinkTraffic;
 
+  /// No description provided for @planLinkStrike.
+  ///
+  /// In en, this message translates to:
+  /// **'Same day · news report (for reference)'**
+  String get planLinkStrike;
+
   /// No description provided for @sources.
   ///
   /// In en, this message translates to:

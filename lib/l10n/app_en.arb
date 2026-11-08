@@ -22,6 +22,7 @@
   "planLinkCrowd": "Same day · {km} km away",
   "@planLinkCrowd": {"placeholders": {"km": {"type": "String"}}},
   "planLinkTraffic": "Before your plan starts · official road control",
+  "planLinkStrike": "Same day · news report (for reference)",
   "sources": "Sources",
   "confidence": "Confidence {percent}%",
   "@confidence": {

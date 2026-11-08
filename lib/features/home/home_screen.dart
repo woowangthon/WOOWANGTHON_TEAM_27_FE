@@ -602,6 +602,7 @@ class _PlanLink extends StatelessWidget {
       'nearby' when km != null => l10n.planLinkNearby(km),
       'crowd' when km != null => l10n.planLinkCrowd(km),
       'traffic' => l10n.planLinkTraffic,
+      'strike' => l10n.planLinkStrike,
       'rain' when weather != null => context.tr(weather.summary),
       _ => null,
     };
