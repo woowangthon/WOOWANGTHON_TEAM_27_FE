@@ -56,6 +56,7 @@ lib/
 ├── data/                     # Riverpod 상태
 │   ├── providers.dart        # 행사·일정·인사이트·취향·교통 통제 provider
 │   ├── live_events.dart      # events.json: 캐시 → 다운로드 → 검증 → 교체
+│   ├── live_news.dart        # news.json (뉴스에서 판독한 파업)
 │   ├── live_traffic.dart     # traffic.json(서울 TOPIS) + ITS 직접 조회(전국) → 합쳐서 캐시
 │   ├── ai_insights.dart      # Gemini 카드 문장 (상위 6개, 캐시, 실패 시 규칙 문장)
 │   ├── calendar_controller.dart  # Google 로그인·캘린더 읽기/쓰기
@@ -79,6 +80,9 @@ test/                         # 위젯·상태·API 파싱 테스트
 
 **교통 통제**
 `traffic.json`(BE, 서울 TOPIS)과 ITS 전국 돌발상황(앱이 직접 조회 — ITS는 해외 서버를 차단)을 동시에 받아 각각 캐시하고, `TrafficNotice.isRelevantAt`으로 끝난 공지를 거른 뒤 합칩니다. 하나가 실패해도 다른 쪽은 그대로 씁니다.
+
+**뉴스 파업**
+BE가 3시간마다 네이버 뉴스를 Gemini로 판독해 게시한 `news.json`을 받아 캐시합니다 (`live_news.dart`). 예고·조건부·진행 중 파업만 엔진에 넘기고, 일정 지역(전국·수도권 포함)과 날짜가 맞으면 `strike:` 참고 카드가 됩니다. 알림·AI 재작성 대상이 아닙니다.
 
 **홈 인사이트**
 `plans × events × interests × weather × taste × traffic` → `InsightEngine.build` (규칙) → 상위 6개를 `InsightWriter`로 Gemini에 요청 → 검증 통과 문장만 교체 (`aiModel` 표시) → 피드백 반영 정렬.

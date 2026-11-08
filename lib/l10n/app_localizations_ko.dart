@@ -73,6 +73,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get planLinkTraffic => '일정 시작 전 · 공식 도로 통제';
 
   @override
+  String get planLinkStrike => '같은 날 · 뉴스 보도 (참고)';
+
+  @override
   String get sources => '출처';
 
   @override

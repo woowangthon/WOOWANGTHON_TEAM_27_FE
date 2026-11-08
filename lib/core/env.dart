@@ -22,6 +22,12 @@ abstract final class Env {
     defaultValue: 'https://raw.githubusercontent.com/woowangthon/WOOWANGTHON_TEAM_27_BE/data/events.json',
   );
 
+  /// 뉴스에서 판독한 대중교통 파업 (BE가 3시간마다 Gemini로 판독해 게시).
+  static const newsUrl = String.fromEnvironment(
+    'NEWS_URL',
+    defaultValue: 'https://raw.githubusercontent.com/woowangthon/WOOWANGTHON_TEAM_27_BE/data/news.json',
+  );
+
   /// 국가교통정보센터(ITS) 키 — 전국 돌발상황. ITS는 해외 IP를 차단해 서버(GitHub Actions)가
   /// 수집할 수 없으므로 앱이 한국 내 기기에서 직접 조회한다. 비어 있으면 서울(TOPIS)만.
   static const itsApiKey = String.fromEnvironment('ITS_API_KEY');

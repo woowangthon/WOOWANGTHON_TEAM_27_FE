@@ -19,6 +19,7 @@
   "planLinkNearby": "일정 장소에서 {km} km · 머무는 동안",
   "planLinkCrowd": "같은 날 · {km} km 거리",
   "planLinkTraffic": "일정 시작 전 · 공식 도로 통제",
+  "planLinkStrike": "같은 날 · 뉴스 보도 (참고)",
   "sources": "출처",
   "confidence": "신뢰도 {percent}%",
   "showOnMap": "지도에서 보기",
