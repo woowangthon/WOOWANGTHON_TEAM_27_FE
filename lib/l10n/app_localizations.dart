@@ -1933,6 +1933,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copied to share'**
   String get shareCopied;
+
+  /// No description provided for @planDeleteCalendarNote.
+  ///
+  /// In en, this message translates to:
+  /// **'It will also be removed from Google Calendar.'**
+  String get planDeleteCalendarNote;
+
+  /// No description provided for @assistantButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask AI'**
+  String get assistantButton;
+
+  /// No description provided for @assistantTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'LifeRadar AI'**
+  String get assistantTitle;
+
+  /// No description provided for @assistantSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Answers from your plans and real data'**
+  String get assistantSubtitle;
+
+  /// No description provided for @assistantNewChat.
+  ///
+  /// In en, this message translates to:
+  /// **'New chat'**
+  String get assistantNewChat;
+
+  /// No description provided for @assistantHello.
+  ///
+  /// In en, this message translates to:
+  /// **'What can I find for you?'**
+  String get assistantHello;
+
+  /// No description provided for @assistantHelloBody.
+  ///
+  /// In en, this message translates to:
+  /// **'I look at your plans, interests and real public data.\nI only add things to your calendar after you confirm.'**
+  String get assistantHelloBody;
+
+  /// No description provided for @assistantSuggestWeekend.
+  ///
+  /// In en, this message translates to:
+  /// **'What should I do this weekend?'**
+  String get assistantSuggestWeekend;
+
+  /// No description provided for @assistantSuggestPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Anything worth visiting during {plan}?'**
+  String assistantSuggestPlan(String plan);
+
+  /// No description provided for @assistantSuggestDeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Any deadlines coming up?'**
+  String get assistantSuggestDeadline;
+
+  /// No description provided for @assistantSuggestFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommend a free exhibition'**
+  String get assistantSuggestFree;
+
+  /// No description provided for @assistantTrust.
+  ///
+  /// In en, this message translates to:
+  /// **'Code picks candidates from real data; the AI only answers from them'**
+  String get assistantTrust;
+
+  /// No description provided for @assistantThinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking through your plans and events…'**
+  String get assistantThinking;
+
+  /// No description provided for @assistantAiBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'AI answer'**
+  String get assistantAiBadge;
+
+  /// No description provided for @assistantRuleBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter search'**
+  String get assistantRuleBadge;
+
+  /// No description provided for @assistantRuleNote.
+  ///
+  /// In en, this message translates to:
+  /// **'AI isn\'t connected, so these are filter results.'**
+  String get assistantRuleNote;
+
+  /// No description provided for @assistantHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask me anything'**
+  String get assistantHint;
+
+  /// No description provided for @assistantFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'The AI only suggests. You confirm every change.'**
+  String get assistantFooter;
+
+  /// No description provided for @assistantProposeCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to your calendar?'**
+  String get assistantProposeCalendar;
+
+  /// No description provided for @assistantProposeMap.
+  ///
+  /// In en, this message translates to:
+  /// **'See it on the map?'**
+  String get assistantProposeMap;
+
+  /// No description provided for @assistantAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get assistantAdd;
+
+  /// No description provided for @assistantOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get assistantOpen;
+
+  /// No description provided for @assistantAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Added'**
+  String get assistantAdded;
+
+  /// No description provided for @assistantOpened.
+  ///
+  /// In en, this message translates to:
+  /// **'Opened'**
+  String get assistantOpened;
+
+  /// No description provided for @assistantCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get assistantCancelled;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get retry;
 }
 
 class _AppLocalizationsDelegate

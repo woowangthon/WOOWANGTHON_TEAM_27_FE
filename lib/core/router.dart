@@ -15,6 +15,7 @@ import '../features/profile/profile_screen.dart';
 import '../features/shell/app_shell.dart';
 import '../features/welcome/welcome_screen.dart';
 import 'theme.dart';
+import '../features/assistant/assistant_screen.dart';
 import 'toast.dart';
 import 'widgets.dart';
 
@@ -54,6 +55,26 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/onboarding', pageBuilder: (_, s) => _fadePage(s, const OnboardingScreen())),
       GoRoute(path: '/account', builder: (_, _) => const AccountScreen()),
       GoRoute(path: '/interests', builder: (_, _) => const OnboardingScreen(editing: true)),
+      // AI 비서 — 아래에서 올라오는 전체 화면.
+      GoRoute(
+        path: '/assistant',
+        pageBuilder: (_, s) => CustomTransitionPage<void>(
+          key: s.pageKey,
+          child: const AssistantScreen(),
+          transitionDuration: Motion.slow,
+          reverseTransitionDuration: Motion.normal,
+          transitionsBuilder: (context, animation, _, child) {
+            final a = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+            return FadeTransition(
+              opacity: a,
+              child: SlideTransition(
+                position: Tween(begin: const Offset(0, 0.06), end: Offset.zero).animate(a),
+                child: child,
+              ),
+            );
+          },
+        ),
+      ),
       StatefulShellRoute(
         builder: (context, state, shell) => shell,
         navigatorContainerBuilder: (context, shell, children) => AppShell(

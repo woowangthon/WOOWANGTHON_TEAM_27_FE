@@ -1023,4 +1023,89 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareCopied => 'Copied to share';
+
+  @override
+  String get planDeleteCalendarNote =>
+      'It will also be removed from Google Calendar.';
+
+  @override
+  String get assistantButton => 'Ask AI';
+
+  @override
+  String get assistantTitle => 'LifeRadar AI';
+
+  @override
+  String get assistantSubtitle => 'Answers from your plans and real data';
+
+  @override
+  String get assistantNewChat => 'New chat';
+
+  @override
+  String get assistantHello => 'What can I find for you?';
+
+  @override
+  String get assistantHelloBody =>
+      'I look at your plans, interests and real public data.\nI only add things to your calendar after you confirm.';
+
+  @override
+  String get assistantSuggestWeekend => 'What should I do this weekend?';
+
+  @override
+  String assistantSuggestPlan(String plan) {
+    return 'Anything worth visiting during $plan?';
+  }
+
+  @override
+  String get assistantSuggestDeadline => 'Any deadlines coming up?';
+
+  @override
+  String get assistantSuggestFree => 'Recommend a free exhibition';
+
+  @override
+  String get assistantTrust =>
+      'Code picks candidates from real data; the AI only answers from them';
+
+  @override
+  String get assistantThinking => 'Looking through your plans and events…';
+
+  @override
+  String get assistantAiBadge => 'AI answer';
+
+  @override
+  String get assistantRuleBadge => 'Filter search';
+
+  @override
+  String get assistantRuleNote =>
+      'AI isn\'t connected, so these are filter results.';
+
+  @override
+  String get assistantHint => 'Ask me anything';
+
+  @override
+  String get assistantFooter =>
+      'The AI only suggests. You confirm every change.';
+
+  @override
+  String get assistantProposeCalendar => 'Add to your calendar?';
+
+  @override
+  String get assistantProposeMap => 'See it on the map?';
+
+  @override
+  String get assistantAdd => 'Add';
+
+  @override
+  String get assistantOpen => 'Open';
+
+  @override
+  String get assistantAdded => 'Added';
+
+  @override
+  String get assistantOpened => 'Opened';
+
+  @override
+  String get assistantCancelled => 'Cancelled';
+
+  @override
+  String get retry => 'Try again';
 }

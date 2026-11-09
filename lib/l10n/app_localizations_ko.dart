@@ -996,4 +996,85 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get shareCopied => '공유할 글을 복사했어요';
+
+  @override
+  String get planDeleteCalendarNote => 'Google 캘린더에서도 삭제돼요.';
+
+  @override
+  String get assistantButton => 'AI 비서';
+
+  @override
+  String get assistantTitle => 'LifeRadar AI';
+
+  @override
+  String get assistantSubtitle => '내 일정과 실제 데이터로 답해요';
+
+  @override
+  String get assistantNewChat => '새 대화';
+
+  @override
+  String get assistantHello => '무엇을 찾아 드릴까요?';
+
+  @override
+  String get assistantHelloBody =>
+      '일정·관심사·실제 공공데이터를 보고 찾아 드려요.\n캘린더 추가 같은 일은 직접 확인한 뒤에만 해요.';
+
+  @override
+  String get assistantSuggestWeekend => '이번 주말에 뭐 하지?';
+
+  @override
+  String assistantSuggestPlan(String plan) {
+    return '$plan 때 갈 만한 곳 있어?';
+  }
+
+  @override
+  String get assistantSuggestDeadline => '마감 임박한 공고 알려줘';
+
+  @override
+  String get assistantSuggestFree => '무료 전시 추천해 줘';
+
+  @override
+  String get assistantTrust => '후보는 코드가 실제 데이터에서 고르고, AI는 그중에서만 답해요';
+
+  @override
+  String get assistantThinking => '일정과 행사를 살펴보는 중…';
+
+  @override
+  String get assistantAiBadge => 'AI 답변';
+
+  @override
+  String get assistantRuleBadge => '조건 검색';
+
+  @override
+  String get assistantRuleNote => 'AI 연결이 안 돼 조건으로 찾은 결과예요.';
+
+  @override
+  String get assistantHint => '무엇이든 물어보세요';
+
+  @override
+  String get assistantFooter => 'AI는 제안만 해요. 추가·변경은 직접 확인해요.';
+
+  @override
+  String get assistantProposeCalendar => '캘린더에 추가할까요?';
+
+  @override
+  String get assistantProposeMap => '지도에서 볼까요?';
+
+  @override
+  String get assistantAdd => '추가';
+
+  @override
+  String get assistantOpen => '보기';
+
+  @override
+  String get assistantAdded => '추가했어요';
+
+  @override
+  String get assistantOpened => '열었어요';
+
+  @override
+  String get assistantCancelled => '취소했어요';
+
+  @override
+  String get retry => '다시 시도';
 }

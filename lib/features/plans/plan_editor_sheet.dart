@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 
 import '../../core/calendar_link.dart';
 import '../../core/errors.dart';
-import '../../core/confirm.dart';
 import '../../core/l10n_ext.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
@@ -13,6 +12,7 @@ import '../../data/calendar_controller.dart';
 import '../../data/providers.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 import '../route/route_panel.dart' show PlaceSearchSheet;
+import 'plan_actions.dart';
 
 /// 일정 추가([plan] = null) 또는 수정.
 /// - 'local'  → 기기에 저장 (선택: Google 캘린더에도).
@@ -209,37 +209,17 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
   }
 
   Future<void> _delete() async {
-    final l10n = context.l10n;
-    final plan = _plan!;
-    final ok = await showConfirm(
-      context,
-      icon: Icons.delete_outline_rounded,
-      title: l10n.planDeleteConfirm(plan.title),
-      confirmLabel: l10n.delete,
-      cancelLabel: l10n.cancel,
-      destructive: true,
-    );
-    if (!ok || !mounted) return;
-
     final navigator = Navigator.of(context);
     setState(() => _saving = true);
-    try {
-      if (_isCalendarPlan) {
-        await ref.read(calendarProvider.notifier).deletePlan(plan);
-      } else {
-        await ref.read(plansProvider.notifier).removeLocal(plan.id);
-      }
+    final deleted = await deletePlanWithConfirm(context, ref, _plan!);
+    if (!mounted) return;
+    if (deleted) {
       navigator.pop();
-      Toast.show(l10n.planDeleted, type: ToastType.info);
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _saving = false;
-          _error = l10n.planSaveError(friendlyError(l10n, e));
-        });
-      }
+    } else {
+      setState(() => _saving = false);
     }
   }
+
 
   // ───────── UI ─────────
 
