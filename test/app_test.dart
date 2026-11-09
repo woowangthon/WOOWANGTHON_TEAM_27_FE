@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:liferadar/data/providers.dart';
 import 'package:liferadar_core/demo.dart';
 import 'package:liferadar/features/discover/discover_screen.dart';
 import 'package:liferadar/features/home/home_screen.dart';
+import 'package:liferadar/features/onboarding/about_me_sheet.dart';
 import 'package:liferadar/main.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -93,6 +95,8 @@ void main() {
 
     expect(find.text('What are you into?'), findsOneWidget);
     expect(find.text('Step 2 of 2'), findsOneWidget);
+    await tester.tap(find.text('Student'));
+    await tester.scrollUntilVisible(find.text('AI'), 200, scrollable: find.byType(Scrollable).first);
     await tester.tap(find.text('AI'));
     await tester.tap(find.text('Startups'));
     await tester.pumpAndSettle();
@@ -104,6 +108,7 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.getString('session'), contains('guest'));
     expect(prefs.getString('name:guest'), 'Abbos');
+    expect(prefs.getString('stage:guest'), 'student');
     expect(prefs.getStringList('interests:guest'), containsAll(['ai', 'startup']));
   });
 
@@ -169,6 +174,41 @@ void main() {
     await tester.tap(find.text('Reset').first);
     await tester.pumpAndSettle();
     expect(find.byType(EventCard).evaluate().length, total);
+  });
+
+  testWidgets('나를 소개하기: AI 없이도 단어로 제안하고, 고른 것만 적용된다', (tester) async {
+    await pumpApp(tester, interests: ['ai']);
+    final router = GoRouter.of(tester.element(find.byType(HomeScreen)));
+    router.push('/interests');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Tell the AI about yourself'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField).last, 'I am a university student and I love jazz concerts and travel');
+    await tester.tap(find.byTooltip('Send'));
+    await tester.pumpAndSettle();
+    expect(find.text('Situation: Student'), findsOneWidget);
+    expect(find.text('Music & shows'), findsWidgets);
+    expect(find.textContaining('AI not connected'), findsOneWidget); // 테스트에는 키가 없다
+
+    // 여행은 끄고 적용
+    final travel = find.descendant(of: find.byType(AboutMeSheet), matching: find.text('Travel'));
+    await tester.ensureVisible(travel);
+    await tester.pumpAndSettle();
+    await tester.tap(travel);
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('Apply ('));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Save'));
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('stage:guest'), 'student');
+    final saved = prefs.getStringList('interests:guest')!;
+    expect(saved, containsAll(['ai', 'music']));
+    expect(saved, isNot(contains('travel')));
+    expect(prefs.getString('about:guest'), contains('jazz'));
   });
 
   testWidgets('키가 없으면 지도 탭에 안내 메시지를 보여준다', (tester) async {

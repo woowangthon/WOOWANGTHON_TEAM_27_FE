@@ -1795,6 +1795,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit'**
   String get routeEdit;
+
+  /// No description provided for @stageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your situation right now?'**
+  String get stageTitle;
+
+  /// No description provided for @stageOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional · we\'ll show fitting programs and events first'**
+  String get stageOptional;
+
+  /// No description provided for @aboutMeCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell the AI about yourself'**
+  String get aboutMeCta;
+
+  /// No description provided for @aboutMeCtaBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a few sentences and we\'ll suggest your situation and interests. You choose.'**
+  String get aboutMeCtaBody;
+
+  /// No description provided for @aboutMeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About me'**
+  String get aboutMeTitle;
+
+  /// No description provided for @aboutMeGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell me a bit about yourself — what you do, what you\'re into lately, what you do on weekends. Anything works.'**
+  String get aboutMeGreeting;
+
+  /// No description provided for @aboutMeEx1.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m a 3rd-year CS student. Studying AI and I\'d like to try a hackathon.'**
+  String get aboutMeEx1;
+
+  /// No description provided for @aboutMeEx2.
+  ///
+  /// In en, this message translates to:
+  /// **'I work at a marketing company. I run after work and visit exhibitions on weekends.'**
+  String get aboutMeEx2;
+
+  /// No description provided for @aboutMeEx3.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m preparing a startup. I need info on investor sessions and startup support programs.'**
+  String get aboutMeEx3;
+
+  /// No description provided for @aboutMeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write about yourself'**
+  String get aboutMeHint;
+
+  /// No description provided for @aboutMeSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get aboutMeSend;
+
+  /// No description provided for @aboutMeThinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading…'**
+  String get aboutMeThinking;
+
+  /// No description provided for @aboutMeUnderstood.
+  ///
+  /// In en, this message translates to:
+  /// **'Here\'s what I understood. Keep what fits.'**
+  String get aboutMeUnderstood;
+
+  /// No description provided for @aboutMeKeyword.
+  ///
+  /// In en, this message translates to:
+  /// **'Matched by keywords (AI not connected). Keep what fits.'**
+  String get aboutMeKeyword;
+
+  /// No description provided for @aboutMeNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m not sure yet. Tell me a little more about what you do or enjoy.'**
+  String get aboutMeNothing;
+
+  /// No description provided for @aboutMeStage.
+  ///
+  /// In en, this message translates to:
+  /// **'Situation: {stage}'**
+  String aboutMeStage(String stage);
+
+  /// No description provided for @aboutMeApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply ({count})'**
+  String aboutMeApply(int count);
+
+  /// No description provided for @aboutMeApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {count} interests'**
+  String aboutMeApplied(int count);
+
+  /// No description provided for @aboutMeAiBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'AI suggestion'**
+  String get aboutMeAiBadge;
+
+  /// No description provided for @aboutMePrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your text is sent to Google Gemini only to make suggestions, and saved on this device only.'**
+  String get aboutMePrivacy;
+
+  /// No description provided for @share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// No description provided for @shareFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Found on LifeRadar'**
+  String get shareFooter;
+
+  /// No description provided for @shareCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to share'**
+  String get shareCopied;
 }
 
 class _AppLocalizationsDelegate

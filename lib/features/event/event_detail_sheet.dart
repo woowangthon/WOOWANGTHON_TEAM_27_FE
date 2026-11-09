@@ -6,6 +6,7 @@ import '../../core/l10n_ext.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../core/widgets.dart';
+import '../../core/share.dart';
 import '../../data/calendar_controller.dart';
 import '../../data/providers.dart';
 import 'package:liferadar_core/liferadar_core.dart';
@@ -256,6 +257,12 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
             padding: const EdgeInsets.fromLTRB(Space.gutter, Space.md, Space.gutter, Space.md),
             child: Row(
               children: [
+                IconButton.outlined(
+                  tooltip: l10n.share,
+                  onPressed: () => shareEvent(context, event),
+                  icon: const Icon(Icons.ios_share_rounded),
+                ),
+                const SizedBox(width: Space.sm),
                 if (event.registerUrl != null) ...[
                   Expanded(
                     child: OutlinedButton(
