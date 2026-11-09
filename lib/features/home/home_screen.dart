@@ -145,6 +145,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ],
                           ),
                         ),
+                        const _AskAiButton(),
+                        const SizedBox(width: Space.sm),
                         Semantics(
                           button: true,
                           label: l10n.tabProfile,
@@ -643,6 +645,49 @@ class _PlanLink extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// 홈 머리의 AI 비서 버튼 — 브랜드 그라데이션 알약 (✨ AI 비서).
+class _AskAiButton extends StatelessWidget {
+  const _AskAiButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final l10n = context.l10n;
+    return Semantics(
+      button: true,
+      label: l10n.assistantTitle,
+      child: Pressable(
+        scale: 0.94,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: p.brandGradient,
+            borderRadius: BorderRadius.circular(999),
+            boxShadow: [BoxShadow(color: p.primary.withValues(alpha: 0.28), blurRadius: 14, offset: const Offset(0, 4))],
+          ),
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(999),
+              onTap: () => context.push('/assistant'),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Space.md + 2, vertical: Space.sm + 2),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.auto_awesome, size: 18, color: p.onPrimary),
+                    const SizedBox(width: 6),
+                    Text(l10n.assistantButton, style: context.textStyles.labelLarge!.copyWith(color: p.onPrimary)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'plan_actions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -149,6 +150,22 @@ class PlanDetailSheet extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(Space.gutter, Space.md, Space.gutter, Space.md),
             child: Row(
               children: [
+                if (plan.isEditable) ...[
+                  IconButton.outlined(
+                    tooltip: l10n.planDelete,
+                    style: IconButton.styleFrom(
+                      foregroundColor: p.danger,
+                      side: BorderSide(color: p.danger.withValues(alpha: 0.4)),
+                      minimumSize: const Size(52, 52),
+                    ),
+                    onPressed: () async {
+                      final nav = Navigator.of(context);
+                      if (await deletePlanWithConfirm(context, ref, plan)) nav.pop();
+                    },
+                    icon: const Icon(Icons.delete_outline_rounded),
+                  ),
+                  const SizedBox(width: Space.sm),
+                ],
                 if (plan.htmlLink != null) ...[
                   Expanded(
                     child: OutlinedButton.icon(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'plan_actions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -55,7 +56,31 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
       child: FadeSlideIn(
         key: ValueKey('${plan.id}-$_month'),
         index: i,
-        child: _PlanCard(plan: plan),
+        // 왼쪽으로 밀면 삭제 (확인 후). 샘플 일정은 밀리지 않는다.
+        child: plan.isEditable
+            ? Dismissible(
+                key: ValueKey('dismiss-${plan.id}'),
+                direction: DismissDirection.endToStart,
+                confirmDismiss: (_) => deletePlanWithConfirm(context, ref, plan),
+                background: Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: Space.xl),
+                  decoration: BoxDecoration(
+                    color: context.palette.dangerSoft,
+                    borderRadius: BorderRadius.circular(Radii.lg),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.delete_outline_rounded, color: context.palette.danger),
+                      const SizedBox(width: Space.xs),
+                      Text(l10n.delete, style: context.textStyles.labelLarge!.copyWith(color: context.palette.danger)),
+                    ],
+                  ),
+                ),
+                child: _PlanCard(plan: plan),
+              )
+            : _PlanCard(plan: plan),
       ),
     );
 

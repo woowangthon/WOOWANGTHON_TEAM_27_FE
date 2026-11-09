@@ -4,10 +4,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/l10n_ext.dart';
 import '../../core/theme.dart';
-import '../../core/toast.dart';
 import '../../core/widgets.dart';
 import '../../core/share.dart';
-import '../../data/calendar_controller.dart';
+import 'event_actions.dart';
 import '../../data/providers.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 import '../weather/weather_chip.dart';
@@ -65,34 +64,10 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
     });
   }
 
-  /// Google 캘린더에 추가. 연결되지 않았다면 Google 권한 창이 열린다.
   Future<void> _addToCalendar() async {
-    final l10n = context.l10n;
-    var title = context.tr(event.title);
-    // 공고: 몇 주짜리 행사가 아니라 마감일 09:00에 1시간짜리 알림.
-    var target = event;
-    if (event.placeless && event.deadline != null) {
-      final d = event.deadline!;
-      target = RadarEvent.fromJson({
-        ...event.toJson(),
-        'start': DateTime(d.year, d.month, d.day, 9).toIso8601String(),
-        'end': DateTime(d.year, d.month, d.day, 10).toIso8601String(),
-      });
-      title = '${l10n.kindDeadline}: $title';
-    }
     setState(() => _adding = true);
-    try {
-      await ref.read(calendarProvider.notifier).addEvent(target, title: title);
-      Toast.show(l10n.addedToCalendar);
-    } catch (e) {
-      final notConfigured = e.toString().contains('not-configured');
-      Toast.show(
-        notConfigured ? l10n.calendarNotConfigured : l10n.calendarAddFailed,
-        type: notConfigured ? ToastType.warning : ToastType.error,
-      );
-    } finally {
-      if (mounted) setState(() => _adding = false);
-    }
+    await addEventToCalendar(context, ref, event);
+    if (mounted) setState(() => _adding = false);
   }
 
   @override

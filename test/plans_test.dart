@@ -179,6 +179,36 @@ void main() {
     expect(find.widgetWithText(FilledButton, 'Edit'), findsOneWidget);
   });
 
+  testWidgets('내 일정: 직접 만든 일정은 상세 창에서 삭제(확인 후), 샘플은 삭제 버튼 없음', (tester) async {
+    await pumpApp(tester, interests: ['ai']);
+    final container = ProviderScope.containerOf(tester.element(find.byType(Scaffold).first));
+    await container.read(plansProvider.notifier).saveLocal(
+      Plan(
+        id: 'mine',
+        title: 'Study group',
+        start: DateTime(2026, 11, 7, 15),
+        end: DateTime(2026, 11, 7, 17),
+        locationText: '',
+        city: '',
+      ),
+    );
+    await tester.tap(find.byIcon(Icons.event_note_outlined).last);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Study group'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Delete plan'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Delete'));
+    await tester.pumpAndSettle();
+    expect(find.text('Study group'), findsNothing);
+    expect(container.read(plansProvider).any((p) => p.id == 'mine'), isFalse);
+
+    await tester.tap(find.text('Busan trip'));
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('Delete plan'), findsNothing); // 샘플
+  });
+
   testWidgets('내 일정: 월간 보기 — 날짜를 고르면 그날의 일정', (tester) async {
     await pumpApp(tester, interests: ['ai']);
     await tester.tap(find.byIcon(Icons.event_note_outlined).last);
