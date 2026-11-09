@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:liferadar_core/liferadar_core.dart';
 import '../services/google_api.dart';
@@ -300,4 +301,10 @@ ForecastKey forecastKey(GeoPoint p, String lang) =>
 /// 10일 예보 — Riverpod이 캐시한다 (장소당 한 번 요청).
 final forecastProvider = FutureProvider.family<List<DailyWeather>, ForecastKey>((ref, k) {
   return ref.read(googleApiProvider).dailyForecast(GeoPoint(k.lat, k.lng), lang: k.lang);
+});
+
+/// 앱 버전 "1.0.0 (2)" — pubspec.yaml의 version.
+final appVersionProvider = FutureProvider<String>((ref) async {
+  final info = await PackageInfo.fromPlatform();
+  return info.buildNumber.isEmpty ? info.version : '${info.version} (${info.buildNumber})';
 });

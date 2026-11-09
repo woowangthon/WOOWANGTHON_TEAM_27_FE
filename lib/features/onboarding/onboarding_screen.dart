@@ -151,7 +151,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     InterestChip(
                       label: context.tr(s.label),
                       icon: lifeStageIcon(s),
-                      hue: Hue.teal,
+                      hue: Hue.indigo,
                       selected: _stage == s,
                       onTap: () => setState(() => _stage = _stage == s ? null : s),
                     ),

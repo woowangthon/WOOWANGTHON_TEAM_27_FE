@@ -5,9 +5,12 @@ import 'package:liferadar_core/liferadar_core.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 // LifeRadar design system
 //
-// 스타일: Minimal / Swiss — 차분한 중립 표면, 주 색상 하나(teal),
-// 강조색은 경고와 마감에만 사용. 모든 컴포넌트는 이
-// 토큰만 사용하며 화면 코드에 hex 값을 직접 쓰지 않는다.
+// 브랜드: primary #5865F2 (blurple) · secondary #23272A · neutral #FFFFFF.
+// 스타일: 차분한 중립 표면 + 주 색상 하나. 강조색(amber)은 경고와 마감에만.
+// 다크 모드: 순수 검정·순수 흰색을 쓰지 않고(눈부심·번짐 방지), 표면은 secondary #23272A 계열,
+// 주 색상은 한 단계 밝고 채도를 낮춘 #8E96F8 + 어두운 글자 (Material 3 방식, 대비 ≥ 4.5:1).
+// 그라데이션은 brand → violet 두 색만, 넓은 배경의 은은한 빛과 브랜드 글자에만 쓴다.
+// 모든 컴포넌트는 이 토큰만 사용하며 화면 코드에 hex 값을 직접 쓰지 않는다.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// 간격 — 4/8dp 리듬.
@@ -55,6 +58,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
     required this.textMuted,
     required this.primary,
     required this.primarySoft,
+    required this.primaryStrong,
+    required this.primaryAlt,
     required this.onPrimary,
     required this.accent,
     required this.accentSoft,
@@ -69,6 +74,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
   final Color text, textMuted;
   final Color primary, primarySoft, onPrimary;
 
+  /// 연한 primary 배경(선택된 칩·세그먼트) 위의 글자 — 작은 글자도 대비 ≥ 4.5:1.
+  final Color primaryStrong;
+
+  /// 그라데이션 짝 (violet). 브랜드 글자·배경 빛에만.
+  final Color primaryAlt;
+
   /// 경고 / 마감 (amber).
   final Color accent, accentSoft;
   final Color danger, dangerSoft;
@@ -76,41 +87,52 @@ class AppPalette extends ThemeExtension<AppPalette> {
   final Color skeleton;
 
   static const light = AppPalette(
-    background: Color(0xFFF6F8F9),
+    background: Color(0xFFF5F6FA),
     surface: Color(0xFFFFFFFF),
-    surfaceAlt: Color(0xFFEEF2F4),
-    border: Color(0xFFE2E8EC),
-    text: Color(0xFF0F172A),
-    textMuted: Color(0xFF586878), // 흰색 위 ≈ 5.7:1
-    primary: Color(0xFF0F766E), // 흰색 위 ≈ 5.4:1
-    primarySoft: Color(0xFFE3F2EF),
+    surfaceAlt: Color(0xFFEEF0F6),
+    border: Color(0xFFE2E4EC),
+    text: Color(0xFF23272A), // secondary — 흰색 위 15:1
+    textMuted: Color(0xFF5B616E), // 흰색 위 6.2:1
+    primary: Color(0xFF5865F2), // 흰색 위 4.6:1
+    primarySoft: Color(0xFFEBEDFE),
+    primaryStrong: Color(0xFF4752C4), // primarySoft 위 ≥ 6:1
+    primaryAlt: Color(0xFF8B5CF6),
     onPrimary: Color(0xFFFFFFFF),
     accent: Color(0xFFB45309),
     accentSoft: Color(0xFFFEF3C7),
-    danger: Color(0xFFDC2626),
-    dangerSoft: Color(0xFFFEE2E2),
-    info: Color(0xFF1D4ED8),
-    infoSoft: Color(0xFFE0E9FF),
-    skeleton: Color(0xFFE6EBEE),
+    danger: Color(0xFFD83C3E),
+    dangerSoft: Color(0xFFFDECEC),
+    info: Color(0xFF0E7490),
+    infoSoft: Color(0xFFE0F4F7),
+    skeleton: Color(0xFFE7E9F0),
   );
 
   static const dark = AppPalette(
-    background: Color(0xFF0B1215),
-    surface: Color(0xFF121B1F),
-    surfaceAlt: Color(0xFF19242A),
-    border: Color(0xFF243239),
-    text: Color(0xFFE6EDF0),
-    textMuted: Color(0xFF9AABB6), // surface 위 ≈ 7:1
-    primary: Color(0xFF2DD4BF),
-    primarySoft: Color(0xFF123230),
-    onPrimary: Color(0xFF04201D),
-    accent: Color(0xFFFBBF24),
-    accentSoft: Color(0xFF33270B),
-    danger: Color(0xFFF87171),
-    dangerSoft: Color(0xFF3A1717),
-    info: Color(0xFF93B4FD),
-    infoSoft: Color(0xFF172443),
-    skeleton: Color(0xFF1E2A30),
+    background: Color(0xFF1A1B1F),
+    surface: Color(0xFF23272A), // secondary
+    surfaceAlt: Color(0xFF2C3035),
+    border: Color(0xFF363A40),
+    text: Color(0xFFE4E6EB), // 순수 흰색 대신 — surface 위 12:1
+    textMuted: Color(0xFFA2A7B1), // surface 위 6.2:1
+    primary: Color(0xFF8E96F8), // surface 위 5.6:1
+    primarySoft: Color(0xFF2B2F55),
+    primaryStrong: Color(0xFF8E96F8),
+    primaryAlt: Color(0xFFB49AF7),
+    onPrimary: Color(0xFF12153A), // primary 위 6.6:1
+    accent: Color(0xFFF2B544),
+    accentSoft: Color(0xFF3A2F17),
+    danger: Color(0xFFF07A7D),
+    dangerSoft: Color(0xFF3D2124),
+    info: Color(0xFF5FC4D4),
+    infoSoft: Color(0xFF17343A),
+    skeleton: Color(0xFF2A2E33),
+  );
+
+  /// 브랜드 그라데이션 (blurple → violet).
+  LinearGradient get brandGradient => LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [primary, primaryAlt],
   );
 
   @override
@@ -129,6 +151,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
       textMuted: l(textMuted, other.textMuted),
       primary: l(primary, other.primary),
       primarySoft: l(primarySoft, other.primarySoft),
+      primaryStrong: l(primaryStrong, other.primaryStrong),
+      primaryAlt: l(primaryAlt, other.primaryAlt),
       onPrimary: l(onPrimary, other.onPrimary),
       accent: l(accent, other.accent),
       accentSoft: l(accentSoft, other.accentSoft),
@@ -148,10 +172,10 @@ extension PaletteX on BuildContext {
 
 /// 지도 마커 — 두 테마 모두에서 지도 타일 위에 잘 보이는 차분한 색.
 abstract final class AppColors {
-  static const brand = Color(0xFF0F766E);
-  static const plan = Color(0xFF0F766E);
-  static const recommended = Color(0xFFD97706);
-  static const route = Color(0xFF2563EB);
+  static const brand = Color(0xFF5865F2);
+  static const plan = Color(0xFF5865F2);
+  static const recommended = Color(0xFFE8890C);
+  static const route = Color(0xFF0D9488);
 }
 
 const appFontFamily = 'LifeRadarSans';
@@ -163,8 +187,8 @@ ThemeData buildTheme(Brightness brightness) {
     primary: p.primary,
     onPrimary: p.onPrimary,
     primaryContainer: p.primarySoft,
-    onPrimaryContainer: p.primary,
-    secondary: p.primary,
+    onPrimaryContainer: p.primaryStrong,
+    secondary: p.primaryAlt,
     onSecondary: p.onPrimary,
     secondaryContainer: p.surfaceAlt,
     onSecondaryContainer: p.text,
@@ -307,10 +331,14 @@ ThemeData buildTheme(Brightness brightness) {
       selectedColor: p.primarySoft,
       disabledColor: p.surfaceAlt,
       checkmarkColor: p.primary,
-      side: BorderSide(color: p.border),
+      side: WidgetStateBorderSide.resolveWith(
+        (s) => BorderSide(color: s.contains(WidgetState.selected) ? p.primary.withValues(alpha: 0.45) : p.border),
+      ),
       shape: rounded(Radii.md),
-      labelStyle: text.bodyMedium!.copyWith(fontWeight: FontWeight.w500),
-      secondaryLabelStyle: text.bodyMedium!.copyWith(fontWeight: FontWeight.w600, color: p.primary),
+      // 상태별 글자 스타일(WidgetStateTextStyle)은 칩 폭 계산과 어긋나 글자가 잘렸다 → 한 가지 스타일.
+      // 선택 상태는 배경(primarySoft)과 테두리로 구분한다.
+      labelStyle: text.bodyMedium!.copyWith(fontWeight: FontWeight.w500, color: p.text),
+      secondaryLabelStyle: text.bodyMedium!.copyWith(fontWeight: FontWeight.w600, color: p.primaryStrong),
       padding: const EdgeInsets.symmetric(horizontal: Space.sm, vertical: Space.sm),
       iconTheme: IconThemeData(size: 18, color: p.textMuted),
       showCheckmark: false,
@@ -324,7 +352,7 @@ ThemeData buildTheme(Brightness brightness) {
           (s) => s.contains(WidgetState.selected) ? p.primarySoft : p.surface,
         ),
         foregroundColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected) ? p.primary : p.textMuted,
+          (s) => s.contains(WidgetState.selected) ? p.primaryStrong : p.textMuted,
         ),
         textStyle: WidgetStatePropertyAll(text.labelMedium!.copyWith(fontSize: 13)),
       ),

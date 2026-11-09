@@ -194,7 +194,8 @@ class ProfileScreen extends ConsumerWidget {
                 ListTile(
                   leading: const Icon(Icons.info_outline_rounded),
                   title: Text(l10n.version),
-                  trailing: Text('0.1.0 · MVP', style: t.bodySmall),
+                  // pubspec.yaml의 version을 그대로 보여준다 (빌드마다 손으로 고치지 않게).
+                  trailing: Text(ref.watch(appVersionProvider).value ?? '', style: t.bodySmall),
                 ),
                 // 계정 삭제 — 실수로 누르지 않도록 일부러 안쪽에 (별도 페이지 + 확인).
                 ListTile(
