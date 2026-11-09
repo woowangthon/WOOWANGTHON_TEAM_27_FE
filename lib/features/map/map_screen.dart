@@ -10,6 +10,7 @@ import '../../core/theme.dart';
 import '../../data/providers.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 import '../event/event_detail_sheet.dart';
+import '../plans/plan_detail_sheet.dart';
 import '../route/route_controller.dart';
 import '../route/route_panel.dart';
 import '../../core/map_theme/map_theme.dart';
@@ -47,6 +48,18 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   /// 경로 기회 Poi → opportunity (누르면 우회 정보 표시용).
   final Map<String, RouteOpportunity> _routeOppByEventId = {};
 
+  /// 경로 기회 Poi (행사 id별) — 경로 필터에 맞지 않는 것은 숨긴다.
+  final Map<String, km.Poi> _routeOppPois = {};
+
+  /// 경로 패널 접힘 상태 — 지도를 누르면 패널을 내려 지도를 넓게 본다.
+  final _panelCollapsed = ValueNotifier(false);
+
+  @override
+  void dispose() {
+    _panelCollapsed.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -70,6 +83,11 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       if (prev?.route != next.route || prev?.opportunities != next.opportunities) {
         _drawRoute(next, fit: prev?.route != next.route);
       }
+      if (next.route != null && prev?.route != next.route) _panelCollapsed.value = false;
+    });
+
+    ref.listen<String?>(routeFilterProvider, (_, _) {
+      _drawing = _drawing.then((_) => _applyRouteFilter()).catchError((_) {});
     });
 
     final p = context.palette;
@@ -164,7 +182,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               left: Space.md,
               right: Space.md,
               bottom: Space.md + MediaQuery.paddingOf(context).bottom,
-              child: RoutePanel(onOpportunityTap: _openOpportunity),
+              child: RoutePanel(onOpportunityTap: _openOpportunity, collapsed: _panelCollapsed),
             ),
         ],
       ),
@@ -238,8 +256,15 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     return km.KakaoMap(
       option: const km.KakaoMapOption(position: _seoul, zoomLevel: 7),
       onMapReady: _onMapReady,
+      // 경로 결과가 있을 때 지도를 누르면 패널을 내린다.
+      onMapClick: (_, _) => _collapsePanel(),
+      onTerrainClick: (_, _) => _collapsePanel(),
       onMapError: (e) => setState(() => _mapError = e.toString()),
     );
+  }
+
+  void _collapsePanel() {
+    if (_mode == MapMode.route && ref.read(routeProvider).route != null) _panelCollapsed.value = true;
   }
 
   /// 레이어 켜기/끄기 — 떠 있는 작은 "pill".
@@ -340,6 +365,10 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           text: p.title,
           rank: 10, // 일정을 행사 마커 위에
           visible: _layers.contains(MapLayer.plans),
+          // 누르면 일정 상세 (수정·삭제 포함).
+          onClick: () {
+            if (mounted) showPlanDetail(context, p);
+          },
         ),
       );
     }
@@ -350,6 +379,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     for (final poi in _pois[layer]!) {
       on ? await poi.show() : await poi.hide();
     }
+    if (layer == MapLayer.route && on) await _applyRouteFilter();
     if (layer == MapLayer.route && _routeLine != null) {
       on ? await _routeLine!.show() : await _routeLine!.hide();
     }
@@ -378,6 +408,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     }
     _pois[MapLayer.route]!.clear();
     _routeOppByEventId.clear();
+    _routeOppPois.clear();
 
     final route = s.route;
     if (route == null || route.points.length < 2) return;
@@ -410,24 +441,38 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     }
 
     // 경로 주변의 기회
+    final filter = ref.read(routeFilterProvider);
+    final interests = ref.read(interestsProvider);
     for (final o in s.opportunities) {
       final icon = await MarkerIcons.pin(AppColors.route, categoryIcon(o.event.category), selected: true);
       _routeOppByEventId[o.event.id] = o;
-      _pois[MapLayer.route]!.add(
-        await map.labelLayer.addPoi(
-          _ll(o.event.location),
-          id: 'route-${o.event.id}',
-          style: km.PoiStyle(icon: icon),
-          rank: 20,
-          visible: visible,
-          onClick: () => _openOpportunity(_routeOppByEventId[o.event.id] ?? o),
-        ),
+      final poi = await map.labelLayer.addPoi(
+        _ll(o.event.location),
+        id: 'route-${o.event.id}',
+        style: km.PoiStyle(icon: icon),
+        rank: 20,
+        visible: visible && routeFilterMatches(filter, o.event, interests),
+        onClick: () => _openOpportunity(_routeOppByEventId[o.event.id] ?? o),
       );
+      _pois[MapLayer.route]!.add(poi);
+      _routeOppPois[o.event.id] = poi;
     }
 
     if (fit) {
       final step = (pts.length / 40).ceil().clamp(1, pts.length);
       await _fit([for (var i = 0; i < pts.length; i += step) pts[i], pts.last]);
+    }
+  }
+
+  /// 경로 필터가 바뀌면 경로 주변 행사 마커를 보이기/숨기기.
+  Future<void> _applyRouteFilter() async {
+    final filter = ref.read(routeFilterProvider);
+    final interests = ref.read(interestsProvider);
+    final visible = _layers.contains(MapLayer.route);
+    for (final MapEntry(key: id, value: poi) in _routeOppPois.entries) {
+      final o = _routeOppByEventId[id];
+      final on = visible && o != null && routeFilterMatches(filter, o.event, interests);
+      on ? await poi.show() : await poi.hide();
     }
   }
 

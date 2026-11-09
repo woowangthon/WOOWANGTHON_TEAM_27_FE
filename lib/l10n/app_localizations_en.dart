@@ -568,7 +568,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get categoryPerformance => 'Shows';
+  String get categoryPerformance => 'Theater & musicals';
 
   @override
   String get categoryExhibition => 'Exhibition';
@@ -877,4 +877,66 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get matchesYou => 'Matches your interests';
+
+  @override
+  String get routePanelHint => 'Pull down to see more of the map';
+
+  @override
+  String get routePanelExpand => 'Expand route panel';
+
+  @override
+  String get routePanelCollapse => 'Lower route panel';
+
+  @override
+  String get filterMine => 'My interests';
+
+  @override
+  String get discoverSearchHint => 'Search events or places';
+
+  @override
+  String get filterPeriod => 'When';
+
+  @override
+  String get filterAnyTime => 'Any time';
+
+  @override
+  String get periodToday => 'Today';
+
+  @override
+  String get periodWeekend => 'This weekend';
+
+  @override
+  String get periodWeek => 'Next 7 days';
+
+  @override
+  String get periodMonth => 'Next month';
+
+  @override
+  String get filterRegion => 'Region';
+
+  @override
+  String get filterAllRegions => 'All regions';
+
+  @override
+  String get sortMatch => 'Best match';
+
+  @override
+  String get sortSoon => 'Soonest';
+
+  @override
+  String get discoverPicks => 'Picked for your interests';
+
+  @override
+  String discoverResults(int count) {
+    return '$count events';
+  }
+
+  @override
+  String get filterReset => 'Reset';
+
+  @override
+  String get discoverNoResults => 'No events match these filters';
+
+  @override
+  String get routeEdit => 'Edit';
 }

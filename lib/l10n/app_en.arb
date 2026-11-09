@@ -311,7 +311,7 @@
       }
     }
   },
-  "categoryPerformance": "Shows",
+  "categoryPerformance": "Theater & musicals",
   "categoryExhibition": "Exhibition",
   "categoryClasses": "Classes",
   "free": "Free",
@@ -461,5 +461,26 @@
   "eventPrice": "Price",
   "applicationLabel": "Applications",
   "organizer": "Organizer",
-  "matchesYou": "Matches your interests"
+  "matchesYou": "Matches your interests",
+  "routePanelHint": "Pull down to see more of the map",
+  "routePanelExpand": "Expand route panel",
+  "routePanelCollapse": "Lower route panel",
+  "filterMine": "My interests",
+  "discoverSearchHint": "Search events or places",
+  "filterPeriod": "When",
+  "filterAnyTime": "Any time",
+  "periodToday": "Today",
+  "periodWeekend": "This weekend",
+  "periodWeek": "Next 7 days",
+  "periodMonth": "Next month",
+  "filterRegion": "Region",
+  "filterAllRegions": "All regions",
+  "sortMatch": "Best match",
+  "sortSoon": "Soonest",
+  "discoverPicks": "Picked for your interests",
+  "discoverResults": "{count} events",
+  "@discoverResults": {"placeholders": {"count": {"type": "int"}}},
+  "filterReset": "Reset",
+  "discoverNoResults": "No events match these filters",
+  "routeEdit": "Edit"
 }

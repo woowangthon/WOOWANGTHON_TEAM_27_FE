@@ -426,7 +426,8 @@ class InterestChip extends StatelessWidget {
         borderRadius: radius,
         border: Border.all(
           color: selected ? fg.withValues(alpha: 0.55) : p.border,
-          width: selected && onTap != null ? 1.5 : 1,
+          // 선택 여부와 관계없이 같은 두께 — 선택해도 칩 크기·줄바꿈이 바뀌지 않는다.
+          width: onTap != null ? 1.5 : 1,
         ),
       ),
       child: Row(
@@ -446,16 +447,6 @@ class InterestChip extends StatelessWidget {
               ),
             ),
           ),
-          if (onTap != null)
-            SmoothSize(
-              duration: Motion.fast,
-              child: selected
-                  ? Padding(
-                      padding: const EdgeInsets.only(left: 6),
-                      child: Icon(Icons.check_rounded, size: 18, color: fg),
-                    )
-                  : const SizedBox.shrink(),
-            ),
         ],
       ),
     );
