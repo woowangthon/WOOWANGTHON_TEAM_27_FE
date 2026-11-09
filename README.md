@@ -7,18 +7,12 @@
 **LifeRadar는 내 캘린더 일정과 관심사를 실제 행사·공식 교통 통제·날씨와 연결해, 묻기 전에 "이건 당신에게 중요해요, 이유는 이거예요"라고 알려주는 앱입니다.** 갈지, 캘린더에 넣을지는 사용자가 결정합니다.
 
 <p align="center">
-  <img src="docs/images/home.png" width="190" alt="홈 — 일정과 연결된 신호 카드">
-  <img src="docs/images/assistant-answer.png" width="190" alt="AI 비서 — 실제 행사 후보 안에서 답하고 [추가]/[취소]">
-  <img src="docs/images/about-me.png" width="190" alt="AI에게 나를 소개하기 — 근거 문구와 함께 제안">
-  <img src="docs/images/route-results.png" width="190" alt="경로 주변 기회 — 추가 km·분">
+  <img src="docs/images/phone/home.jpg" height="400" alt="홈 — 일정과 연결된 신호 카드">
+  <img src="docs/images/phone/assistant-answer.jpg" height="400" alt="AI 비서 — 실제 행사 후보 안에서 답하고 [추가]/[취소]">
+  <img src="docs/images/about-me.png" height="400" alt="AI에게 나를 소개하기 — 근거 문구와 함께 제안">
+  <img src="docs/images/phone/route-results.jpg" height="400" alt="경로 주변 기회 — 추가 km·분, 관심사 필터">
 </p>
-<p align="center">
-  <img src="docs/images/discover.png" width="150" alt="발견 — 필터와 관심사 맞춤 포스터">
-  <img src="docs/images/event-detail.png" width="150" alt="상세 — 날씨·신뢰도·공유">
-  <img src="docs/images/plans-month.png" width="150" alt="내 일정 — 월간 달력">
-  <img src="docs/images/route-map.png" width="150" alt="경로 지도 — 패널을 내린 모습">
-  <img src="docs/images/home-dark.png" width="150" alt="다크 모드">
-</p>
+<p align="center"><sub>Android 실기기 화면 (2026-11-10) · 나를 소개하기는 웹 화면</sub></p>
 
 ## 1. 문제
 
@@ -144,6 +138,18 @@ flowchart LR
   CARDS -->|사실만| GEM["Gemini"] -->|검증 통과 문장| CARDS
   FE --> EXT["Google Calendar · Routes · Weather<br/>Kakao Maps · Local · Mobility"]
 ```
+
+## 화면 (Android 실기기, 2026-11-10)
+
+| 첫 실행 | 로그인 | 관심사·상황 | 홈 (다크) |
+|---|---|---|---|
+| <img src="docs/images/phone/welcome-theme.jpg" width="180"> | <img src="docs/images/phone/login.jpg" width="180"> | <img src="docs/images/phone/onboarding.jpg" width="180"> | <img src="docs/images/phone/home-dark.jpg" width="180"> |
+| **AI 비서** | **AI 답 (다크)** | **발견** | **지도** |
+| <img src="docs/images/phone/assistant.jpg" width="180"> | <img src="docs/images/phone/assistant-answer-dark.jpg" width="180"> | <img src="docs/images/phone/discover.jpg" width="180"> | <img src="docs/images/phone/map-explore.jpg" width="180"> |
+| **경로 (패널 내림)** | **내 일정** | **새 일정** | **프로필** |
+| <img src="docs/images/phone/route-map.jpg" width="180"> | <img src="docs/images/phone/plans.jpg" width="180"> | <img src="docs/images/phone/plan-new.jpg" width="180"> | <img src="docs/images/phone/profile.jpg" width="180"> |
+
+더 많은 화면과 사용법: [사용자 가이드](docs/USER_GUIDE.md)
 
 ## 8. 실행
 

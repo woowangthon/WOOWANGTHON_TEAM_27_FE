@@ -17,7 +17,8 @@ LifeRadar는 여러분의 일정과 관심사를 바탕으로 **가는 길과 �
 
 ## 처음 시작하기 — 언어와 테마
 
-<img src="images/welcome.png" width="240" align="right" alt="언어 선택">
+<img src="images/phone/welcome-language.jpg" width="200" align="right" alt="언어 선택">
+<img src="images/phone/welcome-theme.jpg" width="200" align="right" alt="테마 선택">
 
 앱을 처음 설치하면 두 가지만 먼저 골라요.
 
@@ -32,7 +33,7 @@ LifeRadar는 여러분의 일정과 관심사를 바탕으로 **가는 길과 �
 
 ## 로그인
 
-<img src="images/login.png" width="240" align="right" alt="로그인">
+<img src="images/phone/login.jpg" width="240" align="right" alt="로그인">
 
 - **Google로 계속하기** — Google 계정으로 바로 시작해요. 따로 회원가입할 필요가 없어요. (이름·이메일·프로필 사진만 프로필에 보여요.)
 - **게스트로 둘러보기** — 로그인 없이 모든 기능을 둘러볼 수 있어요. 나중에 프로필에서 로그인할 수 있어요.
@@ -53,8 +54,8 @@ LifeRadar는 여러분의 일정과 관심사를 바탕으로 **가는 길과 �
 ## 관심사 고르기
 
 <p>
-  <img src="images/onboarding.png" width="200" alt="관심사와 지금 상황 선택">
-  <img src="images/about-me.png" width="200" alt="AI에게 나를 소개하기 — 근거와 함께 제안">
+  <img src="images/phone/onboarding.jpg" height="440" alt="관심사와 지금 상황 선택">
+  <img src="images/about-me.png" height="440" alt="AI에게 나를 소개하기 — 근거와 함께 제안">
 </p>
 
 앱을 처음 열면 **"어떤 분야에 관심 있으세요?"** 화면이 나와요.
@@ -89,7 +90,7 @@ LifeRadar는 여러분의 일정과 관심사를 바탕으로 **가는 길과 �
 
 ## 1. 홈 — 나를 위한 신호
 
-<img src="images/home.png" width="240" align="right" alt="홈 화면">
+<img src="images/phone/home.jpg" width="240" align="right" alt="홈 화면">
 
 홈에는 LifeRadar가 찾아낸 **신호 카드**가 있어요. 한눈에 읽히도록 꼭 필요한 것만 보여줘요.
 
@@ -116,8 +117,9 @@ LifeRadar는 여러분의 일정과 관심사를 바탕으로 **가는 길과 �
 ### ✨ AI 비서 — 물어보면 찾아서 제안해요
 
 <p>
-  <img src="images/assistant.png" width="200" alt="AI 비서 첫 화면">
-  <img src="images/assistant-answer.png" width="200" alt="AI 비서 답변과 제안">
+  <img src="images/phone/assistant.jpg" width="200" alt="AI 비서 첫 화면">
+  <img src="images/phone/assistant-answer.jpg" width="200" alt="AI 비서 답변과 제안">
+  <img src="images/phone/assistant-answer-dark.jpg" width="200" alt="AI 비서 다크 모드">
 </p>
 
 홈 오른쪽 위 **✨ AI 비서** 버튼을 누르면 대화 화면이 열려요.
@@ -131,7 +133,7 @@ LifeRadar는 여러분의 일정과 관심사를 바탕으로 **가는 길과 �
 
 ## 2. 내 일정 — Google 캘린더 연결하기
 
-<img src="images/plans.png" width="240" align="right" alt="내 일정 화면">
+<img src="images/phone/plans.jpg" width="240" align="right" alt="내 일정 화면">
 
 1. **📅 내 일정** 탭에서 **Google 캘린더 연결**을 누르세요.
 2. Google 로그인 창에서 계정을 선택하세요.
@@ -161,6 +163,8 @@ LifeRadar는 여러분의 일정과 관심사를 바탕으로 **가는 길과 �
 
 ### 일정 직접 추가·수정하기
 
+<img src="images/phone/plan-new.jpg" width="240" align="right" alt="새 일정">
+
 - 오른쪽 아래 **＋ 새 일정**을 누르면 제목, 날짜·시간(종일 가능), 장소, 메모를 적을 수 있어요.
 - 장소는 검색해서 고르면 지도에 표시되고, 그날 날씨와 주변 신호도 함께 보여요.
 - 일정 상세의 **수정**에서 내용을 바꾸거나 🗑 **삭제**할 수 있어요.
@@ -169,6 +173,12 @@ LifeRadar는 여러분의 일정과 관심사를 바탕으로 **가는 길과 �
 
 - **동기화** — 캘린더를 바꿨다면 눌러서 새로 불러와요
 - **연결 해제** — 언제든 연결을 끊을 수 있어요
+
+<br clear="right"/>
+
+<img src="images/phone/plans-calendar.jpg" width="240" align="right" alt="캘린더 연결 후">
+
+캘린더를 연결하면 위쪽에 **Google 캘린더 · 예정 일정 N개** 줄이 생기고, ↗ 로 Google 캘린더를 열 수 있어요. 일정이 없으면 **＋ 새 일정**으로 바로 만들 수 있어요.
 
 > 💡 일정에 **장소**(예: "부산역", "강남역", "BEXCO")를 적어 두면 LifeRadar가 지도에 표시하고 주변 정보를 찾을 수 있어요.
 
@@ -181,7 +191,7 @@ LifeRadar는 여러분의 일정과 관심사를 바탕으로 **가는 길과 �
 
 ## 3. 지도 — 내 주변과 가는 길 살펴보기
 
-<img src="images/map-explore.png" width="240" align="right" alt="지도 화면">
+<img src="images/phone/map-explore.jpg" width="240" align="right" alt="지도 화면">
 
 지도 위쪽에서 **보기 모드**를 고를 수 있어요.
 
@@ -204,7 +214,7 @@ LifeRadar는 여러분의 일정과 관심사를 바탕으로 **가는 길과 �
 
 ## 4. 경로 — 가는 길에 들를 만한 기회 찾기
 
-<img src="images/route-results.png" width="240" align="right" alt="경로 결과">
+<img src="images/phone/route-results.jpg" width="240" align="right" alt="경로 결과 — 충북대 → 서울대, 자동차">
 
 다른 도시로 가는 날, 가는 길 근처에서 열리는 행사를 찾아줘요.
 
@@ -222,7 +232,7 @@ LifeRadar는 여러분의 일정과 관심사를 바탕으로 **가는 길과 �
 
 패널 위의 **손잡이를 아래로 끌거나**, **지도를 누르면** 패널이 내려가 지도를 넓게 볼 수 있어요. 내려간 패널을 누르거나 위로 끌면 다시 펼쳐져요. (처음 한 번은 움직이는 안내가 나와요.)
 
-<img src="images/route-map.png" width="240" align="right" alt="패널을 내린 경로 지도">
+<img src="images/phone/route-map.jpg" width="240" align="right" alt="패널을 내린 경로 지도">
 
 > 🚆 vs 🚗 — 같은 서울→부산이라도 KTX는 대전을 지나고, 고속도로는 대전을 지나지 않아요.
 > 그래서 **이동 수단에 따라 추천이 달라져요.**
@@ -252,7 +262,7 @@ LifeRadar는 여러분의 일정과 관심사를 바탕으로 **가는 길과 �
 
 ## 6. 발견 — 관심 있는 행사 둘러보기
 
-<img src="images/discover.png" width="240" align="right" alt="발견 화면">
+<img src="images/phone/discover.jpg" width="240" align="right" alt="발견 화면">
 
 서울의 **실제 공연·전시·축제·교육 행사**(서울시 공공데이터)와 서울 밖의 **콘서트·연극·뮤지컬·클래식**(KOPIS 공연예술통합전산망)이 관심사와 잘 맞는 순서로 나와요. `무료` 표시가 있는 행사는 무료예요.
 목록이 길면 맨 아래 **더 보기**를 누르세요. 행사를 누르면 포스터, 출연진, 요금과 함께 **출처**가 보이고, **신청** 버튼은 예매·주최 페이지로 연결돼요.
@@ -274,7 +284,7 @@ LifeRadar는 여러분의 일정과 관심사를 바탕으로 **가는 길과 �
 
 ## 7. 프로필 — 설정과 계정
 
-<img src="images/profile.png" width="240" align="right" alt="프로필">
+<img src="images/phone/profile.jpg" width="240" align="right" alt="프로필">
 
 - **내 관심사** — 선택한 개수만 보여요. **수정**을 누르면 전체 목록이 열려요 (관심사 변경은 프로필에서만)
 - **연결된 서비스** — Google 캘린더 연결/해제
