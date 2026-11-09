@@ -302,7 +302,7 @@ class _GuestButtonState extends State<_GuestButton> {
   }
 }
 
-/// 그라데이션 브랜드 이름 (teal → 파랑).
+/// 그라데이션 브랜드 이름 (blurple → violet).
 class _GradientText extends StatelessWidget {
   const _GradientText(this.text, {required this.style});
   final String text;
@@ -311,10 +311,9 @@ class _GradientText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
-    final (sky, _) = Hue.sky.of(context);
     return ShaderMask(
       blendMode: BlendMode.srcIn,
-      shaderCallback: (r) => LinearGradient(colors: [p.primary, sky]).createShader(r),
+      shaderCallback: (r) => LinearGradient(colors: [p.primary, p.primaryAlt]).createShader(r),
       child: Text(text, style: style),
     );
   }
@@ -407,7 +406,7 @@ class _AuroraState extends State<_Aurora> with SingleTickerProviderStateMixin {
     final p = context.palette;
     final dark = Theme.of(context).brightness == Brightness.dark;
     final (sky, _) = Hue.sky.of(context);
-    final (violet, _) = Hue.violet.of(context);
+
     return RepaintBoundary(
       child: AnimatedBuilder(
         animation: _c,
@@ -415,7 +414,8 @@ class _AuroraState extends State<_Aurora> with SingleTickerProviderStateMixin {
           painter: _AuroraPainter(
             t: _c.value,
             background: p.background,
-            blobs: [(p.primary, dark ? 0.30 : 0.22), (sky, dark ? 0.22 : 0.16), (violet, dark ? 0.16 : 0.10)],
+            // 은은하게: 다크에서도 눈부시지 않도록 낮은 투명도.
+            blobs: [(p.primary, dark ? 0.20 : 0.18), (p.primaryAlt, dark ? 0.14 : 0.12), (sky, dark ? 0.08 : 0.08)],
           ),
         ),
       ),

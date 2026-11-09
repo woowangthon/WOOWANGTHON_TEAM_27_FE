@@ -127,7 +127,7 @@ class GlassTabBar extends StatelessWidget {
                   height: height,
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    color: (dark ? const Color(0xFF1B2327) : Colors.white).withValues(alpha: dark ? 0.60 : 0.68),
+                    color: (dark ? const Color(0xFF23272A) : Colors.white).withValues(alpha: dark ? 0.60 : 0.68),
                     borderRadius: BorderRadius.circular(999),
                     // 유리 가장자리 — 밝고 얇은 선.
                     border: Border.all(color: Colors.white.withValues(alpha: dark ? 0.12 : 0.7)),
@@ -218,7 +218,7 @@ class _TabItem extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFEF4444),
+                        color: const Color(0xFFED4245),
                         borderRadius: BorderRadius.circular(999),
                         border: Border.all(color: p.surface, width: 1.5),
                       ),

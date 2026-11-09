@@ -248,7 +248,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
                 itemCount: picks.length,
                 separatorBuilder: (_, _) => const SizedBox(width: Space.md),
-                itemBuilder: (_, i) => _PosterCard(picks[i]),
+                itemBuilder: (_, i) => Pressable(child: _PosterCard(picks[i])),
               ),
             ),
           ],
@@ -288,7 +288,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                 child: FadeSlideIn(
                   key: ValueKey(events[i].id),
                   index: i % _pageSize,
-                  child: EventCard(event: events[i], interests: interests),
+                  child: Pressable(child: EventCard(event: events[i], interests: interests)),
                 ),
               ),
           if (events.length > _limit)

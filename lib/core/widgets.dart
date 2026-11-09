@@ -310,17 +310,18 @@ class AppAvatar extends StatelessWidget {
     final initials = (name ?? '').trim().isEmpty ? null : name!.trim().characters.first.toUpperCase();
     final fallback = Center(
       child: initials == null
-          ? Icon(Icons.person_outline, size: size * 0.5, color: p.primary)
+          ? Icon(Icons.person_outline, size: size * 0.5, color: p.onPrimary)
           : Text(
               initials,
-              style: context.textStyles.titleMedium!.copyWith(color: p.primary, fontSize: size * 0.4),
+              style: context.textStyles.titleMedium!.copyWith(color: p.onPrimary, fontSize: size * 0.4),
             ),
     );
+    // 사진이 없으면 브랜드 그라데이션 원 + 이니셜.
     return Container(
       width: size,
       height: size,
       clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(color: p.primarySoft, shape: BoxShape.circle),
+      decoration: BoxDecoration(gradient: p.brandGradient, shape: BoxShape.circle),
       child: photoUrl == null
           ? fallback
           : Image.network(photoUrl!, fit: BoxFit.cover, errorBuilder: (_, _, _) => fallback),
@@ -348,7 +349,7 @@ class GroupCard extends StatelessWidget {
 
 // ───────────────────────────── 동작 ─────────────────────────────
 
-/// 목록 항목의 부드러운 등장: 투명도 + 8px 위로 이동, [index]에 따라 지연.
+/// 목록 항목의 부드러운 등장: 투명도 + 12px 위로 + 98.5%→100% 크기, [index]에 따라 지연.
 class FadeSlideIn extends StatefulWidget {
   const FadeSlideIn({super.key, required this.child, this.index = 0});
   final Widget child;
@@ -387,9 +388,85 @@ class _FadeSlideInState extends State<FadeSlideIn> with SingleTickerProviderStat
     child: AnimatedBuilder(
       animation: _a,
       child: widget.child,
-      builder: (_, child) => Transform.translate(offset: Offset(0, 8 * (1 - _a.value)), child: child),
+      builder: (_, child) => Transform.translate(
+        offset: Offset(0, 12 * (1 - _a.value)),
+        child: Transform.scale(scale: 0.985 + 0.015 * _a.value, child: child),
+      ),
     ),
   );
+}
+
+/// 누르는 동안 살짝 작아지는 카드 반응 (탭 제스처는 가로채지 않는다).
+class Pressable extends StatefulWidget {
+  const Pressable({super.key, required this.child, this.scale = 0.98});
+  final Widget child;
+  final double scale;
+
+  @override
+  State<Pressable> createState() => _PressableState();
+}
+
+class _PressableState extends State<Pressable> {
+  bool _down = false;
+
+  void _set(bool v) {
+    if (_down != v) setState(() => _down = v);
+  }
+
+  @override
+  Widget build(BuildContext context) => Listener(
+    onPointerDown: (_) => _set(true),
+    onPointerUp: (_) => _set(false),
+    onPointerCancel: (_) => _set(false),
+    child: AnimatedScale(
+      scale: _down ? widget.scale : 1,
+      duration: Motion.of(context, Motion.fast),
+      curve: Curves.easeOutCubic,
+      child: widget.child,
+    ),
+  );
+}
+
+/// 화면 위쪽의 은은한 브랜드 빛 (blurple · violet). 내용 뒤에 깔리며 움직이지 않는다 —
+/// 깊이감만 주고 눈을 끌지 않도록 투명도를 낮게 둔다.
+class AmbientGlow extends StatelessWidget {
+  const AmbientGlow({super.key, this.height = 320});
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    return IgnorePointer(
+      child: SizedBox(
+        height: height,
+        width: double.infinity,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: const Alignment(-0.9, -1.1),
+                  radius: 1.1,
+                  colors: [p.primary.withValues(alpha: dark ? 0.16 : 0.12), p.primary.withValues(alpha: 0)],
+                ),
+              ),
+            ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: const Alignment(1.0, -1.0),
+                  radius: 0.9,
+                  colors: [p.primaryAlt.withValues(alpha: dark ? 0.10 : 0.08), p.primaryAlt.withValues(alpha: 0)],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 /// 색상 관심사 칩. [onTap]이 있으면 선택 가능(온보딩), 없으면 정적 표시.
@@ -776,7 +853,7 @@ class GlassSurface extends StatelessWidget {
           child: Container(
             padding: padding,
             decoration: BoxDecoration(
-              color: (dark ? const Color(0xFF1B2327) : Colors.white).withValues(alpha: opacity ?? (dark ? 0.55 : 0.62)),
+              color: (dark ? const Color(0xFF23272A) : Colors.white).withValues(alpha: opacity ?? (dark ? 0.55 : 0.62)),
               borderRadius: br,
               border: Border.all(color: Colors.white.withValues(alpha: dark ? 0.12 : 0.7)),
             ),

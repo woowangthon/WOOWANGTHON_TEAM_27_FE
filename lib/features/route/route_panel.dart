@@ -140,7 +140,12 @@ class _RoutePanelState extends ConsumerState<RoutePanel> with SingleTickerProvid
       for (final o in opps)
         if (routeFilterMatches(filter, o.event, interests)) o,
     ];
-    final categories = opps.map((o) => o.event.category).toSet().toList()..sort((a, b) => a.index.compareTo(b.index));
+    // 내 관심사별 칩: 사용자가 고른 관심사 중 경로 주변 행사에 실제로 있는 것만, 많은 순.
+    final tagCounts = <String, int>{
+      for (final tag in interests)
+        tag: opps.where((o) => o.event.tags.contains(tag)).length,
+    }..removeWhere((_, n) => n == 0);
+    final myTags = tagCounts.keys.toList()..sort((a, b) => tagCounts[b]!.compareTo(tagCounts[a]!));
     final mineCount = opps.where((o) => routeFilterMatches(routeFilterMine, o.event, interests)).length;
     void setFilter(String? f) => ref.read(routeFilterProvider.notifier).set(filter == f ? null : f);
 
@@ -382,14 +387,14 @@ class _RoutePanelState extends ConsumerState<RoutePanel> with SingleTickerProvid
                                     onSelected: (_) => setFilter(routeFilterMine),
                                   ),
                                 ],
-                                if (categories.length > 1)
-                                  for (final cat in categories) ...[
+                                for (final tag in myTags)
+                                  if (interestByTag(tag) case final o?) ...[
                                     const SizedBox(width: Space.sm),
                                     ChoiceChip(
-                                      avatar: Icon(categoryIcon(cat)),
-                                      label: Text(context.categoryLabel(cat)),
-                                      selected: filter == cat.name,
-                                      onSelected: (_) => setFilter(cat.name),
+                                      avatar: Icon(o.icon),
+                                      label: Text('${context.tr(o.label)} ${tagCounts[tag]}'),
+                                      selected: filter == '$routeFilterTagPrefix$tag',
+                                      onSelected: (_) => setFilter('$routeFilterTagPrefix$tag'),
                                     ),
                                   ],
                               ],

@@ -152,11 +152,13 @@ class RouteController extends Notifier<RouteState> {
   }
 }
 
-/// 경로 주변 행사 필터: null = 전체, [routeFilterMine] = 내 관심사와 맞는 행사, 그 밖에는 [EventCategory.name].
+/// 경로 주변 행사 필터: null = 전체, [routeFilterMine] = 내 관심사 중 하나라도 맞는 행사,
+/// `tag:<관심사>` = 그 관심사 하나 (사용자가 고른 관심사가 칩으로 나온다), 그 밖에는 [EventCategory.name].
 /// 패널 목록과 지도 마커가 같은 필터를 쓴다.
 final routeFilterProvider = NotifierProvider<RouteFilterController, String?>(RouteFilterController.new);
 
 const routeFilterMine = 'mine';
+const routeFilterTagPrefix = 'tag:';
 
 class RouteFilterController extends Notifier<String?> {
   @override
@@ -168,5 +170,6 @@ class RouteFilterController extends Notifier<String?> {
 bool routeFilterMatches(String? filter, RadarEvent e, Set<String> interests) => switch (filter) {
   null => true,
   routeFilterMine => e.tags.any(interests.contains),
+  final f when f.startsWith(routeFilterTagPrefix) => e.tags.contains(f.substring(routeFilterTagPrefix.length)),
   final c => e.category.name == c,
 };

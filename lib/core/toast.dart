@@ -8,9 +8,9 @@ import 'theme.dart';
 /// (그래서 "연한 초록" 대신 읽을 수 있는 가장 밝은 초록 green-700).
 enum ToastType {
   success(Color(0xFF15803D)),
-  error(Color(0xFFB91C1C)),
+  error(Color(0xFFC62828)),
   warning(Color(0xFFB45309)),
-  info(Color(0xFF1E293B));
+  info(Color(0xFF23272A));
 
   const ToastType(this.color);
   final Color color;

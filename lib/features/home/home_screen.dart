@@ -99,7 +99,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: FadeSlideIn(
                 key: ValueKey('${_filter.name}-${shown[i].id}'),
                 index: i,
-                child: InsightCard(insight: shown[i]),
+                child: Pressable(child: InsightCard(insight: shown[i])),
               ),
             ),
         ],
@@ -108,7 +108,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final d = Motion.of(context, Motion.normal);
     return Scaffold(
-      body: SafeArea(
+      body: Stack(
+        children: [
+          const AmbientGlow(),
+          SafeArea(
         bottom: false,
         // 옆으로 밀기 — 필터 간 이동 (내 일정 ↔ 전체 ↔ 마감 임박).
         child: GestureDetector(
@@ -203,6 +206,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
         ),
+          ),
+        ],
       ),
     );
   }
@@ -257,7 +262,7 @@ class _FilterHeader extends SliverPersistentHeaderDelegate {
     final k = Curves.easeInOut.transform((shrinkOffset / (_max - _min)).clamp(0.0, 1.0));
     double lerp(double a, double b) => a + (b - a) * k;
     final d = Motion.of(context, const Duration(milliseconds: 380));
-    const red = Color(0xFFEF4444);
+    const red = Color(0xFFED4245);
 
     Widget badge(HomeFilter f, int n, bool on) {
       final urgent = f == HomeFilter.deadlines && n > 0;
