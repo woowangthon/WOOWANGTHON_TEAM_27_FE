@@ -8,9 +8,16 @@
 
 <p align="center">
   <img src="docs/images/home.png" width="190" alt="홈 — 일정과 연결된 신호 카드">
-  <img src="docs/images/discover.png" width="190" alt="발견 — 실제 공공데이터 행사">
-  <img src="docs/images/route-results.png" width="190" alt="경로 주변 기회">
-  <img src="docs/images/event-detail.png" width="190" alt="상세 — 왜 나에게 중요한가">
+  <img src="docs/images/assistant-answer.png" width="190" alt="AI 비서 — 실제 행사 후보 안에서 답하고 [추가]/[취소]">
+  <img src="docs/images/about-me.png" width="190" alt="AI에게 나를 소개하기 — 근거 문구와 함께 제안">
+  <img src="docs/images/route-results.png" width="190" alt="경로 주변 기회 — 추가 km·분">
+</p>
+<p align="center">
+  <img src="docs/images/discover.png" width="150" alt="발견 — 필터와 관심사 맞춤 포스터">
+  <img src="docs/images/event-detail.png" width="150" alt="상세 — 날씨·신뢰도·공유">
+  <img src="docs/images/plans-month.png" width="150" alt="내 일정 — 월간 달력">
+  <img src="docs/images/route-map.png" width="150" alt="경로 지도 — 패널을 내린 모습">
+  <img src="docs/images/home-dark.png" width="150" alt="다크 모드">
 </p>
 
 ## 1. 문제
@@ -23,6 +30,7 @@
 | **기회를 놓친다** | 관심 분야의 세미나·창업 지원 공고는 직접 찾지 않으면 마감이 지난 뒤에야 안다 |
 | **질문해야만 답을 준다** | 검색 엔진·지도·AI 챗봇 모두 "무엇을 물어야 할지" 알아야 쓸 수 있다 |
 | **이동 경로는 고려되지 않는다** | "KTX로 가는 길에 잠깐 들를 만한 행사"를 보여주는 서비스가 없다 |
+| **한국에 사는 외국인에게는 더 어렵다** | 공지는 한국어로, 기관마다 다른 사이트에 있다. 팀원이 유학생으로 직접 겪은 문제 — 행사를 알게 됐을 때는 이미 마감이 지나 있었다 |
 | **AI의 말을 믿기 어렵다** | 생성형 AI는 없는 행사나 틀린 날짜를 그럴듯하게 만들어낸다 |
 
 ## 2. 해결 — "알려주는 것은 AI, 결정은 사람"
@@ -61,21 +69,21 @@
 | **AI 비서** | 홈의 ✨ 버튼 → "이번 주말 뭐 하지?", "Busan trip 때 갈 만한 곳?" 질문에 실제 행사 카드로 답하고, 캘린더 추가·지도 보기를 **제안** → 사용자가 [추가]/[취소] | 필터를 고르는 대신 말로 물어보면, AI가 찾아 주고 결정은 내가 한다 |
 | **AI에게 나를 소개하기** | 자유롭게 쓴 소개글에서 Gemini가 지금 상황(학생·구직·직장인·창업·프리랜서)과 관심사를 **근거 문구와 함께 제안** → 사용자가 맞는 것만 골라 적용. 상황은 순위에 반영 (학생 → 장학금·학생 프로그램, 창업 → 창업 지원 공고) | 칩 26개로는 "졸업하고 프론트엔드 개발자로 취업 준비 중" 같은 사정을 담기 어렵다 |
 | **취향 학습** | 👍/👎/숨기기가 태그·카테고리 가중치를 바꿔 홈·발견·지도·경로를 다시 정렬 | 한 번 "이건 아니야"라고 하면 실제로 줄어들어야 한다 |
-| **경로 기반 발견** | 출발·도착·날짜 → KTX(대중교통)·자동차 경로와 15 km 안의 같은 날 행사, 추가 거리·시간 | 이미 정해진 이동 시간 안에서 "조금만 돌아가면 되는 기회" |
+| **경로 기반 발견** | 출발·도착·날짜 → KTX(대중교통)·자동차 경로와 15 km 안의 같은 날 행사, 추가 거리·시간. 내 관심사·종류별 필터(지도 핀도 함께), 끌어내리는 결과 패널 | 이미 정해진 이동 시간 안에서 "조금만 돌아가면 되는 기회" |
 | **뉴스로 본 파업** | 네이버 뉴스에서 Gemini가 국내 대중교통 파업(예고·진행·철회·종료)을 판독하고, 코드가 기사 원문 인용으로 검증 → 일정 지역·날짜가 맞으면 **참고 카드** (인용·기사 링크, 알림 없음) | 파업 소식은 공식 API가 없고 뉴스에만 있다. 해외 시위·드라마·끝난 파업이 섞여 키워드로는 구분할 수 없다 |
 | **공식 교통 통제** | 서울 시내(TOPIS)와 전국 고속도로·국도(ITS)의 행사·공사·기상·재난 통제가 일정 장소 1 km 이내·시작 전 2시간이면 경고 (같은 도로는 한 번만, 일정당 최대 2개) | 행사 개최만으로 혼잡을 단정하지 않고, 공식 정보가 있을 때만 경고 |
-| **Google 캘린더** | 향후 90일 일정 읽기, 행사 추가, 일정 수정·삭제. Android는 Google 캘린더 앱으로 열기 | 사용자의 실제 계획이 있어야 "나와 관련된" 신호가 된다 |
+| **내 일정 · Google 캘린더** | 향후 90일 일정 읽기, 행사 추가, 직접 만든 일정 추가·수정·삭제(밀어서 삭제), 목록/월간 달력, 지도 일정 핀 → 상세·수정. Android는 Google 캘린더 앱으로 열기 | 사용자의 실제 계획이 있어야 "나와 관련된" 신호가 된다 |
 | **발견** | 검색 · 기간(오늘/주말/7일/한 달) · 지역 · 무료 · 내 관심사 필터, 추천순/날짜순, 관심사 맞춤 포스터, 공유(카카오톡·인스타그램 등 기기 공유 창) | 수백 개 행사 중 "이번 주말 부산, 무료"를 바로 찾을 수 있게 |
 | **알림** | 2일 이내 마감·3일 이내 일정 경고를 시스템 알림으로 (Android·웹) | 시간이 중요한 신호는 앱을 열 때까지 기다리면 늦다 |
-| **ko / en · 라이트/다크** | 모든 화면 2개 언어, 행사명도 영어로 번역 | 한국에 사는 외국인 유학생도 쓸 수 있게 |
+| **ko / en · 라이트/다크** | 모든 화면 2개 언어, 행사명도 영어로 번역. 브랜드 색 #5865F2 · #23272A, 눈부시지 않은 다크 모드 | 한국에 사는 외국인 유학생도 쓸 수 있게 — 팀원이 직접 겪은 문제 |
 
 ## 4. 데이터 — 어디서, 언제 오나요
 
 | 데이터 | 출처 | 갱신 | 앱이 받는 방법 |
 |---|---|---|---|
-| 실제 행사 635건 (11/8) | 서울 열린데이터광장 문화행사 · 한국관광공사 TourAPI 축제 · 창업진흥원 K-Startup 공고 | 매일 06:00 KST | BE가 게시한 `events.json` (캐시 → 최신 다운로드 → 검증 후 교체, 오프라인 동작) |
-| 대중교통 파업 (뉴스) | 네이버 뉴스 검색 (NAVER API HUB) → Gemini 판독 (11/8: 기사 150건 → 사건 15건, 활성 10건) | 3시간마다 | BE가 게시한 `news.json` |
-| 공식 도로 통제 (서울) | 서울시 TOPIS 실시간 돌발정보 | 3시간마다 | BE가 게시한 `traffic.json` |
+| 실제 행사 828건 (11/9) | 서울 열린데이터광장 문화행사 303 · KOPIS 서울 밖 공연 250 · 한국관광공사 TourAPI 축제 75 · 창업진흥원 K-Startup 공고 200 | 매일 06:00 KST | BE가 게시한 `events.json` (캐시 → 최신 다운로드 → 검증 후 교체, 오프라인 동작) |
+| 대중교통 파업 (뉴스) | 네이버 뉴스 검색 (NAVER API HUB) → Gemini 판독 (11/9: 기사 150건 → 사건 14건, 예고·조건부 11건) | 3시간마다 | BE가 게시한 `news.json` |
+| 공식 도로 통제 (서울) | 서울시 TOPIS 실시간 돌발정보 (11/9: 32건) | 3시간마다 | BE가 게시한 `traffic.json` |
 | 공식 도로 통제 (전국) | 국가교통정보센터(ITS) 돌발상황정보 — 공사·행사·기상·재난 (11/8 기준 약 190건) | 앱 실행 시 | **앱이 기기에서 직접 조회** — ITS가 해외 IP(GitHub Actions)를 차단하기 때문 |
 | 내 일정 | Google Calendar API | 연결·새로고침 시 | 사용자 OAuth 동의 후 직접 호출 |
 | 경로 | Google Routes (대중교통) · Kakao Mobility (자동차) | 요청 시 | 직접 호출 |
@@ -120,15 +128,15 @@
 ```mermaid
 flowchart LR
   subgraph BE["BE · GitHub Actions"]
-    SRC["공공 API 5종"] --> NORM["정규화·검증"] --> EN["Gemini 번역·태그"]
-    EN --> DATA["data 브랜치<br/>events.json · traffic.json"]
+    SRC["공공 API 6종 + 네이버 뉴스"] --> NORM["정규화·검증"] --> EN["Gemini 번역·태그·뉴스 판독"]
+    EN --> DATA["data 브랜치<br/>events.json · news.json · traffic.json"]
   end
   subgraph AI["AI · liferadar_core"]
     ENG["InsightEngine · RouteMatcher<br/>TrafficMatcher · Taste"]
-    W["InsightWriter<br/>(프롬프트·숫자 검증)"]
+    W["InsightWriter · Assistant<br/>ProfileExtractor<br/>(프롬프트·검증)"]
   end
   subgraph FE["FE · Flutter (Android / Web)"]
-    FEED["LiveEvents · LiveTraffic"] --> CARDS["홈 · 지도 · 경로 · 발견"]
+    FEED["LiveEvents · LiveNews · LiveTraffic"] --> CARDS["홈 · AI 비서 · 지도 · 경로 · 발견"]
   end
   DATA --> FEED
   FE -. git 의존성 .-> AI
@@ -156,27 +164,29 @@ flutter build apk --release --split-per-abi --dart-define-from-file=env.json   #
 |---|---|
 | 앱 | Flutter 3.41 (Android · Web), Riverpod 3, go_router, gen_l10n, shared_preferences |
 | 판단·AI | `liferadar_core` (AI 저장소) — 규칙 엔진, Gemini `gemini-3.5-flash-lite` (예비 `3.1-flash-lite`) |
-| 데이터 | BE 저장소 — 공공 API 5종, GitHub Actions 스케줄, 정적 JSON (raw.githubusercontent.com) |
+| 데이터 | BE 저장소 — 공공 API 6종 + 네이버 뉴스, GitHub Actions 스케줄, 정적 JSON (raw.githubusercontent.com) |
 | 지도·경로 | Kakao Maps SDK, Kakao Local · Mobility, Google Routes |
 | 일정·로그인·날씨 | Google Calendar API, Google Sign-In (Android·웹), Google Weather |
 | 알림 | Android `flutter_local_notifications`, 웹 Notification API |
-| 디자인 | 자체 디자인 시스템 (라이트/다크, 대비 ≥ 4.5:1, 동작 줄이기 지원), Pretendard 서브셋 글꼴 |
-| 품질 | 테스트 — FE 43 · AI 59 · BE 23개, 3개 저장소 모두 GitHub Actions CI |
+| 디자인 | 자체 디자인 시스템 — 브랜드 #5865F2 · #23272A · #FFFFFF, 라이트/다크 (본문 대비 ≥ 4.5:1), 그라데이션·누름 애니메이션·스켈레톤, 동작 줄이기 지원, Pretendard 서브셋 글꼴 |
+| 품질 | 테스트 146개 — FE 50 · AI 73 · BE 23, 3개 저장소 모두 GitHub Actions CI. AI 기능 4종은 실제 Gemini로 실측 평가 |
+| 공유·버전 | `share_plus` (기기 공유 창), `package_info_plus` (프로필의 앱 버전) |
 
 ## 10. 구현 범위와 한계 (정직하게)
 
 **직접 구현**: 앱 전체 UI·상태·캐시, 규칙 엔진, AI 프롬프트·검증, 수집기와 스케줄 게시, 디자인 시스템, 테스트.
-**외부 기술**: Google(Calendar·Routes·Weather·Gemini·Sign-In), Kakao(Maps·Local·Mobility), 공공 API 5종.
+**외부 기술**: Google(Calendar·Routes·Weather·Gemini·Sign-In), Kakao(Maps·Local·Mobility), 공공 API 6종, NAVER API HUB.
 **AI 코딩 도구**: 개발 과정에서 AI 코딩 도우미(Claude)를 사용했고 커밋에 공동 작성자로 표시했습니다.
 
 **샘플·미검증 범위**
 - IT 컨퍼런스·해커톤(대전 AI 세미나, 벡스코 AI 엑스포 등)은 공개 API가 없어 **샘플** — 화면에 `샘플` 배지로 표시
-- 공식 교통 통제: 서울은 시내 도로까지, 그 외 지역은 **고속도로·국도 위주** (도시 내부 집회 통제는 경찰청 UTIC API 신청 중)
+- 공식 교통 통제: 서울은 시내 도로까지, 그 외 지역은 **고속도로·국도 위주** (도시 내부 집회 통제는 경찰청 UTIC API — 키 발급 완료, 접속 IP 등록 대기)
 - 알림은 **앱 실행 중**에만 — 앱이 닫혀 있을 때의 서버 푸시(FCM)는 설계만
 - 지도·경로·날씨·Gemini 키가 **데모를 위해 앱 안에** 있음 → 다음 단계: BE의 API 프록시
 - 관심사·일정·피드백은 **기기에만** 저장 (기기 간 동기화 없음)
 - 대중교통 "추가 시간"은 가장 가까운 역에서 행사장까지 왕복 기준의 추정치
-- AI 문장 품질은 시나리오 카드 기준으로만 평가 (정답셋 정량 평가 없음)
+- AI 평가는 팀이 만든 소규모 실측(카드 6개, 뉴스 25건, 소개글 7개 × 3회, 비서 질문 7개)이며, 사람이 라벨링한 대규모 정답셋 평가는 아님
+- Google 로그인은 공개(프로덕션) 상태지만 Google 앱 검토 전이라 "확인하지 않은 앱" 안내가 나옴 (고급 → 이동)
 
 ## 11. 개발 기록
 
@@ -185,7 +195,9 @@ flutter build apk --release --split-per-abi --dart-define-from-file=env.json   #
 | 11/5 | 기획, MVP 계획, Flutter 골격, 카카오 지도 |
 | 11/6 | 경로 기반 발견(KTX·자동차), Google 캘린더 연동, 날씨, 온보딩, 규칙 인사이트 엔진, 디자인 시스템 |
 | 11/7 | 실제 공공데이터 수집 + Gemini 번역, 첫 실행 설정·계정 삭제, liquid glass UI, Gemini 카드 문장 + 숫자 검증, 피드백 취향 학습, 시연 데이터 자동 이동, 친절한 오류 메시지 |
-| 11/8 | 매일 데이터 갱신, Android 알림·Google 캘린더 앱 연결, 공식 교통 통제(TOPIS·전국 ITS) 판별, 일정 연결 줄, FE·BE·AI 팀 저장소로 분리 이전 |
+| 11/8 | 매일 데이터 갱신, Android 알림·Google 캘린더 앱 연결, 공식 교통 통제(TOPIS·전국 ITS) 판별, 뉴스 파업 판독, KOPIS 전국 공연, 일정 연결 줄, FE·BE·AI 팀 저장소로 분리 이전 |
+| 11/9 | 실기기 피드백 반영(발견 필터·검색, 끌어내리는 경로 패널, 지도 일정 핀 상세), **AI에게 나를 소개하기**·지금 상황, 행사 공유, 개인정보처리방침·Google 로그인 공개 전환, 새 브랜드 색, 경로 관심사 필터, 일정 삭제, **AI 비서** |
+| 11/10 | 실기기 전체 기능 확인, 문서·스크린숏 갱신 |
 
 2026-11-05부터 개인 작업 저장소에서 개발했고, 2026-11-08 팀 저장소(FE·BE·AI)로 이전했습니다.
 

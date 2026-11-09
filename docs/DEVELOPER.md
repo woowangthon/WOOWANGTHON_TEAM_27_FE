@@ -15,6 +15,7 @@ flutter pub get                       # liferadar_core(AI 저장소)를 git으�
 dart run tool/gen_web_env.dart        # 웹용 Kakao JS SDK 설정 생성
 
 # 웹 (Kakao JS 도메인에 http://localhost:8080 등록 필요)
+# flutter build web 전에도 gen_web_env를 실행해야 build/web에 kakao_config.js가 들어간다
 flutter run -d chrome --web-port=8080 --dart-define-from-file=env.json \
   --web-browser-flag="--user-data-dir=$PWD/.dart_tool/chrome-profile"   # 로그인·관심사 유지
 
@@ -52,24 +53,26 @@ keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore -
 ```
 lib/
 ├── main.dart                 # 시작: 알림 초기화, 캐시된 행사 로드, ProviderScope
-├── core/                     # 테마·공용 위젯·토스트·라우터·오류 메시지·알림(웹/Android)·캘린더 링크
+├── core/                     # 테마·공용 위젯·토스트·라우터·오류 메시지·알림(웹/Android)·캘린더 링크·공유
 ├── data/                     # Riverpod 상태
 │   ├── providers.dart        # 행사·일정·인사이트·취향·교통 통제 provider
 │   ├── live_events.dart      # events.json: 캐시 → 다운로드 → 검증 → 교체
 │   ├── live_news.dart        # news.json (뉴스에서 판독한 파업)
 │   ├── live_traffic.dart     # traffic.json(서울 TOPIS) + ITS 직접 조회(전국) → 합쳐서 캐시
 │   ├── ai_insights.dart      # Gemini 카드 문장 (상위 6개, 캐시, 실패 시 규칙 문장)
+│   ├── assistant_controller.dart # AI 비서 대화: 질문 → 조건·후보(코드) → Gemini → 검증, 제안 행동 상태
+│   ├── profile.dart          # 지금 상황(LifeStage)·자기소개 글, 계정별 저장
 │   ├── calendar_controller.dart  # Google 로그인·캘린더 읽기/쓰기
 │   ├── notifications.dart    # 중요 신호 → 시스템 알림 (신호당 1회)
 │   └── session.dart, interests.dart, seen.dart, location.dart
-├── features/                 # 화면: welcome, auth, onboarding, home, map, route, plans, discover, event, profile, shell
+├── features/                 # 화면: welcome, auth, onboarding(+나를 소개하기), home, assistant, map, route, plans, discover, event, profile, shell
 ├── services/                 # 외부 API: google_api(Routes·Weather), kakao_api, calendar_api
 └── l10n/                     # ko / en (gen_l10n)
 assets/data/events.json       # 오프라인용 행사 스냅숏 (BE가 생성)
 test/                         # 위젯·상태·API 파싱 테스트
 ```
 
-모델과 엔진(`InsightEngine`, `RouteMatcher`, `TrafficMatcher`, `Taste`), Gemini 검증(`InsightWriter`), 시연 데이터는 `package:liferadar_core`에서 가져옵니다.
+모델과 엔진(`InsightEngine`, `RouteMatcher`, `TrafficMatcher`, `Taste`), Gemini 검증(`InsightWriter`, `Assistant`, `ProfileExtractor`), 시연 데이터는 `package:liferadar_core`에서 가져옵니다.
 
 ## 4. 데이터 흐름
 
@@ -89,7 +92,13 @@ BE가 3시간마다 네이버 뉴스를 Gemini로 판독해 게시한 `news.json
 교통 통제·혼잡 참고 카드는 AI 대상이 아닙니다 (`InsightWriter.isEligible`).
 
 **취향 학습**
-👍/👎/숨기기 → `Taste.from(feedback, events)` → 홈·발견·지도·경로의 점수에 반영.
+👍/👎/숨기기 → `Taste.from(feedback, events).withStage(지금 상황)` → 홈·발견·지도·경로·AI 비서의 점수에 반영.
+
+**AI 비서**
+질문 → `AssistantQuery.parse`(날짜·지역·종류·무료·마감·일정) → `Assistant.retrieve`(실제 행사에서 후보 24개) → `Assistant.context`(후보·일정·홈 신호) → Gemini → `parseResponse`(후보 밖 id·근거 없는 숫자 거부). AI가 없으면 `Assistant.fallback`. 제안 행동(캘린더 추가·지도 보기)은 `ActionStatus.pending`으로 두고, 사용자가 [추가]를 눌러야 `addEventToCalendar`가 실행된다. 대화는 세션 동안만 메모리에 있다.
+
+**나를 소개하기**
+글 → `ProfileExtractor.extract`(단어 번호 근거, 허용 목록 검증) → 제안 목록(체크박스 + 원문 인용) → 사용자가 **적용하기** → `interestsProvider`·`lifeStageProvider` 저장. 키가 없으면 `keywordFallback`.
 
 **경로 기반 발견**
 출발·도착·날짜 → 대중교통(Google Routes) 또는 자동차(Kakao Mobility) 경로 → `RouteMatcher.match` (15 km 회랑, 같은 날) → 상위 N개만 우회 거리·시간 계산 (자동차: 경유지 경로, 대중교통: 가장 가까운 역에서 왕복).
@@ -109,12 +118,12 @@ Google 로그인 → `calendar.events` 권한 → 향후 90일 일정 읽기 →
 
 | 토큰 | 내용 |
 |---|---|
-| `AppPalette` | `background / surface / text / textMuted / primary / accent / danger / info …` 라이트·다크 (본문 대비 ≥ 4.5:1). `context.palette.primary` |
+| `AppPalette` | `background / surface / text / textMuted / primary / primaryStrong / primaryAlt / accent / danger / info …` 라이트·다크 (본문 대비 ≥ 4.5:1), `brandGradient`. 브랜드 #5865F2 · #23272A · #FFFFFF, 다크는 #1A1B1F 배경 + 밝기를 낮춘 #8E96F8. `context.palette.primary` |
 | `Space` | 4/8dp 리듬: `xs 4 · sm 8 · md 12 · lg 16 · xl 20 · xxl 24 · gutter 20` |
 | `Radii` | `sm 8 · md 12 · lg 16 · xl 24` |
 | `Motion` | `Motion.of(context, d)` — "동작 줄이기"면 0 |
 
-공용 컴포넌트: `Shimmer`·`SkeletonCard`, `Pill`, `MetaRow`, `EmptyState`, `GlassSurface`(liquid glass), `GlassSegmented`, `DetailSheet`, `MarqueeText`, `QuietTags`, `SmoothSize`. 홈 카드의 **일정 연결 줄**은 신호가 어떤 캘린더 일정과 왜 연결되는지(날짜·제목·거리)를 보여줍니다 — 계산하지 않은 값(추천 시간·이동 시간)은 만들지 않습니다.
+공용 컴포넌트: `Pressable`(누름 축소), `AmbientGlow`(배경 빛), `FadeSlideIn`, `Shimmer`·`SkeletonCard`, `Pill`, `MetaRow`, `EmptyState`, `GlassSurface`(liquid glass), `GlassSegmented`, `DetailSheet`, `MarqueeText`, `QuietTags`, `SmoothSize`. 홈 카드의 **일정 연결 줄**은 신호가 어떤 캘린더 일정과 왜 연결되는지(날짜·제목·거리)를 보여줍니다 — 계산하지 않은 값(추천 시간·이동 시간)은 만들지 않습니다.
 
 ## 6. 다국어
 
@@ -130,8 +139,11 @@ flutter test --platform chrome test/google_api_test.dart   # 웹(dart2js) 전용
 
 | 테스트 | 내용 |
 |---|---|
-| `app_test.dart` | 첫 실행 → 로그인(게스트) → 이름 → 관심사 → 홈, 언어 전환, 발견 순서, 홈 필터, 상세 시트 높이, 👍/👎 확인, 계정 삭제, 빈 상태 |
-| `plans_test.dart` | 계정별 관심사, 일정 추가·수정·삭제, 캘린더 요청 본문, 월간 보기 |
+| `app_test.dart` | 첫 실행 → 로그인(게스트) → 이름 → 관심사·지금 상황 → 홈, 나를 소개하기 제안 적용, 언어 전환, 발견 순서, 홈 필터, 상세 시트 높이, 👍/👎 확인, 계정 삭제, 빈 상태 |
+| `plans_test.dart` | 계정별 관심사, 일정 추가·수정·삭제(확인 창), 캘린더 요청 본문, 월간 보기 |
+| `assistant_test.dart` | AI 비서: 키가 없으면 조건 검색으로 실제 카드, 가짜 Gemini 응답의 제안은 [취소]로 끝나고 후보 밖 id는 화면에 없음 |
+| `filters_test.dart` | 발견 기간 필터(이번 주말), 경로 필터(전체·내 관심사·관심사 하나·카테고리) |
+| `live_news_test.dart`, `live_traffic_test.dart` | 뉴스 파업 피드(활성 파업만), ITS 기기 조회·TOPIS 병합·캐시 유지 |
 | `ai_insights_test.dart` | Gemini 문장 적용·캐시 재사용, 오류 시 규칙 문장 유지·예비 모델 시도 |
 | `live_events_test.dart` | 최신 피드만 교체, 깨진·작은·오래된 파일 무시, 오프라인 |
 | `event_feed_test.dart` | 피드 JSON 왕복 |
@@ -148,7 +160,9 @@ flutter test --platform chrome test/google_api_test.dart   # 웹(dart2js) 전용
 | 웹에서 경로가 엉뚱한 곳에 그려짐 | dart2js에서 `~`는 부호 없는 32비트 → `-(x + 1)` 사용 |
 | Google 자동차 경로가 안 나옴 | Google은 한국 자동차 길찾기 미지원 → Kakao Mobility |
 | 서울→부산 자동차 경로에 대전 행사가 없음 | 정상. 고속도로가 대전에서 약 68 km (KTX는 6 km) |
-| 캘린더 연결 시 "확인되지 않은 앱" / `access_denied` | 테스트 모드 — 테스트 사용자로 등록된 계정만 가능 |
+| 캘린더 연결 시 "확인되지 않은 앱" | 앱은 프로덕션 게시 상태, Google 검토 전 → 고급 → 이동. 게시에는 앱 이름·지원 이메일·홈페이지·[개인정보처리방침](PRIVACY.md) URL·승인된 도메인(github.com)이 필요했다 |
+| 웹 빌드에서만 지도가 "SDK를 불러오지 못했습니다" | `build/web/kakao_config.js` 없음 → `dart run tool/gen_web_env.dart` 후 다시 빌드 |
+| 칩 글자가 잘림 | `ChipThemeData.labelStyle`에 상태별 스타일(`WidgetStateTextStyle`)을 쓰면 잘린다 → 단일 스타일 |
 | 새로고침 후 캘린더 연결이 풀림 | 토큰을 메모리에만 보관 (의도된 동작) |
 | `MissingPluginException` | 플러그인 추가 후 오래된 빌드 캐시 → `flutter clean && flutter pub get` |
 | `A circle cannot have a border radius` (디버그만) | `copyWith(borderRadius: null)`은 radius를 지우지 않음 → 새 `BoxDecoration` |

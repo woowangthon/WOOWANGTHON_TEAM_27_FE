@@ -1,6 +1,8 @@
 # LifeRadar AI — MVP 계획
 
-> 제출 마감: **2026-11-14** · 팀: 2명 · 플랫폼: **Flutter (Android)** · UI: **한국어 + 영어**
+> 제출 마감: **2026-11-15 18:00 KST** · 팀: 2명 · 플랫폼: **Flutter (Android · Web)** · UI: **한국어 + 영어**
+>
+> 이 문서는 11/5에 쓴 **처음 계획**입니다 (Firebase·FCM 서버 계산 등 일부는 바뀌었습니다). 실제로 만든 것과 그 이유는 [README](../README.md)와 아래 8장에 있습니다.
 
 ---
 
@@ -178,3 +180,19 @@ users/{uid}/routes/{routeId}
 | [WOOWANGTHON_TEAM_27_AI](https://github.com/woowangthon/WOOWANGTHON_TEAM_27_AI) | 판단 엔진과 AI 모듈 (`liferadar_core`, 순수 Dart) |
 
 > 초기 계획의 Firebase(Firestore·Cloud Functions)는 MVP에서 사용하지 않았습니다. 데이터는 BE의 정적 JSON으로, 사용자 데이터는 기기에 저장합니다. 서버 푸시 설계는 [PUSH_NOTIFICATIONS.md](PUSH_NOTIFICATIONS.md).
+
+## 9. 계획 대비 결과 (11/10)
+
+| # | 계획 | 결과 |
+|---|---|---|
+| M1 | Google 로그인 + 캘린더 | ✅ 읽기·추가·수정·삭제, 공개(프로덕션) 게시 |
+| M2 | 온보딩 | ✅ 관심사 26개 + 지금 상황 + **AI에게 나를 소개하기** (계획 밖 추가) |
+| M3 | Home — AI 인사이트 | ✅ 규칙 엔진 + Gemini 문장 + 숫자 검증, 일정 연결 줄, 뉴스 파업·공식 교통 통제 카드 |
+| M4·M5 | Map · Route | ✅ Kakao 지도, KTX·자동차 경로, 우회 km·분, 관심사 필터, 끌어내리는 패널 |
+| M6·M7 | Discover · 상세 | ✅ 실제 행사 828건, 검색·기간·지역·무료 필터, 포스터, 공유 |
+| M8 | 피드백 | ✅ 👍/👎/숨기기 → 취향 가중치 |
+| M9 | 선제적 푸시 (FCM) | 🟡 앱 실행 중 로컬 알림만 — 서버 푸시는 [설계](PUSH_NOTIFICATIONS.md) |
+| M10 | 다국어 | ✅ ko / en, 행사명 Gemini 번역 |
+| 추가 | 앱 안의 AI 비서 | ✅ 실제 행사 후보 안에서 답하고 행동은 사용자가 확인 |
+| Should | 날씨 경고 | ✅ Google Weather, 일정 날 비 예보 카드 |
+| Should | Search grounding으로 새 행사 발견 | ✕ 대신 공공 API 6종 + 네이버 뉴스 판독 (사실 출처를 고정하기 위해) |

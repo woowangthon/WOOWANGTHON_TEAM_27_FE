@@ -1,6 +1,6 @@
 # LifeRadar 개인정보처리방침 · Privacy Policy
 
-시행일 · Effective: 2026-11-09
+시행일 · Effective: 2026-11-09 (개정 2026-11-10: AI 비서)
 
 LifeRadar는 2026 AI 우왕톤 Team 27 (DALAB)이 만든 해커톤 MVP입니다. **사용자 정보를 저장하는 자체 서버가 없습니다.** 앱이 다루는 개인정보는 사용자의 기기에 저장되고, 아래 표의 기능을 쓸 때만 해당 서비스로 직접 전송됩니다.
 
@@ -13,13 +13,14 @@ LifeRadar는 2026 AI 우왕톤 Team 27 (DALAB)이 만든 해커톤 MVP입니다.
 | 사용자가 고른 행사 → 캘린더 일정 추가·수정·삭제 | Google Calendar API | 사용자가 누른 경우에만 | 사용자의 Google 캘린더 |
 | 관심사, 지금 상황, 직접 만든 일정, 👍/👎 피드백 | 사용자 입력 | 추천 순서 | 기기 |
 | "나를 소개하기"에 쓴 글 | 사용자 입력 | 상황·관심사 제안 | 기기 |
+| AI 비서 대화 | 사용자 입력 | 질문에 맞는 행사 찾기·제안 | 저장하지 않음 (앱을 닫으면 사라짐) |
 | 현재 위치 | 기기 위치 (권한 허용 시) | 지도에 내 위치 표시 | 저장하지 않음 |
 
 ## 2. 외부 서비스로 보내는 정보
 
 | 서비스 | 보내는 정보 | 언제 |
 |---|---|---|
-| Google Gemini API | 카드 설명에 필요한 사실(일정 제목·장소·날짜, 행사 정보), "나를 소개하기" 글 | AI 문장·제안을 만들 때 |
+| Google Gemini API | 카드 설명에 필요한 사실(일정 제목·장소·날짜, 행사 정보), "나를 소개하기" 글, AI 비서 질문과 답에 필요한 정보(최근 대화 6턴, 후보 행사, 일정 제목·날짜·장소, 관심사·상황) | AI 문장·제안·비서 답을 만들 때 |
 | Google Routes · Weather API | 출발·도착 장소, 일정 장소 | 경로·날씨를 볼 때 |
 | Kakao Maps · Local · Mobility | 지도 표시 영역, 장소 검색어, 출발·도착 | 지도·검색·경로를 쓸 때 |
 | 국가교통정보센터(ITS) | 없음 (공개 교통 정보만 받음) | 앱 실행 시 |
@@ -43,4 +44,4 @@ LifeRadar가 Google API로 받은 정보의 사용과 다른 앱으로의 전송
 
 ## English summary
 
-LifeRadar is a hackathon MVP by Team 27 (DALAB). **It has no server that stores user data.** Your Google name and email, calendar events (next 90 days, `calendar.events` scope), interests, situation, self-introduction text and feedback are stored **on your device only**. Data is sent directly to Google (Gemini, Routes, Weather, Calendar) and Kakao (Maps, Local, Mobility) only when you use the corresponding feature, and is never sold or used for ads. LifeRadar's use and transfer of information received from Google APIs adheres to the [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), including the Limited Use requirements; calendar data is not used to train AI models. Delete everything with **Profile → Delete account** or by uninstalling; revoke Google access at <https://myaccount.google.com/connections>. Contact: [GitHub Issues](https://github.com/woowangthon/WOOWANGTHON_TEAM_27_FE/issues).
+LifeRadar is a hackathon MVP by Team 27 (DALAB). **It has no server that stores user data.** Your Google name and email, calendar events (next 90 days, `calendar.events` scope), interests, situation, self-introduction text and feedback are stored **on your device only**; AI assistant chats are kept in memory only and sent to Gemini (with the candidate events and your plan titles, dates and places) only to answer. Data is sent directly to Google (Gemini, Routes, Weather, Calendar) and Kakao (Maps, Local, Mobility) only when you use the corresponding feature, and is never sold or used for ads. LifeRadar's use and transfer of information received from Google APIs adheres to the [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), including the Limited Use requirements; calendar data is not used to train AI models. Delete everything with **Profile → Delete account** or by uninstalling; revoke Google access at <https://myaccount.google.com/connections>. Contact: [GitHub Issues](https://github.com/woowangthon/WOOWANGTHON_TEAM_27_FE/issues).
