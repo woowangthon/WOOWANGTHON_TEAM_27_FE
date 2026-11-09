@@ -34,14 +34,16 @@ Future<void> pumpApp(
     if (setupDone) 'locale': locale,
   });
   final prefs = await SharedPreferences.getInstance();
-  await tester.pumpWidget(ProviderScope(
-    overrides: [
-      sharedPrefsProvider.overrideWithValue(prefs),
-      nowProvider.overrideWithValue(now ?? DateTime(2026, 11, 6, 10)),
-      ...overrides,
-    ],
-    child: const LifeRadarApp(),
-  ));
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        sharedPrefsProvider.overrideWithValue(prefs),
+        nowProvider.overrideWithValue(now ?? DateTime(2026, 11, 6, 10)),
+        ...overrides,
+      ],
+      child: const LifeRadarApp(),
+    ),
+  );
   await tester.pumpAndSettle();
 }
 
@@ -139,6 +141,36 @@ void main() {
     expect(find.descendant(of: first, matching: find.text('Large concert in Busan (sample)')), findsOneWidget);
   });
 
+  testWidgets('발견 탭: 검색·필터로 좁히고, 초기화하면 다시 전체', (tester) async {
+    await pumpApp(tester, interests: ['music']);
+    await tester.tap(find.byIcon(Icons.explore_outlined).last);
+    await tester.pumpAndSettle();
+    final total = find.byType(EventCard).evaluate().length;
+    expect(total, greaterThan(1));
+
+    await tester.enterText(find.byType(TextField).first, 'Busan');
+    await tester.pumpAndSettle();
+    final cards = find.byType(EventCard);
+    expect(cards, findsWidgets);
+    for (final e in cards.evaluate()) {
+      expect(
+        (e.widget as EventCard).event.city.toLowerCase() +
+            (e.widget as EventCard).event.title.en.toLowerCase() +
+            (e.widget as EventCard).event.venue.toLowerCase(),
+        contains('busan'),
+      );
+    }
+    expect(find.text('Reset'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField).first, 'zzzz-no-such-event');
+    await tester.pumpAndSettle();
+    expect(find.text('No events match these filters'), findsOneWidget);
+
+    await tester.tap(find.text('Reset').first);
+    await tester.pumpAndSettle();
+    expect(find.byType(EventCard).evaluate().length, total);
+  });
+
   testWidgets('키가 없으면 지도 탭에 안내 메시지를 보여준다', (tester) async {
     await pumpApp(tester, interests: ['ai']);
     await tester.tap(find.byIcon(Icons.map_outlined).last);
@@ -166,7 +198,7 @@ void main() {
     expect(find.text('Deadline'), findsWidgets);
   });
 
-  testWidgets('Home: yonga surish filtrlarni almashtiradi, filtr tepada qadalib qoladi', (tester) async {
+  testWidgets('홈: 옆으로 밀면 필터가 바뀌고, 필터 줄은 위에 고정된다', (tester) async {
     await pumpApp(tester, interests: ['ai', 'startup', 'music']);
     expect(find.text('Signals for you'), findsOneWidget);
     // 왼쪽으로 밀기 → 다음 필터 (Due soon)

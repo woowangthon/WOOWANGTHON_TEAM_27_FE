@@ -1103,7 +1103,7 @@ abstract class AppLocalizations {
   /// No description provided for @categoryPerformance.
   ///
   /// In en, this message translates to:
-  /// **'Shows'**
+  /// **'Theater & musicals'**
   String get categoryPerformance;
 
   /// No description provided for @categoryExhibition.
@@ -1675,6 +1675,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Matches your interests'**
   String get matchesYou;
+
+  /// No description provided for @routePanelHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull down to see more of the map'**
+  String get routePanelHint;
+
+  /// No description provided for @routePanelExpand.
+  ///
+  /// In en, this message translates to:
+  /// **'Expand route panel'**
+  String get routePanelExpand;
+
+  /// No description provided for @routePanelCollapse.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower route panel'**
+  String get routePanelCollapse;
+
+  /// No description provided for @filterMine.
+  ///
+  /// In en, this message translates to:
+  /// **'My interests'**
+  String get filterMine;
+
+  /// No description provided for @discoverSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search events or places'**
+  String get discoverSearchHint;
+
+  /// No description provided for @filterPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get filterPeriod;
+
+  /// No description provided for @filterAnyTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Any time'**
+  String get filterAnyTime;
+
+  /// No description provided for @periodToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get periodToday;
+
+  /// No description provided for @periodWeekend.
+  ///
+  /// In en, this message translates to:
+  /// **'This weekend'**
+  String get periodWeekend;
+
+  /// No description provided for @periodWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Next 7 days'**
+  String get periodWeek;
+
+  /// No description provided for @periodMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Next month'**
+  String get periodMonth;
+
+  /// No description provided for @filterRegion.
+  ///
+  /// In en, this message translates to:
+  /// **'Region'**
+  String get filterRegion;
+
+  /// No description provided for @filterAllRegions.
+  ///
+  /// In en, this message translates to:
+  /// **'All regions'**
+  String get filterAllRegions;
+
+  /// No description provided for @sortMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Best match'**
+  String get sortMatch;
+
+  /// No description provided for @sortSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Soonest'**
+  String get sortSoon;
+
+  /// No description provided for @discoverPicks.
+  ///
+  /// In en, this message translates to:
+  /// **'Picked for your interests'**
+  String get discoverPicks;
+
+  /// No description provided for @discoverResults.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} events'**
+  String discoverResults(int count);
+
+  /// No description provided for @filterReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get filterReset;
+
+  /// No description provided for @discoverNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No events match these filters'**
+  String get discoverNoResults;
+
+  /// No description provided for @routeEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get routeEdit;
 }
 
 class _AppLocalizationsDelegate

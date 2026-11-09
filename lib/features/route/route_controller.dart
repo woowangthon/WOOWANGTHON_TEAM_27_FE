@@ -75,7 +75,7 @@ class RouteController extends Notifier<RouteState> {
     state = RouteState(origin: d, destination: o, date: state.date, mode: state.mode);
   }
 
-  /// Pitch demo: 서울역 → 부산역, 20-noyabr, KTX.
+  /// 발표 데모: 서울역 → 부산역, 11월 20일, KTX.
   void useDemo() {
     state = RouteState(
       origin: const Place(name: '서울역', address: '서울 용산구 한강대로 405', location: GeoPoint(37.5547, 126.9707)),
@@ -151,3 +151,22 @@ class RouteController extends Notifier<RouteState> {
     }
   }
 }
+
+/// 경로 주변 행사 필터: null = 전체, [routeFilterMine] = 내 관심사와 맞는 행사, 그 밖에는 [EventCategory.name].
+/// 패널 목록과 지도 마커가 같은 필터를 쓴다.
+final routeFilterProvider = NotifierProvider<RouteFilterController, String?>(RouteFilterController.new);
+
+const routeFilterMine = 'mine';
+
+class RouteFilterController extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  void set(String? f) => state = f;
+}
+
+bool routeFilterMatches(String? filter, RadarEvent e, Set<String> interests) => switch (filter) {
+  null => true,
+  routeFilterMine => e.tags.any(interests.contains),
+  final c => e.category.name == c,
+};

@@ -97,6 +97,8 @@ class MonthView extends StatelessWidget {
         const SizedBox(height: Space.xs),
         GridView.builder(
           shrinkWrap: true,
+          // padding을 비우면 스크롤 뷰가 MediaQuery 하단 여백(내비게이션 바)을 더해 카드 아래가 비어 보인다.
+          padding: EdgeInsets.zero,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: cells,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7, childAspectRatio: 0.9),

@@ -158,7 +158,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get categoryHackathon => '해커톤';
 
   @override
-  String get categoryConcert => '공연';
+  String get categoryConcert => '콘서트';
 
   @override
   String get categoryFestival => '축제';
@@ -556,7 +556,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get categoryPerformance => '공연';
+  String get categoryPerformance => '연극·뮤지컬';
 
   @override
   String get categoryExhibition => '전시';
@@ -858,4 +858,66 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get matchesYou => '내 관심사와 일치';
+
+  @override
+  String get routePanelHint => '아래로 내리면 지도를 넓게 볼 수 있어요';
+
+  @override
+  String get routePanelExpand => '경로 패널 펼치기';
+
+  @override
+  String get routePanelCollapse => '경로 패널 내리기';
+
+  @override
+  String get filterMine => '내 관심사';
+
+  @override
+  String get discoverSearchHint => '행사·장소 검색';
+
+  @override
+  String get filterPeriod => '기간';
+
+  @override
+  String get filterAnyTime => '전체 기간';
+
+  @override
+  String get periodToday => '오늘';
+
+  @override
+  String get periodWeekend => '이번 주말';
+
+  @override
+  String get periodWeek => '7일 안';
+
+  @override
+  String get periodMonth => '한 달 안';
+
+  @override
+  String get filterRegion => '지역';
+
+  @override
+  String get filterAllRegions => '전체 지역';
+
+  @override
+  String get sortMatch => '추천순';
+
+  @override
+  String get sortSoon => '날짜순';
+
+  @override
+  String get discoverPicks => '관심사 맞춤 추천';
+
+  @override
+  String discoverResults(int count) {
+    return '$count개';
+  }
+
+  @override
+  String get filterReset => '초기화';
+
+  @override
+  String get discoverNoResults => '조건에 맞는 행사가 없어요';
+
+  @override
+  String get routeEdit => '수정';
 }
