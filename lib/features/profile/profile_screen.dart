@@ -95,7 +95,10 @@ class ProfileScreen extends ConsumerWidget {
                 ListTile(
                   leading: const IconTile(Icons.interests_outlined, size: 36),
                   title: Text(l10n.interestsEdit),
-                  subtitle: Text(l10n.interestsCount(ref.watch(interestsProvider).length)),
+                  subtitle: Text([
+                    if (ref.watch(lifeStageProvider) case final st?) context.tr(st.label),
+                    l10n.interestsCount(ref.watch(interestsProvider).length),
+                  ].join(' · ')),
                   trailing: TextButton(onPressed: () => context.push('/interests'), child: Text(l10n.edit)),
                   onTap: () => context.push('/interests'),
                 ),

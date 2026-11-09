@@ -939,4 +939,88 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routeEdit => 'Edit';
+
+  @override
+  String get stageTitle => 'What\'s your situation right now?';
+
+  @override
+  String get stageOptional =>
+      'Optional · we\'ll show fitting programs and events first';
+
+  @override
+  String get aboutMeCta => 'Tell the AI about yourself';
+
+  @override
+  String get aboutMeCtaBody =>
+      'Write a few sentences and we\'ll suggest your situation and interests. You choose.';
+
+  @override
+  String get aboutMeTitle => 'About me';
+
+  @override
+  String get aboutMeGreeting =>
+      'Tell me a bit about yourself — what you do, what you\'re into lately, what you do on weekends. Anything works.';
+
+  @override
+  String get aboutMeEx1 =>
+      'I\'m a 3rd-year CS student. Studying AI and I\'d like to try a hackathon.';
+
+  @override
+  String get aboutMeEx2 =>
+      'I work at a marketing company. I run after work and visit exhibitions on weekends.';
+
+  @override
+  String get aboutMeEx3 =>
+      'I\'m preparing a startup. I need info on investor sessions and startup support programs.';
+
+  @override
+  String get aboutMeHint => 'Write about yourself';
+
+  @override
+  String get aboutMeSend => 'Send';
+
+  @override
+  String get aboutMeThinking => 'Reading…';
+
+  @override
+  String get aboutMeUnderstood => 'Here\'s what I understood. Keep what fits.';
+
+  @override
+  String get aboutMeKeyword =>
+      'Matched by keywords (AI not connected). Keep what fits.';
+
+  @override
+  String get aboutMeNothing =>
+      'I\'m not sure yet. Tell me a little more about what you do or enjoy.';
+
+  @override
+  String aboutMeStage(String stage) {
+    return 'Situation: $stage';
+  }
+
+  @override
+  String aboutMeApply(int count) {
+    return 'Apply ($count)';
+  }
+
+  @override
+  String aboutMeApplied(int count) {
+    return 'Added $count interests';
+  }
+
+  @override
+  String get aboutMeAiBadge => 'AI suggestion';
+
+  @override
+  String get aboutMePrivacy =>
+      'Your text is sent to Google Gemini only to make suggestions, and saved on this device only.';
+
+  @override
+  String get share => 'Share';
+
+  @override
+  String get shareFooter => 'Found on LifeRadar';
+
+  @override
+  String get shareCopied => 'Copied to share';
 }

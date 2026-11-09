@@ -920,4 +920,80 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get routeEdit => '수정';
+
+  @override
+  String get stageTitle => '지금 어떤 상황인가요?';
+
+  @override
+  String get stageOptional => '선택 · 상황에 맞는 공고와 행사를 먼저 보여 드려요';
+
+  @override
+  String get aboutMeCta => 'AI에게 나를 소개하기';
+
+  @override
+  String get aboutMeCtaBody => '몇 문장만 쓰면 상황과 관심사를 골라 드려요. 고르는 건 직접 해요.';
+
+  @override
+  String get aboutMeTitle => '나를 소개하기';
+
+  @override
+  String get aboutMeGreeting =>
+      '어떤 사람인지 편하게 적어 주세요. 하는 일, 요즘 관심 있는 것, 주말에 하는 일… 무엇이든 좋아요.';
+
+  @override
+  String get aboutMeEx1 => '컴퓨터공학과 3학년이에요. AI 공부 중이고 해커톤에 나가 보고 싶어요.';
+
+  @override
+  String get aboutMeEx2 => '마케팅 회사 직장인이에요. 퇴근 후엔 러닝, 주말엔 전시회를 다녀요.';
+
+  @override
+  String get aboutMeEx3 => '창업 준비 중이에요. 투자 설명회와 창업 지원 사업 정보가 필요해요.';
+
+  @override
+  String get aboutMeHint => '나에 대해 적어 주세요';
+
+  @override
+  String get aboutMeSend => '보내기';
+
+  @override
+  String get aboutMeThinking => '읽고 있어요…';
+
+  @override
+  String get aboutMeUnderstood => '이렇게 이해했어요. 맞는 것만 남겨 주세요.';
+
+  @override
+  String get aboutMeKeyword => '단어로 찾아봤어요 (AI 연결 안 됨). 맞는 것만 남겨 주세요.';
+
+  @override
+  String get aboutMeNothing => '아직 잘 모르겠어요. 하는 일이나 좋아하는 것을 조금 더 적어 주세요.';
+
+  @override
+  String aboutMeStage(String stage) {
+    return '상황: $stage';
+  }
+
+  @override
+  String aboutMeApply(int count) {
+    return '적용하기 ($count)';
+  }
+
+  @override
+  String aboutMeApplied(int count) {
+    return '관심사 $count개를 더했어요';
+  }
+
+  @override
+  String get aboutMeAiBadge => 'AI 제안';
+
+  @override
+  String get aboutMePrivacy => '쓴 글은 제안을 만들 때만 Google Gemini로 보내고, 기기에만 저장해요.';
+
+  @override
+  String get share => '공유';
+
+  @override
+  String get shareFooter => 'LifeRadar에서 찾은 행사예요';
+
+  @override
+  String get shareCopied => '공유할 글을 복사했어요';
 }

@@ -8,6 +8,7 @@ import '../services/kakao_api.dart';
 import 'ai_insights.dart';
 import 'event_feed.dart';
 import 'interests.dart';
+import 'profile.dart';
 import 'live_events.dart';
 import 'live_news.dart';
 import 'live_traffic.dart';
@@ -16,6 +17,7 @@ import 'session.dart';
 
 export 'event_feed.dart' show EventFeed;
 export 'seen.dart' show seenProvider;
+export 'profile.dart';
 export 'interests.dart'
     show interestsProvider, interestOptions, InterestOption, InterestGroup, interestByTag, sharedPrefsProvider, accountScope;
 
@@ -219,7 +221,8 @@ class NewsFeedController extends Notifier<NewsFeed> {
 /// 피드백으로 학습한 취향: 홈, 발견, 지도, 경로의 순서에 반영된다.
 final tasteProvider = Provider<Taste>((ref) {
   final events = {for (final e in ref.watch(eventsProvider)) e.id: e};
-  return Taste.from(ref.watch(insightFeedbackProvider), events);
+  // 지금 상황(학생·구직…)에 맞는 행사를 조금 올린다.
+  return Taste.from(ref.watch(insightFeedbackProvider), events).withStage(ref.watch(lifeStageProvider));
 });
 
 /// 규칙 기반 인사이트 = InsightEngine(일정, 행사, 관심사, 날씨).

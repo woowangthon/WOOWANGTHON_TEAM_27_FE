@@ -5,7 +5,10 @@ import 'package:go_router/go_router.dart';
 import '../../core/l10n_ext.dart';
 import '../../core/theme.dart';
 import '../../core/widgets.dart';
+import '../../core/toast.dart';
 import '../../data/providers.dart';
+import 'package:liferadar_core/liferadar_core.dart';
+import 'about_me_sheet.dart';
 
 /// 관심사 선택. 첫 실행([editing] = false)과
 /// 이후 "관심사 변경"([editing] = true)에서 모두 사용한다.
@@ -20,10 +23,12 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   late final Set<String> _selected = {...ref.read(interestsProvider)};
+  late LifeStage? _stage = ref.read(lifeStageProvider);
   bool _saving = false;
 
   Future<void> _save() async {
     setState(() => _saving = true);
+    await ref.read(lifeStageProvider.notifier).save(_stage);
     await ref.read(interestsProvider.notifier).save(_selected);
     if (!mounted) return;
     if (widget.editing && context.canPop()) {
@@ -31,6 +36,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     } else {
       context.go('/home');
     }
+  }
+
+  /// AI 대화로 상황·관심사 제안을 받아, 사용자가 남긴 것만 더한다.
+  Future<void> _aboutMe() async {
+    final r = await showAboutMe(context);
+    if (r == null || !mounted) return;
+    final added = r.tags.difference(_selected).length;
+    setState(() {
+      if (r.stage != null) _stage = r.stage;
+      _selected.addAll(r.tags);
+    });
+    Toast.show(context.l10n.aboutMeApplied(added));
   }
 
   @override
@@ -91,6 +108,55 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               Text(l10n.onboardingTitle, style: t.headlineSmall),
               const SizedBox(height: Space.sm),
               Text(l10n.onboardingSubtitle, style: t.bodyMedium!.copyWith(color: p.textMuted)),
+              const SizedBox(height: Space.xl),
+
+              // ── AI에게 나를 소개하기 ──
+              Card(
+                child: InkWell(
+                  onTap: _aboutMe,
+                  child: Padding(
+                    padding: const EdgeInsets.all(Space.lg),
+                    child: Row(
+                      children: [
+                        const IconTile(Icons.auto_awesome),
+                        const SizedBox(width: Space.md),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(l10n.aboutMeCta, style: t.titleSmall),
+                              const SizedBox(height: 2),
+                              Text(l10n.aboutMeCtaBody, style: t.bodySmall),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.chevron_right_rounded, color: p.textMuted),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: Space.xl),
+
+              // ── 지금 상황 (선택) ──
+              Text(l10n.stageTitle, style: t.labelLarge!.copyWith(color: p.textMuted)),
+              const SizedBox(height: 2),
+              Text(l10n.stageOptional, style: t.bodySmall),
+              const SizedBox(height: Space.md),
+              Wrap(
+                spacing: Space.sm,
+                runSpacing: Space.sm,
+                children: [
+                  for (final s in LifeStage.values)
+                    InterestChip(
+                      label: context.tr(s.label),
+                      icon: lifeStageIcon(s),
+                      hue: Hue.teal,
+                      selected: _stage == s,
+                      onTap: () => setState(() => _stage = _stage == s ? null : s),
+                    ),
+                ],
+              ),
               const SizedBox(height: Space.xxl),
               for (final g in InterestGroup.values) ...[
                 Padding(
