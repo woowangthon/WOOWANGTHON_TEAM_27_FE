@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'theme.dart';
@@ -849,6 +850,8 @@ class GlassSurface extends StatelessWidget {
       child: ClipRRect(
         borderRadius: br,
         child: BackdropFilter(
+          // Android native map surfaces cannot reliably participate in backdrop reads.
+          enabled: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
           filter: ui.ImageFilter.blur(sigmaX: blur, sigmaY: blur),
           child: Container(
             padding: padding,

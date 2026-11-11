@@ -21,8 +21,9 @@ Future<String> requestNotifyPermission() async {
 }
 
 /// 메신저 알림처럼 표시: 앱 아이콘, 제목, 본문. 누르면 앱 창이 열린다.
-void showSystemNotification(String title, String body, {String? tag}) {
-  if (notifyPermission() != 'granted') return;
+Future<bool> showSystemNotification(String title, String body, {String? tag}) async {
+  if (notifyPermission() != 'granted') return false;
+  try {
   final n = web.Notification(
     title,
     web.NotificationOptions(body: body, icon: 'icons/Icon-192.png', badge: 'icons/Icon-192.png', tag: tag ?? ''),
@@ -31,6 +32,8 @@ void showSystemNotification(String title, String body, {String? tag}) {
     web.window.focus();
     n.close();
   }).toJS;
+    return true;
+  } catch (_) { return false; }
 }
 
 extension on web.Window {

@@ -10,6 +10,7 @@ import '../../core/widgets.dart';
 import '../../data/providers.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 import 'route_controller.dart';
+import '../plans/travel_impact_sheet.dart';
 
 /// 지도의 경로 모드 하단 패널: 출발 / 도착 / 날짜 → 결과.
 ///
@@ -352,6 +353,22 @@ class _RoutePanelState extends ConsumerState<RoutePanel> with SingleTickerProvid
                       ],
 
                       if (summary != null) ...[
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            final route = s.route!;
+                            final now = ref.read(nowProvider);
+                            final departure = DateUtils.isSameDay(s.date, now) ? now : s.date.add(const Duration(hours: 9));
+                            final arrival = departure.add(Duration(seconds: route.durationSeconds));
+                            final plan = Plan(id: 'route-check', title: '${s.origin!.name} → ${s.destination!.name}',
+                              start: arrival, end: arrival.add(const Duration(hours: 1)), source: 'route-check',
+                              location: s.destination!.location, locationText: s.destination!.name, city: '');
+                            showTravelImpact(context, plan, trip: TripContext(id: 'route-check', version: departure.toIso8601String(),
+                              departure: departure, arrival: arrival, modes: s.mode == TravelMode.car ? const {'car'} : route.transportModes,
+                              points: route.points, lines: route.transitLines));
+                          },
+                          icon: const Icon(Icons.traffic_outlined),
+                          label: Text(context.tr(const LocalizedText(ko: '이 경로의 교통 영향 확인', en: 'Check traffic on this route'))),
+                        ),
                         SizedBox(height: _editing ? Space.lg : Space.xs),
                         Row(
                           children: [

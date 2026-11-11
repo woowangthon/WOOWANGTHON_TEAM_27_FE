@@ -47,12 +47,16 @@ class AssistantMessage {
 final assistantProvider = NotifierProvider<AssistantController, List<AssistantMessage>>(AssistantController.new);
 
 class AssistantController extends Notifier<List<AssistantMessage>> {
+  int _conversation = 0;
   @override
   List<AssistantMessage> build() => const [];
 
   bool get busy => state.any((m) => m.loading);
 
-  void clear() => state = const [];
+  void clear() {
+    _conversation++;
+    state = const [];
+  }
 
   void setActionStatus(int message, int action, ActionStatus s) {
     if (message >= state.length) return;
@@ -63,6 +67,7 @@ class AssistantController extends Notifier<List<AssistantMessage>> {
   Future<void> ask(String question, {required String lang}) async {
     final text = question.trim();
     if (text.isEmpty || busy) return;
+    final conversation = _conversation;
     final history = [
       for (final m in state)
         if (!m.loading && m.text.isNotEmpty) ChatTurn(fromUser: m.fromUser, text: m.text),
@@ -109,8 +114,23 @@ class AssistantController extends Notifier<List<AssistantMessage>> {
       );
     } catch (_) {
       reply = Assistant.fallback(query, candidates, lang: lang);
+      if (query.isEmpty ||
+          (candidates.isEmpty &&
+              query.from == null &&
+              query.region == null &&
+              query.categories.isEmpty &&
+              !query.freeOnly &&
+              !query.deadlineSoon &&
+              query.plan == null)) {
+        reply = AssistantReply(
+          text: lang == 'ko'
+              ? '지금은 AI 대화에 연결할 수 없어 조건 검색만 가능해요. “이번 주말 서울 무료 행사”처럼 날짜나 지역을 포함해 물어봐 주세요.'
+              : 'AI chat is unavailable right now, but event filters still work. Try a date or city, such as “free events in Seoul this weekend”.',
+          eventIds: const [],
+        );
+      }
     }
-    if (!ref.mounted) return;
+    if (!ref.mounted || conversation != _conversation) return;
     state = [
       for (final m in state)
         if (!m.loading) m,

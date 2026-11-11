@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:liferadar/data/ai_insights.dart';
+import 'package:liferadar_core/demo.dart';
 import 'package:liferadar/features/assistant/assistant_screen.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 
@@ -41,6 +42,41 @@ Future<void> _open(WidgetTester tester) async {
 }
 
 void main() {
+  test('Unrelated chat and unavailable categories do not return top events', () {
+    final now = DateTime(2026, 11, 6);
+    for (final question in ['바보', '안녕하세요', '없는행사이름']) {
+      final events = Assistant.retrieve(
+        AssistantQuery.parse(question, now: now),
+        events: sampleEvents,
+        interests: const {'ai'},
+        now: now,
+      );
+      expect(events, isEmpty, reason: question);
+    }
+    final onlyConcerts = sampleEvents.where((e) => e.category == EventCategory.concert).toList();
+    expect(onlyConcerts, isNotEmpty);
+    expect(
+      Assistant.retrieve(
+        AssistantQuery.parse('해커톤', now: now),
+        events: onlyConcerts,
+        interests: const {'ai'},
+        now: now,
+      ),
+      isEmpty,
+    );
+  });
+
+  testWidgets('Unknown chat without AI explains availability without event cards', (tester) async {
+    await pumpApp(tester, interests: ['ai']);
+    await _open(tester);
+    await tester.enterText(find.byType(TextField), '바보');
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.arrow_upward_rounded));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('AI chat is unavailable'), findsOneWidget);
+    expect(find.textContaining('to your calendar?'), findsNothing);
+  });
+
   testWidgets('AI 비서: 키가 없으면 조건 검색으로 실제 카드를 보여준다', (tester) async {
     await pumpApp(tester, interests: ['ai', 'music']);
     await _open(tester);

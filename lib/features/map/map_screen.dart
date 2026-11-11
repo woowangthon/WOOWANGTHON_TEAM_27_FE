@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakao_map_sdk/kakao_map_sdk.dart' as km;
@@ -36,6 +38,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   km.KakaoMapController? _map;
   bool _ready = false;
   String? _mapError;
+  int _mapGeneration = 0;
   MapMode _mode = MapMode.explore;
   final Set<MapLayer> _layers = {MapLayer.plans, MapLayer.recommended};
 
@@ -54,8 +57,26 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   /// 경로 패널 접힘 상태 — 지도를 누르면 패널을 내려 지도를 넓게 본다.
   final _panelCollapsed = ValueNotifier(false);
 
+  Timer? _readyTimeout;
+
+  @override
+  void initState() {
+    super.initState();
+    _startReadyTimeout();
+  }
+
+  void _startReadyTimeout() {
+    _readyTimeout?.cancel();
+    _readyTimeout = Timer(const Duration(seconds: 25), () {
+      if (mounted && !_ready && _canShowMap) {
+        setState(() => _mapError = 'Map initialization timed out');
+      }
+    });
+  }
+
   @override
   void dispose() {
+    _readyTimeout?.cancel();
     _panelCollapsed.dispose();
     super.dispose();
   }
@@ -108,8 +129,18 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           if (!_ready && _canShowMap)
             Positioned.fill(
               child: IgnorePointer(
-                child: Shimmer(
-                  child: ColoredBox(color: p.skeleton, child: const SizedBox.expand()),
+                child: ColoredBox(
+                  color: p.surface,
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const CircularProgressIndicator(),
+                        const SizedBox(height: Space.md),
+                        Text(l10n.searching),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -252,14 +283,37 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     final l10n = context.l10n;
     if (!Env.hasKakaoMapKey) return _MapMessage(l10n.mapKeyMissing);
     if (!isKakaoSdkLoaded()) return _MapMessage(l10n.mapSdkNotLoaded(Uri.base.origin));
-    if (_mapError != null) return _MapMessage(l10n.mapError(friendlyError(l10n, _mapError)));
+    if (_mapError != null) {
+      return _MapMessage(
+        l10n.mapError(friendlyError(l10n, _mapError)),
+        onRetry: () => setState(() {
+          _mapError = null;
+          _map = null;
+          _ready = false;
+          _mePoi = null;
+          for (final pois in _pois.values) {
+            pois.clear();
+          }
+          _routeLine = null;
+          _routeOppPois.clear();
+          _routeOppByEventId.clear();
+          _mapGeneration++;
+          _startReadyTimeout();
+        }),
+      );
+    }
     return km.KakaoMap(
+      key: ValueKey(_mapGeneration),
+      // Keep Kakao's GL surface in the Android view hierarchy instead of a virtual display.
+      forceHybridComposition: true,
       option: const km.KakaoMapOption(position: _seoul, zoomLevel: 7),
       onMapReady: _onMapReady,
       // 경로 결과가 있을 때 지도를 누르면 패널을 내린다.
       onMapClick: (_, _) => _collapsePanel(),
       onTerrainClick: (_, _) => _collapsePanel(),
-      onMapError: (e) => setState(() => _mapError = e.toString()),
+      onMapError: (e) {
+        if (mounted) setState(() => _mapError = e.toString());
+      },
     );
   }
 
@@ -313,10 +367,17 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   // ---------- 지도 로직 ----------
 
   Future<void> _onMapReady(km.KakaoMapController controller) async {
+    if (!mounted) return;
+    _readyTimeout?.cancel();
     _map = controller;
     if (mounted) setState(() => _ready = true);
     await _drawOverlays();
-    await _fitAll();
+    final route = ref.read(routeProvider);
+    if (route.route != null) {
+      _drawRoute(route, fit: true);
+    } else {
+      await _fitAll();
+    }
     final pending = ref.read(mapFocusProvider);
     if (pending != null) await _focusEvent(pending);
     // 내 위치 표시 (처음에는 브라우저/기기가 권한을 요청). 카메라는 전체 화면을 유지한다.
@@ -558,14 +619,24 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 }
 
 class _MapMessage extends StatelessWidget {
-  const _MapMessage(this.message);
+  const _MapMessage(this.message, {this.onRetry});
   final String message;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) => ColoredBox(
     color: context.palette.surfaceAlt,
     child: Center(
-      child: EmptyState(icon: Icons.map_outlined, title: message),
+      child: SingleChildScrollView(
+        child: EmptyState(
+          icon: Icons.map_outlined,
+          title: message,
+          actions: [
+            if (onRetry != null)
+              OutlinedButton.icon(onPressed: onRetry, icon: const Icon(Icons.refresh), label: Text(context.l10n.retry)),
+          ],
+        ),
+      ),
     ),
   );
 }

@@ -50,3 +50,7 @@ env.json
 # 웹용으로 생성되는 Kakao 설정
 web/kakao_config.js
 /tool/out/
+/pubspec_overrides.yaml
+
+# Local deterministic test scratch
+.test-tmp/

@@ -37,6 +37,27 @@ const _offline = [
 /// 이해하기 쉽고 지역화된 메시지. 원본 에러는 디버그 로그에 기록됨.
 String friendlyError(AppLocalizations l10n, Object? error) {
   if (error != null) debugPrint('error: $error');
+  final text = error?.toString() ?? '';
+  final mapCode = RegExp(r'^KakaoAuthError\(code: (\d+)').firstMatch(text)?.group(1);
+  if (mapCode != null) {
+    return switch (mapCode) {
+      '401' => l10n.mapAuthRegistrationError,
+      '403' => l10n.mapPermissionError,
+      '429' => l10n.errBusy,
+      '499' => l10n.errOffline,
+      _ => '${l10n.errService} (MAP_$mapCode)',
+    };
+  }
+  if (text.contains('GoogleSignInException')) {
+    final code = RegExp(r'GoogleSignInExceptionCode\.(\w+)').firstMatch(text)?.group(1);
+    if (code == 'clientConfigurationError' || code == 'providerConfigurationError' ||
+        RegExp(r'ApiException:\s*10\b|DEVELOPER_ERROR').hasMatch(text)) {
+      return l10n.googleRegistrationError;
+    }
+    if (code == 'canceled' || code == 'interrupted') return l10n.googleSignInCanceled;
+    if (code == 'userMismatch') return l10n.googleAccountMismatch;
+    return '${l10n.errService} (GOOGLE_${code ?? 'unknown'})';
+  }
   return switch (classifyError(error)) {
     ErrorKind.offline => l10n.errOffline,
     ErrorKind.busy => l10n.errBusy,

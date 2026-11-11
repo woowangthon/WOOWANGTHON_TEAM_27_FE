@@ -17,6 +17,7 @@ import 'month_view.dart';
 import 'plan_detail_sheet.dart';
 import 'plan_editor_sheet.dart';
 import 'plan_signals.dart';
+import 'plan_route_connector.dart';
 
 class PlansScreen extends ConsumerStatefulWidget {
   const PlansScreen({super.key});
@@ -105,6 +106,11 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
         title: Text(l10n.tabPlans),
         actions: [
           IconButton(
+            tooltip: l10n.planNew,
+            onPressed: () => showPlanEditor(context, day: _month ? selected : null),
+            icon: const Icon(Icons.add_rounded),
+          ),
+          IconButton(
             tooltip: _month ? l10n.planViewList : l10n.planViewMonth,
             onPressed: () => _setMonth(!_month),
             icon: Icon(_month ? Icons.view_agenda_outlined : Icons.calendar_month_outlined),
@@ -118,10 +124,14 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
           const SizedBox(width: Space.sm),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showPlanEditor(context, day: _month ? selected : null),
-        icon: const Icon(Icons.add_rounded),
-        label: Text(l10n.planNew),
+      floatingActionButton: Padding(
+        // This nested Scaffold does not own the shell's floating navigation bar.
+        padding: const EdgeInsets.only(bottom: GlassTabBar.height + Space.md),
+        child: FloatingActionButton.extended(
+          onPressed: () => showPlanEditor(context, day: _month ? selected : null),
+          icon: const Icon(Icons.add_rounded),
+          label: Text(l10n.planNew),
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -185,7 +195,10 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
                   ),
                 )
               else
-                for (var i = 0; i < dayPlans.length; i++) planTile(dayPlans[i], i),
+                for (var i = 0; i < dayPlans.length; i++) ...[
+                  planTile(dayPlans[i], i),
+                  if (i + 1 < dayPlans.length) PlanRouteConnector(from: dayPlans[i], to: dayPlans[i + 1]),
+                ],
             ] else if (upcoming.isEmpty)
               EmptyState(
                 icon: Icons.event_available_outlined,
@@ -202,7 +215,10 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
             else
               for (final entry in groups.entries) ...[
                 SectionHeader(dayLabel(entry.key)),
-                for (var i = 0; i < entry.value.length; i++) planTile(entry.value[i], i),
+                for (var i = 0; i < entry.value.length; i++) ...[
+                  planTile(entry.value[i], i),
+                  if (i + 1 < entry.value.length) PlanRouteConnector(from: entry.value[i], to: entry.value[i + 1]),
+                ],
               ],
           ],
         ),

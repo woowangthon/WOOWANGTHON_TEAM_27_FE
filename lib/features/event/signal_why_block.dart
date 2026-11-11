@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/l10n_ext.dart';
+import 'traffic_metadata.dart';
 import '../../core/theme.dart';
 import '../../core/widgets.dart';
 import 'package:liferadar_core/liferadar_core.dart';
@@ -38,7 +39,7 @@ class SignalWhyBlock extends StatelessWidget {
       Tone.danger => (p.danger, p.dangerSoft),
       _ => (p.primary, p.primarySoft),
     };
-    final links = insight.sources.where((s) => s.url != null).toList();
+    final links = insight.sources.where((s) => s.url != null && (insight.trafficContext == null || safeTrafficUrl(s.url))).toList();
 
     return Container(
       width: double.infinity,
@@ -72,6 +73,7 @@ class SignalWhyBlock extends StatelessWidget {
           Text(context.tr(insight.body), style: t.bodyMedium!.copyWith(color: p.text, height: 1.5)),
           const SizedBox(height: Space.sm),
           Text(context.tr(insight.why), style: t.bodySmall),
+          if (insight.trafficContext != null) TrafficMetadata(insight.trafficContext!, detailed: true),
           if (standalone) ...[
             if (insight.signals.isNotEmpty) ...[
               const SizedBox(height: Space.md),
@@ -86,7 +88,7 @@ class SignalWhyBlock extends StatelessWidget {
                 child: TextButton(
                   style: TextButton.styleFrom(padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
                   onPressed: () => launchUrl(Uri.parse(s.url!), mode: LaunchMode.externalApplication),
-                  child: Text(l10n.openSource),
+                  child: Text(insight.trafficContext?.source == 'utic' ? context.tr(const LocalizedText(ko: 'UTIC에서 확인', en: 'Check on UTIC')) : l10n.openSource),
                 ),
               ),
           ],

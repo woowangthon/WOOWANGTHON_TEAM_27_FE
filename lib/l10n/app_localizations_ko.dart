@@ -9,6 +9,26 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
+  String get mapAuthRegistrationError =>
+      '지도 인증 실패 (MAP_401). 앱 관리자가 카카오 Android 패키지·서명 키 해시 등록을 확인해야 합니다.';
+
+  @override
+  String get mapPermissionError =>
+      '지도 사용 권한 없음 (MAP_403). 앱 관리자가 카카오맵 사용 설정을 확인해야 합니다.';
+
+  @override
+  String get googleRegistrationError =>
+      'Google 앱 인증 설정 오류 (GOOGLE_CONFIG). 앱 관리자가 Android 패키지·서명 SHA-1과 OAuth 클라이언트를 확인해야 합니다.';
+
+  @override
+  String get googleSignInCanceled =>
+      'Google 연결이 완료되지 않았어요. 계정 선택 후 취소됐다면 앱의 Android 인증 설정 확인이 필요할 수 있어요.';
+
+  @override
+  String get googleAccountMismatch =>
+      'Google 계정이 일치하지 않아요. 로그아웃 후 캘린더를 사용할 계정으로 다시 연결해 주세요.';
+
+  @override
   String get appTitle => 'LifeRadar';
 
   @override
@@ -1077,4 +1097,40 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get retry => '다시 시도';
+
+  @override
+  String get planRouteAdd => '경로 추가';
+
+  @override
+  String get planRouteArrival => '도착';
+
+  @override
+  String get planRouteAutoLocations => '앞뒤 일정의 장소를 가져왔어요. 대중교통 경로를 검색하고 저장하세요.';
+
+  @override
+  String get planRouteDelete => '이동 경로 삭제';
+
+  @override
+  String get planRouteDeparture => '출발';
+
+  @override
+  String get planRouteLate => '다음 일정 시작 시간보다 늦게 도착해요.';
+
+  @override
+  String get planRouteMissingLocation => '정확한 경로 검색을 위해 출발·도착 장소를 선택해주세요.';
+
+  @override
+  String get planRouteOutsideGap => '앞 일정 종료 후부터 다음 일정 시작 전까지의 출발 시간을 선택해주세요.';
+
+  @override
+  String get planRouteSave => '이 경로를 일정에 추가';
+
+  @override
+  String get planRouteStale => '일정이 변경됐어요. 창을 닫고 경로를 다시 추가해주세요.';
+
+  @override
+  String get planRouteTitle => '이동 계획';
+
+  @override
+  String get planRouteSearch => '경로 찾기';
 }

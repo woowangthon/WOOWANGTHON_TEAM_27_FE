@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../core/toast.dart';
+import '../../core/errors.dart';
+import '../../core/l10n_ext.dart';
+import '../../data/calendar_controller.dart';
 
 Widget googleSignInButton(BuildContext context, {required String languageCode, required double width}) {
   return SizedBox(
@@ -9,13 +12,13 @@ Widget googleSignInButton(BuildContext context, {required String languageCode, r
     child: OutlinedButton.icon(
       onPressed: () async {
         try {
+          await initGoogleSignIn();
           if (!GoogleSignIn.instance.supportsAuthenticate()) throw UnsupportedError('authenticate');
           await GoogleSignIn.instance.authenticate();
         } catch (e) {
+          if (!context.mounted) return;
           Toast.show(
-            languageCode == 'ko'
-                ? '이 기기에서는 아직 Google 로그인을 사용할 수 없어요.'
-                : 'Google sign-in is not set up on this device yet.',
+            friendlyError(context.l10n, e),
             type: ToastType.warning,
           );
         }

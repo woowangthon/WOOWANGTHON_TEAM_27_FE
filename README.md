@@ -213,3 +213,12 @@ flutter build apk --release --split-per-abi --dart-define-from-file=env.json   #
 |---|---|
 | Abbos Aliboev | 기획 · 아키텍처 · 디자인 · 개발 (FE·BE·AI) |
 | 전영우 (Jeon Yeongwoo) | 데이터 조사 · 교통 영향 판별 규칙 설계 · 레퍼런스 디자인 |
+
+
+## UTIC v2 로컬 구현 (운영 비활성)
+
+공용 교통 모델 0.2.0과 `traffic-v2.json`을 사용하는 경로를 추가했습니다. UTIC 실 API 통제 코드·CRS·시간·완전성은 미검증이며 실제 호출은 비활성화되어 있습니다. 기존 TOPIS/ITS 경로는 유지합니다.
+
+새 기본 `TRAFFIC_URL`은 data 브랜치의 `traffic-v2.json`입니다. BE v2 게시 후 새 앱을 출시하세요. 구버전용 `traffic.json`에는 UTIC를 넣지 않습니다. 앱 설정에 UTIC 키나 저장소 토큰을 추가하지 마세요.
+
+BE/FE의 로컬 AI path override 테스트와 배포용 원격 패키지 검증은 별개입니다. AI 0.2.0 게시 후 Git 참조를 실제 immutable SHA로 고정하고 override 없는 CI를 실행해야 합니다. 이번 작업은 push/배포하지 않았습니다.

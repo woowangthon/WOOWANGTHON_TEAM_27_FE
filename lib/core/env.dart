@@ -35,7 +35,7 @@ abstract final class Env {
   /// 도로 통제 정보 (TOPIS) — GitHub Actions가 3시간마다 업데이트.
   static const trafficUrl = String.fromEnvironment(
     'TRAFFIC_URL',
-    defaultValue: 'https://raw.githubusercontent.com/woowangthon/WOOWANGTHON_TEAM_27_BE/data/traffic.json',
+    defaultValue: 'https://raw.githubusercontent.com/woowangthon/WOOWANGTHON_TEAM_27_BE/data/traffic-v2.json',
   );
 
   /// 웹에서는 index.html의 JS SDK(kakao_config.js)를 통해, 안드로이드에서는 네이티브 키 사용.

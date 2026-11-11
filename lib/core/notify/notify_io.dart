@@ -78,10 +78,11 @@ const _details = NotificationDetails(
 );
 
 /// 동일한 [tag] — 단일 알림(중복 생성되지 않고 갱신됨).
-void showSystemNotification(String title, String body, {String? tag}) {
-  if (!_ready || _permission != 'granted') return;
+Future<bool> showSystemNotification(String title, String body, {String? tag}) async {
+  if (!_ready || _permission != 'granted') return false;
   final id = (tag ?? '$title$body').hashCode & 0x7fffffff;
-  _plugin.show(id: id, title: title, body: body, notificationDetails: _details).catchError(
-    (Object e) => debugPrint('notify show: $e'),
-  );
+  try {
+    await _plugin.show(id: id, title: title, body: body, notificationDetails: _details);
+    return true;
+  } catch (e) { debugPrint('notify show: $e'); return false; }
 }

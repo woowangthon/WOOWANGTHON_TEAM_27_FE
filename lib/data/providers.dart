@@ -15,6 +15,9 @@ import 'live_news.dart';
 import 'live_traffic.dart';
 import 'package:liferadar_core/demo.dart';
 import 'session.dart';
+import 'plan_routes.dart';
+import 'news_traffic.dart';
+import 'travel_impact.dart';
 
 export 'event_feed.dart' show EventFeed;
 export 'seen.dart' show seenProvider;
@@ -55,7 +58,8 @@ class EventFeedController extends Notifier<EventFeed> {
 
 /// 전체 행사: 실제(공개 API) + 데모 시나리오용 샘플 ("Sample" 배지).
 final eventsProvider = Provider<List<RadarEvent>>(
-  (ref) => [...ref.watch(eventFeedProvider).events, ...sampleEventsAt(ref.watch(nowProvider))],
+  (ref) => [...ref.watch(eventFeedProvider).events,
+    if (!ref.watch(liveEventsEnabledProvider)) ...sampleEventsAt(ref.watch(nowProvider))],
 );
 
 /// 일정 = 기본 출처 (Google 캘린더 연결 전에는 샘플, 이후 캘린더)
@@ -71,7 +75,8 @@ class PlansController extends Notifier<List<Plan>> {
   @override
   List<Plan> build() {
     _key = 'plans:${accountScope(ref.watch(sessionProvider))}';
-    _base = samplePlansAt(ref.watch(nowProvider));
+    // Clock ticks must not replace synchronized calendar plans with samples.
+    _base = ref.read(liveEventsEnabledProvider) ? const [] : samplePlansAt(ref.read(nowProvider));
     _own = _load();
     return _merge();
   }
@@ -101,7 +106,7 @@ class PlansController extends Notifier<List<Plan>> {
     state = _merge();
   }
 
-  void resetToSample() => setPlans(samplePlansAt(ref.read(nowProvider)));
+  void resetToSample() => setPlans(ref.read(liveEventsEnabledProvider) ? const [] : samplePlansAt(ref.read(nowProvider)));
 
   /// 앱에서 만든 일정을 추가하거나 수정한다 (source = 'local').
   Future<void> saveLocal(Plan plan) async {
@@ -144,7 +149,12 @@ final eventByIdProvider = Provider.family<RadarEvent?, String>((ref, id) {
 });
 
 /// "오늘" — 테스트에서는 고정 날짜로 override한다.
-final nowProvider = Provider<DateTime>((ref) => DateTime.now());
+final _clockProvider = StreamProvider<DateTime>((ref) =>
+    Stream.periodic(const Duration(minutes: 1), (_) => DateTime.now()));
+final nowProvider = Provider<DateTime>((ref) {
+  ref.watch(_clockProvider);
+  return DateTime.now();
+});
 
 /// 사용자 피드백 (인사이트 id → like/dislike/hidden), 기기에 저장.
 final insightFeedbackProvider =
@@ -195,7 +205,7 @@ class TrafficFeedController extends Notifier<TrafficFeed> {
     final prefs = ref.read(sharedPrefsProvider);
     final (feed, its) = await (LiveTraffic.fetch(prefs, state), LiveTraffic.fetchIts(prefs)).wait;
     if ((feed == null && its == null) || !ref.mounted) return false;
-    state = state.copyWith(feed: feed, its: its, itsFetchedAt: its == null ? null : DateTime.now());
+    state = state.copyWith(feed: feed, its: its, itsFetchedAt: its == null ? null : DateTime.now().toUtc());
     return true;
   }
 }
@@ -245,16 +255,32 @@ final baseInsightsProvider = Provider<List<Insight>>((ref) {
     if (w != null) weather[p.id] = w;
   }
 
-  return const InsightEngine().build(
+  final news = ref.watch(newsFeedProvider);
+  final verifiedStrikeSources = {for (final impact in news.trafficImpacts) if (impact.type == 'STRIKE') impact.sourceUrl};
+  final regular = const InsightEngine().build(
     plans: plans,
     events: ref.watch(eventsProvider),
     interests: ref.watch(interestsProvider),
     now: now,
     weatherByPlanId: weather,
     taste: ref.watch(tasteProvider),
-    traffic: ref.watch(trafficFeedProvider).activeAt(now),
-    strikes: ref.watch(newsFeedProvider).active,
+    traffic: ref.watch(trafficFeedProvider).activeAt(now.toUtc()),
+    trafficNow: now.toUtc(),
+    strikes: news.active.where((s) => !verifiedStrikeSources.contains(s.url)).toList(),
+    tripsByPlanId: ref.watch(tripsByPlanIdProvider),
   );
+  return InsightEngine.rank([
+    ...{for (final i in [
+      ...regular,
+      for (final entry in ref.watch(travelImpactProvider).entries)
+        if (plans.any((p) => p.id == entry.key && p.source != 'sample' &&
+            entry.value.matches(p, ref.watch(tripsByPlanIdProvider)[p.id])) &&
+            now.difference(entry.value.checkedAt) < const Duration(minutes: 10))
+          ...entry.value.insights,
+    ]) i.id: i}.values,
+    for (final evaluation in ref.watch(newsTrafficDecisionsProvider))
+      if (evaluation.visible) evaluation.toInsight(),
+  ]);
 });
 
 /// 홈의 인사이트 = 규칙 카드 + Gemini 문장(있으면) + 피드백.

@@ -1,5 +1,10 @@
 {
   "@@locale": "en",
+  "mapAuthRegistrationError": "Map authentication failed (MAP_401). The app administrator needs to check the Kakao Android package and signing key hash registration.",
+  "mapPermissionError": "Map permission denied (MAP_403). The app administrator needs to enable Kakao Maps for this app.",
+  "googleRegistrationError": "Google app configuration error (GOOGLE_CONFIG). The app administrator needs to check the Android package, signing SHA-1 and OAuth clients.",
+  "googleSignInCanceled": "Google connection did not complete. If it closed after account selection, the app's Android authentication settings may need checking.",
+  "googleAccountMismatch": "The Google account does not match. Sign out and reconnect with the account used for your calendar.",
   "appTitle": "LifeRadar",
   "tabHome": "Home",
   "tabMap": "Map",
@@ -535,5 +540,17 @@
   "assistantAdded": "Added",
   "assistantOpened": "Opened",
   "assistantCancelled": "Cancelled",
-  "retry": "Try again"
+  "retry": "Try again",
+  "planRouteAdd": "Add route",
+  "planRouteArrival": "Arrival",
+  "planRouteAutoLocations": "Locations from your adjacent plans. Find and save a transit route.",
+  "planRouteDelete": "Remove route",
+  "planRouteDeparture": "Departure",
+  "planRouteLate": "You will arrive after the next plan starts.",
+  "planRouteMissingLocation": "Choose the origin and destination to search for a route.",
+  "planRouteOutsideGap": "Choose a departure between the end of this plan and the start of the next.",
+  "planRouteSave": "Add this route to plans",
+  "planRouteStale": "These plans have changed. Close this sheet and add the route again.",
+  "planRouteTitle": "Travel plan",
+  "planRouteSearch": "Find transit route"
 }

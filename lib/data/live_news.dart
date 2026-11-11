@@ -9,12 +9,15 @@ import '../core/env.dart';
 
 /// 뉴스에서 판독한 대중교통 파업 (`news.json`). 공식 공지가 아니므로 홈에는 참고 카드로만 나온다.
 class NewsFeed {
-  const NewsFeed({this.strikes = const [], this.generatedAt});
+  const NewsFeed({this.strikes = const [], this.generatedAt, this.trafficImpacts = const [], this.extractionFailures = const [], this.transportReferences = const []});
 
   static const empty = NewsFeed();
 
   final List<TransitStrike> strikes;
   final DateTime? generatedAt;
+  final List<NewsTrafficImpact> trafficImpacts;
+  final List<Map<String, dynamic>> extractionFailures;
+  final List<TrafficReference> transportReferences;
 
   static NewsFeed parse(String raw) {
     final j = jsonDecode(raw) as Map<String, dynamic>;
@@ -29,6 +32,15 @@ class NewsFeed {
     return NewsFeed(
       strikes: strikes,
       generatedAt: DateTime.tryParse(j['generatedAt'] as String? ?? ''),
+      trafficImpacts: [
+        if (j['newsTrafficSchemaVersion'] == '1.0')
+          for (final row in j['trafficImpacts'] as List? ?? const [])
+            // Malformed verified records reject the update as a whole. Keeping
+            // the old cache prevents a bad item from silently removing warnings.
+            NewsTrafficImpact.fromJson((row as Map).cast<String, dynamic>()),
+      ],
+      extractionFailures: [for (final row in j['extractionFailures'] as List? ?? const []) (row as Map).cast<String, dynamic>()],
+      transportReferences: [for (final row in j['transportReferences'] as List? ?? const []) TrafficReference.fromJson((row as Map).cast<String, dynamic>())],
     );
   }
 

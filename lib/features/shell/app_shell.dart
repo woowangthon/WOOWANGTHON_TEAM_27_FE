@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +12,8 @@ import '../../core/theme.dart';
 import '../../core/widgets.dart';
 import '../../data/notifications.dart';
 import '../../data/providers.dart';
+import '../../data/travel_impact.dart';
+import '../../data/plan_routes.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 
 /// 하단 내비게이션 셸 (탭 5개). 여기서 신호를 지켜보고, 중요한 신호를
@@ -24,10 +28,20 @@ class AppShell extends ConsumerStatefulWidget {
   ConsumerState<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends ConsumerState<AppShell> {
+class _AppShellState extends ConsumerState<AppShell> with WidgetsBindingObserver {
+  Timer? _trafficRefresh;
+  bool _refreshing = false;
+  bool _checkingTravel = false;
+  bool _travelPending = false;
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    if (ref.read(liveEventsEnabledProvider)) {
+      _trafficRefresh = Timer.periodic(const Duration(minutes: 5), (_) => unawaited(_refreshTraffic()));
+      ref.listenManual<List<Plan>>(plansProvider, (_, _) => Future.microtask(_refreshTravel), fireImmediately: true);
+      ref.listenManual(planRoutesProvider, (_, _) => Future.microtask(_refreshTravel));
+    }
     ref.listenManual<List<Insight>>(
       insightsProvider,
       (_, next) => ref.read(signalNotifierProvider).dispatch(next),
@@ -37,6 +51,48 @@ class _AppShellState extends ConsumerState<AppShell> {
     ref.listenManual<bool>(notificationsEnabledProvider, (_, on) {
       if (on) ref.read(signalNotifierProvider).dispatch(ref.read(insightsProvider));
     });
+  }
+
+  Future<void> _refreshTraffic() async {
+    if (!mounted || _refreshing || !ref.read(liveEventsEnabledProvider)) return;
+    _refreshing = true;
+    ref.invalidate(nowProvider);
+    try {
+      await Future.wait([
+        ref.read(newsFeedProvider.notifier).refresh(),
+        ref.read(trafficFeedProvider.notifier).refresh(),
+        ref.read(eventFeedProvider.notifier).refresh(),
+        _refreshTravel(),
+      ]);
+    } finally {
+      _refreshing = false;
+    }
+  }
+
+  Future<void> _refreshTravel() async {
+    if (!mounted || !ref.read(liveEventsEnabledProvider)) return;
+    if (_checkingTravel) { _travelPending = true; return; }
+    _checkingTravel = true;
+    try { await ref.read(travelImpactProvider.notifier).refreshUpcoming(); }
+    finally {
+      _checkingTravel = false;
+      if (_travelPending && mounted) {
+        _travelPending = false;
+        unawaited(_refreshTravel());
+      }
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) unawaited(_refreshTraffic());
+  }
+
+  @override
+  void dispose() {
+    _trafficRefresh?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   StatefulNavigationShell get shell => widget.shell;
@@ -122,6 +178,7 @@ class GlassTabBar extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(999),
               child: BackdropFilter(
+                enabled: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
                 filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
                 child: Container(
                   height: height,
@@ -263,13 +320,16 @@ class FadeBranchContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Stack(
     fit: StackFit.expand,
-    children: [for (var i = 0; i < children.length; i++) _Branch(active: i == currentIndex, child: children[i])],
+    children: [
+      for (var i = 0; i < children.length; i++) _Branch(active: i == currentIndex, animate: i != 1, child: children[i]),
+    ],
   );
 }
 
 class _Branch extends StatefulWidget {
-  const _Branch({required this.active, required this.child});
+  const _Branch({required this.active, required this.child, required this.animate});
   final bool active;
+  final bool animate;
   final Widget child;
 
   @override
@@ -277,11 +337,13 @@ class _Branch extends StatefulWidget {
 }
 
 class _BranchState extends State<_Branch> with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(
-    vsync: this,
-    duration: Motion.normal,
-    value: widget.active ? 1 : 0,
-  );
+  late final AnimationController _c;
+
+  @override
+  void initState() {
+    super.initState();
+    _c = AnimationController(vsync: this, duration: Motion.normal, value: widget.active ? 1 : 0);
+  }
 
   @override
   void didUpdateWidget(_Branch old) {
@@ -303,10 +365,12 @@ class _BranchState extends State<_Branch> with SingleTickerProviderStateMixin {
     offstage: !widget.active,
     child: TickerMode(
       enabled: widget.active,
-      child: FadeTransition(
-        opacity: CurvedAnimation(parent: _c, curve: Motion.curve),
-        child: widget.child,
-      ),
+      child: !widget.animate
+          ? widget.child
+          : FadeTransition(
+              opacity: CurvedAnimation(parent: _c, curve: Motion.curve),
+              child: widget.child,
+            ),
     ),
   );
 }

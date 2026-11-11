@@ -27,7 +27,9 @@ List<PlanSignal> planSignals(BuildContext context, WidgetRef ref, Plan plan) {
   final out = <PlanSignal>[];
   for (final i in insights) {
     final event = i.eventIds.isEmpty ? null : ref.watch(eventByIdProvider(i.eventIds.first));
-    if (i.id.startsWith('rain:')) {
+    if (i.trafficContext != null || i.id.startsWith('travel:') || i.id.startsWith('news-traffic:')) {
+      out.add(PlanSignal(insight: i, icon: Icons.traffic_outlined, text: context.tr(i.title), tone: Tone.info));
+    } else if (i.id.startsWith('rain:')) {
       out.add(PlanSignal(insight: i, icon: Icons.umbrella_outlined, text: l10n.planSignalRain, tone: Tone.info));
     } else if (i.id.startsWith('crowd:') && event != null) {
       out.add(

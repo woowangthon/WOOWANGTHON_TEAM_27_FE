@@ -11,4 +11,4 @@ String notifyPermission() => 'unsupported';
 
 Future<String> requestNotifyPermission() async => 'unsupported';
 
-void showSystemNotification(String title, String body, {String? tag}) {}
+Future<bool> showSystemNotification(String title, String body, {String? tag}) async => false;

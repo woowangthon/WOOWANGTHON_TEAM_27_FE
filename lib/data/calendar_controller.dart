@@ -21,12 +21,23 @@ class CalendarState {
 }
 
 /// Google Sign-In은 앱 시작 시 한 번 초기화한다 (웹: GIS SDK 로드).
-Future<void> initGoogleSignIn() async {
+Future<void>? _googleSignInInitialization;
+
+Future<void> initGoogleSignIn() {
+  return _googleSignInInitialization ??= _initializeGoogleSignIn();
+}
+
+Future<void> _initializeGoogleSignIn() async {
   if (!isGoogleSignInConfigured) return;
-  await GoogleSignIn.instance.initialize(
-    clientId: kIsWeb ? Env.googleOAuthWebClientId : null,
-    serverClientId: kIsWeb ? null : Env.googleOAuthWebClientId,
-  );
+  try {
+    await GoogleSignIn.instance.initialize(
+      clientId: kIsWeb ? Env.googleOAuthWebClientId : null,
+      serverClientId: kIsWeb ? null : Env.googleOAuthWebClientId,
+    );
+  } catch (_) {
+    _googleSignInInitialization = null;
+    rethrow;
+  }
 }
 
 /// Android OAuth 클라이언트는 패키지와 SHA-1로 식별되고, 서버 ID에는 웹 클라이언트를 사용한다.
@@ -60,7 +71,16 @@ class CalendarController extends Notifier<CalendarState> {
   }
 
   Future<void> _authorize() async {
-    final authz = await GoogleSignIn.instance.authorizationClient.authorizeScopes([CalendarApi.scope]);
+    await initGoogleSignIn();
+    final signIn = GoogleSignIn.instance;
+    var client = signIn.authorizationClient;
+    if (!kIsWeb && signIn.supportsAuthenticate()) {
+      final account = await signIn.attemptLightweightAuthentication() ??
+          await signIn.authenticate(scopeHint: [CalendarApi.scope]);
+      client = account.authorizationClient;
+    }
+    final authz = await client.authorizationForScopes([CalendarApi.scope]) ??
+        await client.authorizeScopes([CalendarApi.scope]);
     _token = authz.accessToken;
   }
 

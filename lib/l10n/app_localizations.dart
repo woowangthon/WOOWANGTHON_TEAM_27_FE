@@ -98,6 +98,36 @@ abstract class AppLocalizations {
     Locale('ko'),
   ];
 
+  /// No description provided for @mapAuthRegistrationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Map authentication failed (MAP_401). The app administrator needs to check the Kakao Android package and signing key hash registration.'**
+  String get mapAuthRegistrationError;
+
+  /// No description provided for @mapPermissionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Map permission denied (MAP_403). The app administrator needs to enable Kakao Maps for this app.'**
+  String get mapPermissionError;
+
+  /// No description provided for @googleRegistrationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Google app configuration error (GOOGLE_CONFIG). The app administrator needs to check the Android package, signing SHA-1 and OAuth clients.'**
+  String get googleRegistrationError;
+
+  /// No description provided for @googleSignInCanceled.
+  ///
+  /// In en, this message translates to:
+  /// **'Google connection did not complete. If it closed after account selection, the app\'s Android authentication settings may need checking.'**
+  String get googleSignInCanceled;
+
+  /// No description provided for @googleAccountMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The Google account does not match. Sign out and reconnect with the account used for your calendar.'**
+  String get googleAccountMismatch;
+
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
@@ -2089,6 +2119,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try again'**
   String get retry;
+
+  /// No description provided for @planRouteAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add route'**
+  String get planRouteAdd;
+
+  /// No description provided for @planRouteArrival.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival'**
+  String get planRouteArrival;
+
+  /// No description provided for @planRouteAutoLocations.
+  ///
+  /// In en, this message translates to:
+  /// **'Locations from your adjacent plans. Find and save a transit route.'**
+  String get planRouteAutoLocations;
+
+  /// No description provided for @planRouteDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove route'**
+  String get planRouteDelete;
+
+  /// No description provided for @planRouteDeparture.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure'**
+  String get planRouteDeparture;
+
+  /// No description provided for @planRouteLate.
+  ///
+  /// In en, this message translates to:
+  /// **'You will arrive after the next plan starts.'**
+  String get planRouteLate;
+
+  /// No description provided for @planRouteMissingLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the origin and destination to search for a route.'**
+  String get planRouteMissingLocation;
+
+  /// No description provided for @planRouteOutsideGap.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a departure between the end of this plan and the start of the next.'**
+  String get planRouteOutsideGap;
+
+  /// No description provided for @planRouteSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Add this route to plans'**
+  String get planRouteSave;
+
+  /// No description provided for @planRouteStale.
+  ///
+  /// In en, this message translates to:
+  /// **'These plans have changed. Close this sheet and add the route again.'**
+  String get planRouteStale;
+
+  /// No description provided for @planRouteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel plan'**
+  String get planRouteTitle;
+
+  /// No description provided for @planRouteSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Find transit route'**
+  String get planRouteSearch;
 }
 
 class _AppLocalizationsDelegate

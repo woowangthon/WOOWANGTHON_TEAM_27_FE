@@ -30,7 +30,8 @@ class GoogleApi {
         'X-Goog-Api-Key': _key,
         'X-Goog-FieldMask': 'routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline,'
             'routes.legs.steps.travelMode,routes.legs.steps.transitDetails.transitLine.name,'
-            'routes.legs.steps.transitDetails.transitLine.nameShort',
+            'routes.legs.steps.transitDetails.transitLine.nameShort,'
+            'routes.legs.steps.transitDetails.transitLine.vehicle.type',
       },
       body: jsonEncode({
         'origin': loc(origin),
@@ -47,9 +48,20 @@ class GoogleApi {
     if (routes == null || routes.isEmpty) throw const GoogleApiException('No transit route found');
     final r = routes.first as Map<String, dynamic>;
     final lines = <String>[];
+    final modes = <String>{};
+    var unknownTransitMode = false;
     for (final leg in (r['legs'] as List? ?? const [])) {
       for (final step in (leg['steps'] as List? ?? const [])) {
         final line = step['transitDetails']?['transitLine'];
+        final vehicle = line?['vehicle']?['type'];
+        final mode = switch (vehicle) {
+          'BUS' || 'INTERCITY_BUS' || 'TROLLEYBUS' => 'bus',
+          'SUBWAY' || 'METRO_RAIL' || 'TRAM' || 'MONORAIL' => 'subway',
+          'RAIL' || 'HEAVY_RAIL' || 'HIGH_SPEED_TRAIN' || 'COMMUTER_TRAIN' || 'LONG_DISTANCE_TRAIN' => 'rail',
+          _ => null,
+        };
+        if (mode != null) modes.add(mode);
+        if (line != null && mode == null) unknownTransitMode = true;
         final name = (line?['name'] ?? line?['nameShort']) as String?;
         if (name != null && !lines.contains(name)) lines.add(name);
       }
@@ -60,6 +72,7 @@ class GoogleApi {
       durationSeconds: int.parse((r['duration'] as String).replaceAll('s', '')),
       points: decodePolyline(r['polyline']['encodedPolyline'] as String),
       transitLines: lines,
+      transportModes: unknownTransitMode ? const {} : modes,
     );
   }
 

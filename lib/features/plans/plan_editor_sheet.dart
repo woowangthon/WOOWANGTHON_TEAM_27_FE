@@ -181,6 +181,7 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
       location: _location,
       source: _plan?.source ?? 'local',
       note: note.isEmpty ? null : note,
+      attendance: _plan?.attendance ?? 'unknown',
     );
 
     final navigator = Navigator.of(context);
@@ -481,11 +482,19 @@ class _TimeRow extends StatelessWidget {
     final t = context.textStyles;
     return Padding(
       padding: const EdgeInsets.only(left: 32, right: Space.sm, bottom: Space.sm),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: Text(label, style: t.bodyMedium)),
-          _ValueButton(day, onDay, error: error),
-          if (time != null) ...[const SizedBox(width: 6), _ValueButton(time!, onTime, error: error)],
+          Text(label, style: t.bodyMedium),
+          const SizedBox(height: Space.xs),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              _ValueButton(day, onDay, error: error),
+              if (time != null) _ValueButton(time!, onTime, error: error),
+            ],
+          ),
         ],
       ),
     );

@@ -9,6 +9,26 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get mapAuthRegistrationError =>
+      'Map authentication failed (MAP_401). The app administrator needs to check the Kakao Android package and signing key hash registration.';
+
+  @override
+  String get mapPermissionError =>
+      'Map permission denied (MAP_403). The app administrator needs to enable Kakao Maps for this app.';
+
+  @override
+  String get googleRegistrationError =>
+      'Google app configuration error (GOOGLE_CONFIG). The app administrator needs to check the Android package, signing SHA-1 and OAuth clients.';
+
+  @override
+  String get googleSignInCanceled =>
+      'Google connection did not complete. If it closed after account selection, the app\'s Android authentication settings may need checking.';
+
+  @override
+  String get googleAccountMismatch =>
+      'The Google account does not match. Sign out and reconnect with the account used for your calendar.';
+
+  @override
   String get appTitle => 'LifeRadar';
 
   @override
@@ -1108,4 +1128,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Try again';
+
+  @override
+  String get planRouteAdd => 'Add route';
+
+  @override
+  String get planRouteArrival => 'Arrival';
+
+  @override
+  String get planRouteAutoLocations =>
+      'Locations from your adjacent plans. Find and save a transit route.';
+
+  @override
+  String get planRouteDelete => 'Remove route';
+
+  @override
+  String get planRouteDeparture => 'Departure';
+
+  @override
+  String get planRouteLate => 'You will arrive after the next plan starts.';
+
+  @override
+  String get planRouteMissingLocation =>
+      'Choose the origin and destination to search for a route.';
+
+  @override
+  String get planRouteOutsideGap =>
+      'Choose a departure between the end of this plan and the start of the next.';
+
+  @override
+  String get planRouteSave => 'Add this route to plans';
+
+  @override
+  String get planRouteStale =>
+      'These plans have changed. Close this sheet and add the route again.';
+
+  @override
+  String get planRouteTitle => 'Travel plan';
+
+  @override
+  String get planRouteSearch => 'Find transit route';
 }

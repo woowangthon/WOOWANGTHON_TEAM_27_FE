@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'calendar_controller.dart';
+import 'plan_routes.dart';
 import 'providers.dart';
 
 // ─────────────────────────── 테마 / 언어 (저장됨) ───────────────────────────
@@ -190,6 +191,7 @@ Future<void> deleteAccountAndData(WidgetRef ref) async {
     ..invalidate(sessionProvider)
     ..invalidate(interestsProvider)
     ..invalidate(plansProvider)
+    ..invalidate(planRoutesProvider)
     ..invalidate(profileNameProvider)
     ..invalidate(setupDoneProvider)
     ..invalidate(themeModeProvider)

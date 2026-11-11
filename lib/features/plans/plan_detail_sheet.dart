@@ -15,6 +15,7 @@ import '../shell/app_shell.dart';
 import '../weather/weather_chip.dart';
 import 'plan_editor_sheet.dart';
 import 'plan_signals.dart';
+import 'travel_impact_sheet.dart';
 
 /// 일정 보기 (수정 전): 언제 · 어디서 · 날씨 · 주변 소식.
 Future<void> showPlanDetail(BuildContext context, Plan plan) => showModalBottomSheet<void>(
@@ -121,6 +122,14 @@ class PlanDetailSheet extends ConsumerWidget {
             ),
           ),
 
+          if (plan.source != 'sample') ...[
+            const SizedBox(height: Space.md),
+            FilledButton.tonalIcon(
+              onPressed: () => showTravelImpact(context, plan),
+              icon: const Icon(Icons.traffic_outlined),
+              label: Text(context.tr(const LocalizedText(ko: '교통 영향 확인', en: 'Check travel impact'))),
+            ),
+          ],
           // ── 주변 소식 ──
           SectionHeader(l10n.planAround, padding: const EdgeInsets.fromLTRB(0, Space.xl, 0, Space.sm)),
           if (signals.isEmpty)

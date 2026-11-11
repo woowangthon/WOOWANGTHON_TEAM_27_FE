@@ -51,14 +51,14 @@ void main() {
 
   group('직접 만든 일정', () {
     Plan plan(String id, {String title = 'Gym'}) => Plan(
-          id: id,
-          title: title,
-          start: DateTime(2026, 11, 10, 9),
-          end: DateTime(2026, 11, 10, 10),
-          locationText: '',
-          city: '',
-          note: 'bring shoes',
-        );
+      id: id,
+      title: title,
+      start: DateTime(2026, 11, 10, 9),
+      end: DateTime(2026, 11, 10, 10),
+      locationText: '',
+      city: '',
+      note: 'bring shoes',
+    );
 
     test('추가 → 저장 → 수정 → 삭제', () async {
       final c = await _container({'session': '{"kind":"guest"}'});
@@ -130,10 +130,16 @@ void main() {
   });
 
   testWidgets('내 일정: "+"로 새 일정을 추가한다', (tester) async {
+    tester.view.physicalSize = const Size(360, 780);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     await pumpApp(tester, interests: ['ai']);
     await tester.tap(find.byIcon(Icons.event_note_outlined).last);
     await tester.pumpAndSettle();
 
+    // On a phone the button must be above the floating navigation bar and tappable.
+    expect(tester.getBottomRight(find.text('New plan')).dy, lessThan(tester.getTopLeft(find.byIcon(Icons.event_note_rounded).last).dy));
     await tester.tap(find.text('New plan'));
     await tester.pumpAndSettle();
     // 제목 없이는 저장할 수 없다
@@ -182,16 +188,18 @@ void main() {
   testWidgets('내 일정: 직접 만든 일정은 상세 창에서 삭제(확인 후), 샘플은 삭제 버튼 없음', (tester) async {
     await pumpApp(tester, interests: ['ai']);
     final container = ProviderScope.containerOf(tester.element(find.byType(Scaffold).first));
-    await container.read(plansProvider.notifier).saveLocal(
-      Plan(
-        id: 'mine',
-        title: 'Study group',
-        start: DateTime(2026, 11, 7, 15),
-        end: DateTime(2026, 11, 7, 17),
-        locationText: '',
-        city: '',
-      ),
-    );
+    await container
+        .read(plansProvider.notifier)
+        .saveLocal(
+          Plan(
+            id: 'mine',
+            title: 'Study group',
+            start: DateTime(2026, 11, 7, 15),
+            end: DateTime(2026, 11, 7, 17),
+            locationText: '',
+            city: '',
+          ),
+        );
     await tester.tap(find.byIcon(Icons.event_note_outlined).last);
     await tester.pumpAndSettle();
 

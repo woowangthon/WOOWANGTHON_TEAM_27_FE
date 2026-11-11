@@ -1,3 +1,4 @@
+import '../event/traffic_metadata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,6 +50,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // 사용자가 입력한 이름; 없으면 Google 이름의 첫 단어.
     final name =
         ref.watch(profileNameProvider) ?? (session == null || session.isGuest ? null : session.name?.split(' ').first);
+
+    final trafficStates = ref.watch(trafficFeedProvider).sourceStatesAt(now.toUtc());
+    final delayedSources = trafficStates.entries.where((e) => e.value is Map && {'unavailable', 'partial'}.contains(e.value['status'])).map((e) => e.key).join(', ');
 
     final counts = {
       HomeFilter.plans: forPlans.length,
@@ -129,6 +133,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
             child: CustomScrollView(
               slivers: [
+                if (delayedSources.isNotEmpty) SliverToBoxAdapter(child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Space.gutter, vertical: Space.sm),
+                  child: Text(context.tr(LocalizedText(ko: '교통 정보 갱신 지연 · $delayedSources · 통제 없음으로 해석하지 마세요.', en: 'Traffic update delayed · $delayedSources · this does not mean no road controls.'))),
+                )),
                 // ── 제목 ──
                 SliverToBoxAdapter(
                   child: Padding(
@@ -537,6 +545,7 @@ class InsightCard extends ConsumerWidget {
                   child: MarqueeText(what, style: t.titleMedium),
                 ),
                 const SizedBox(height: 6),
+                if (insight.trafficContext != null) TrafficMetadata(insight.trafficContext!),
                 if (when != null) MetaRow(Icons.schedule_outlined, when),
                 if (where != null && where.isNotEmpty) ...[
                   const SizedBox(height: 2),

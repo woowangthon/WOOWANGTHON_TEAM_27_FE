@@ -93,28 +93,63 @@ void main() {
       prefs,
       key: 'k',
       now: now,
-      client: MockClient(
-        (_) async => http.Response.bytes(utf8.encode(_itsBody()), 200),
-      ),
+      client: MockClient((_) async => http.Response.bytes(utf8.encode(_itsBody()), 200)),
     );
     final offline = await LiveTraffic.fetchIts(
       prefs,
       key: 'k',
       now: now,
-      client: MockClient(
-        (_) => throw http.ClientException('Failed host lookup'),
-      ),
+      client: MockClient((_) => throw http.ClientException('Failed host lookup')),
     );
     expect(offline, isNull);
     expect(LiveTraffic.cached(prefs).its, hasLength(1));
   });
 
   test('activeAt: 서울(TOPIS)과 전국(ITS)을 합치고 id 중복을 없앤다', () {
-    final its = TrafficNotice.fromJson(
-      _topis('its-1').toJson()..['source'] = 'its',
-    );
+    final its = TrafficNotice.fromJson(_topis('its-1').toJson()..['source'] = 'its');
     final feed = TrafficFeed(notices: [_topis('t1')], its: [its, its]);
-    expect([for (final n in feed.activeAt(now)) n.id], ['t1', 'its-1']);
+    expect([for (final n in feed.activeAt(now)) n.id], unorderedEquals(['t1', 'its-1']));
     expect(feed.activeAt(DateTime(2026, 11, 9)), isEmpty); // 다음 날에는 끝난 공지
+  });
+  test('partial counts and malformed eligible ITS rows cannot clear the last good device cache', () async {
+    await LiveTraffic.fetchIts(
+      prefs,
+      key: 'synthetic',
+      now: now,
+      client: MockClient((_) async => http.Response.bytes(utf8.encode(_itsBody()), 200)),
+    );
+    final saved = prefs.getString(LiveTraffic.itsPrefsKey);
+    final partial = jsonDecode(_itsBody()) as Map<String, dynamic>;
+    (partial['body'] as Map)['items'] = [];
+    final failed = await LiveTraffic.fetchIts(
+      prefs,
+      key: 'synthetic',
+      now: now.add(const Duration(minutes: 1)),
+      client: MockClient((_) async => http.Response.bytes(utf8.encode(jsonEncode(partial)), 200)),
+    );
+    expect(failed, isNull);
+    expect(prefs.getString(LiveTraffic.itsPrefsKey), saved);
+    final malformed = jsonDecode(_itsBody()) as Map<String, dynamic>;
+    ((malformed['body'] as Map)['items'] as List).first['coordX'] = 'invalid';
+    final invalid = await LiveTraffic.fetchIts(
+      prefs,
+      key: 'synthetic',
+      now: now.add(const Duration(minutes: 1)),
+      client: MockClient((_) async => http.Response.bytes(utf8.encode(jsonEncode(malformed)), 200)),
+    );
+    expect(invalid, isNull);
+    expect(prefs.getString(LiveTraffic.itsPrefsKey), saved);
+    final empty = {
+      'header': {'resultCode': 0},
+      'body': {'totalCount': 0, 'items': []},
+    };
+    final cleared = await LiveTraffic.fetchIts(
+      prefs,
+      key: 'synthetic',
+      now: now.add(const Duration(minutes: 1)),
+      client: MockClient((_) async => http.Response(jsonEncode(empty), 200)),
+    );
+    expect(cleared, isEmpty);
+    expect(LiveTraffic.cached(prefs).its, isEmpty);
   });
 }

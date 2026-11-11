@@ -1,8 +1,27 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 import 'package:liferadar/services/google_api.dart';
 
 void main() {
+  test('transit vehicle types come from route provider, not line-name guessing', () async {
+    final api = GoogleApi(apiKey: 'fixture-key', client: MockClient((request) async {
+      expect(request.headers['X-Goog-FieldMask'], contains('transitLine.vehicle.type'));
+      return http.Response.bytes(utf8.encode(jsonEncode({'routes': [{
+        'distanceMeters': 1000, 'duration': '1800s', 'polyline': {'encodedPolyline': ''},
+        'legs': [{'steps': [
+          {'transitDetails': {'transitLine': {'name': '101번', 'vehicle': {'type': 'BUS'}}}},
+          {'transitDetails': {'transitLine': {'name': '2호선', 'vehicle': {'type': 'SUBWAY'}}}},
+        ]}],
+      }]})), 200);
+    }));
+    final route = await api.transit(const GeoPoint(37.5, 127), const GeoPoint(37.6, 127), departure: DateTime(2026, 11, 10));
+    expect(route.transportModes, {'bus', 'subway'});
+    expect(route.facilityIds, isEmpty);
+    expect(route.transitLines, ['101번', '2호선']);
+  });
   test('decodePolyline: Google rasmiy misoli', () {
     final pts = GoogleApi.decodePolyline('_p~iF~ps|U_ulLnnqC_mqNvxq`@');
     expect(pts.length, 3);
