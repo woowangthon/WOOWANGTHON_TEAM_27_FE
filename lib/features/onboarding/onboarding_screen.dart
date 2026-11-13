@@ -32,6 +32,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     await ref.read(interestsProvider.notifier).save(_selected);
     if (!mounted) return;
     if (widget.editing && context.canPop()) {
+      Toast.show(context.l10n.interestsSaved);
       context.pop();
     } else {
       context.go('/home');

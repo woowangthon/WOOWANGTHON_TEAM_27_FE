@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../core/toast.dart';
 import '../../core/l10n_ext.dart';
 import '../../core/theme.dart';
 import '../../data/travel_impact.dart';
@@ -64,6 +65,7 @@ class _TravelImpactSheetState extends ConsumerState<TravelImpactSheet> {
       if (mounted) setState(() => _report = report);
     } catch (_) {
       if (mounted) {
+        Toast.show(context.l10n.travelCheckError, type: ToastType.error);
         setState(
           () => _error = tr(
             '조회하지 못했습니다. 연결 상태와 일정 장소를 확인해 주세요.',

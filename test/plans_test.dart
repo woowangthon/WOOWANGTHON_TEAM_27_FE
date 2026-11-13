@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:liferadar/features/home/home_screen.dart';
 import 'package:liferadar/data/providers.dart';
 import 'package:liferadar/data/session.dart';
 import 'package:liferadar_core/liferadar_core.dart';
@@ -155,13 +157,12 @@ void main() {
     expect(find.text('Dentist'), findsOneWidget);
   });
 
-  testWidgets('프로필: 관심사 목록은 보이지 않고 개수와 "Edit"만', (tester) async {
+  testWidgets('프로필: 관심사는 칩 5개 + 나머지 개수, 누르면 수정 화면', (tester) async {
     await pumpApp(tester, interests: ['ai', 'music', 'food', 'travel', 'pets', 'art', 'fitness']);
-    await tester.tap(find.byIcon(Icons.person_outline_rounded).last);
+    GoRouter.of(tester.element(find.byType(HomeScreen))).push('/profile');
     await tester.pumpAndSettle();
-    expect(find.text('7 selected'), findsOneWidget);
-    expect(find.text('Pets'), findsNothing);
-    await tester.tap(find.text('Edit'));
+    expect(find.text('+2'), findsOneWidget);
+    await tester.tap(find.text('+2'));
     await tester.pumpAndSettle();
     expect(find.text('What are you into?'), findsOneWidget); // 수정 화면이 열림
     await tester.scrollUntilVisible(find.text('Pets'), 300, scrollable: find.byType(Scrollable).last);

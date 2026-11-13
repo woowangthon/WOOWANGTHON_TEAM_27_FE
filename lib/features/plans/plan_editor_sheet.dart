@@ -9,10 +9,12 @@ import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../core/widgets.dart';
 import '../../data/calendar_controller.dart';
+import '../../data/plan_travel.dart';
 import '../../data/providers.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 import '../route/route_panel.dart' show PlaceSearchSheet;
 import 'plan_actions.dart';
+import 'plan_travel_line.dart';
 
 /// 일정 추가([plan] = null) 또는 수정.
 /// - 'local'  → 기기에 저장 (선택: Google 캘린더에도).
@@ -22,6 +24,7 @@ Future<void> showPlanEditor(BuildContext context, {Plan? plan, DateTime? day}) =
   context: context,
   isScrollControlled: true,
   useSafeArea: true,
+  useRootNavigator: true, // 하단 내비게이션이 저장 버튼을 가리지 않게
   builder: (_) => PlanEditorSheet(plan: plan, day: day),
 );
 
@@ -47,6 +50,12 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
   String _locationText = '';
   String _city = '';
   GeoPoint? _location;
+  // 이동 방법 (선택)
+  String? _travelMode;
+  late final TextEditingController _lines = TextEditingController();
+  String? _originName;
+  GeoPoint? _origin;
+  TimeOfDay? _departure;
   late bool _toCalendar;
   bool _saving = false;
   bool _titleError = false;
@@ -82,12 +91,21 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
       _endTime = TimeOfDay(hour: (hour + 1).clamp(0, 23), minute: hour == 23 ? 59 : 0);
     }
     _toCalendar = _isCalendarPlan || (_isNew && ref.read(calendarProvider).isConnected);
+    final travel = p == null ? null : ref.read(planTravelProvider.notifier).lookup(p);
+    if (travel != null) {
+      _travelMode = travel.mode;
+      _lines.text = travel.lines.join(', ');
+      _originName = travel.originName;
+      _origin = travel.origin;
+      if (travel.departure != null) _departure = TimeOfDay.fromDateTime(travel.departure!.toLocal());
+    }
   }
 
   @override
   void dispose() {
     _title.dispose();
     _note.dispose();
+    _lines.dispose();
     super.dispose();
   }
 
@@ -102,6 +120,34 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
       : DateTime(_endDay.year, _endDay.month, _endDay.day, _endTime.hour, _endTime.minute);
 
   bool get _rangeValid => _end.isAfter(_start);
+
+  /// 출발 시각은 시작일 기준. 시작 시각보다 늦으면 전날 출발로 본다(야간 이동).
+  DateTime? get _departureAt {
+    final d = _departure;
+    if (d == null || _allDay) return null;
+    var at = DateTime(_startDay.year, _startDay.month, _startDay.day, d.hour, d.minute);
+    if (at.isAfter(_start)) at = at.subtract(const Duration(days: 1));
+    return at;
+  }
+
+  bool get _departureValid {
+    final at = _departureAt;
+    return at == null || _start.difference(at) <= const Duration(hours: 24);
+  }
+
+  PlanTravel? _travelFor(Plan plan) {
+    final mode = _travelMode;
+    if (mode == null) return null;
+    return PlanTravel(
+      planId: plan.id,
+      fingerprint: PlanTravel.fingerprintOf(plan.title, plan.start),
+      mode: mode,
+      lines: PlanTravel.parseLines(_lines.text),
+      originName: _origin == null ? null : _originName,
+      origin: _origin,
+      departure: _departureAt,
+    );
+  }
 
   // ───────── 선택기 ─────────
 
@@ -159,6 +205,28 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
     });
   }
 
+  Future<void> _pickOrigin() async {
+    final picked = await showModalBottomSheet<Place>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) => const PlaceSearchSheet(),
+    );
+    if (picked == null) return;
+    setState(() {
+      _originName = picked.name;
+      _origin = picked.location;
+    });
+  }
+
+  Future<void> _pickDeparture() async {
+    final initial = _departure ??
+        TimeOfDay.fromDateTime(_start.subtract(const Duration(hours: 1)));
+    final picked = await showTimePicker(context: context, initialTime: initial);
+    if (picked == null) return;
+    setState(() => _departure = picked);
+  }
+
   // ───────── 저장 / 삭제 ─────────
 
   Future<void> _save() async {
@@ -168,7 +236,7 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
       _titleError = title.isEmpty;
       _error = null;
     });
-    if (title.isEmpty || !_rangeValid) return;
+    if (title.isEmpty || !_rangeValid || !_departureValid) return;
 
     final note = _note.text.trim();
     final plan = Plan(
@@ -197,6 +265,8 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
       } else {
         await plans.saveLocal(plan);
       }
+      // 이동 방법은 기기에만 저장한다 (캘린더 ID가 바뀌어도 제목+시작 시각으로 찾는다).
+      await ref.read(planTravelProvider.notifier).save(_travelFor(plan), previousPlanId: _plan?.id);
       navigator.pop();
       Toast.show(l10n.planSaved);
     } catch (e) {
@@ -359,6 +429,11 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
                   ),
                   const SizedBox(height: Space.md),
 
+                  if (!_allDay) ...[
+                    _travelSection(context),
+                    const SizedBox(height: Space.md),
+                  ],
+
                   TextField(
                     controller: _note,
                     minLines: 2,
@@ -443,6 +518,108 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
           ),
         ],
       ),
+    );
+  }
+
+  // ───────── 이동 방법 ─────────
+
+  Widget _travelSection(BuildContext context) {
+    final l10n = context.l10n;
+    final p = context.palette;
+    final t = context.textStyles;
+    final mode = _travelMode;
+    return _Group(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: Space.sm),
+          child: Row(
+            children: [
+              Icon(Icons.commute_rounded, size: 20, color: p.textMuted),
+              const SizedBox(width: Space.md),
+              Expanded(child: Text(l10n.planTravelTitle, style: t.bodyLarge)),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 32, right: Space.sm, bottom: Space.sm),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(l10n.planTravelHint, style: t.bodySmall),
+              const SizedBox(height: Space.sm),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  ChoiceChip(
+                    label: Text(l10n.planTravelNone),
+                    selected: mode == null,
+                    onSelected: (_) => setState(() => _travelMode = null),
+                  ),
+                  for (final m in planTravelModes)
+                    ChoiceChip(
+                      avatar: Icon(planTravelIcon(m), size: 16),
+                      label: Text(planTravelModeLabel(context, m)),
+                      selected: mode == m,
+                      onSelected: (_) => setState(() => _travelMode = m),
+                    ),
+                ],
+              ),
+              if (mode != null) ...[
+                const SizedBox(height: Space.md),
+                if (mode != 'car')
+                  TextField(
+                    controller: _lines,
+                    textInputAction: TextInputAction.done,
+                    decoration: InputDecoration(
+                      labelText: l10n.planTravelLines,
+                      hintText: l10n.planTravelLinesHint,
+                      isDense: true,
+                    ),
+                  ),
+                const SizedBox(height: Space.sm),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
+                    InputChip(
+                      avatar: const Icon(Icons.trip_origin_rounded, size: 16),
+                      label: Text(_originName ?? l10n.planTravelOriginAdd),
+                      onPressed: _pickOrigin,
+                      onDeleted: _origin == null
+                          ? null
+                          : () => setState(() {
+                              _origin = null;
+                              _originName = null;
+                            }),
+                    ),
+                    InputChip(
+                      avatar: const Icon(Icons.schedule_rounded, size: 16),
+                      label: Text(
+                        _departure == null
+                            ? l10n.planTravelDepartureAdd
+                            : l10n.planTravelDepartAt(_departure!.format(context)),
+                      ),
+                      onPressed: _pickDeparture,
+                      onDeleted: _departure == null ? null : () => setState(() => _departure = null),
+                    ),
+                  ],
+                ),
+                if (!_departureValid)
+                  Padding(
+                    padding: const EdgeInsets.only(top: Space.xs),
+                    child: Text(l10n.planTravelDepartureAfterStart, style: t.bodySmall!.copyWith(color: p.danger)),
+                  ),
+                if (mode == 'air')
+                  Padding(
+                    padding: const EdgeInsets.only(top: Space.sm),
+                    child: Text(l10n.planTravelAirNote, style: t.bodySmall),
+                  ),
+              ],
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

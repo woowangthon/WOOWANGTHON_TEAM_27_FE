@@ -49,7 +49,7 @@ class _NameScreenState extends ConsumerState<NameScreen> {
     await ref.read(profileNameProvider.notifier).save(name);
     if (!mounted) return;
     if (widget.editing) {
-      Toast.show(context.l10n.save);
+      Toast.show(context.l10n.nameSaved);
       context.pop();
     } else {
       context.go(nextAfterAuthOf(ref));

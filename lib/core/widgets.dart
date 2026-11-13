@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'l10n_ext.dart';
 import 'theme.dart';
 
 // 공통 UI 블록 — 모든 화면은 이 블록으로 구성한다.
@@ -953,6 +954,59 @@ class GlassSegmented<T> extends StatelessWidget {
           ]),
         ]),
       ),
+    );
+  }
+}
+
+
+/// 긴 글: [maxLines]줄까지만 보여주고, 넘치면 "더 보기"로 펼친다.
+/// 앱의 화면은 핵심만 짧게 — 자세한 내용은 사용자가 원할 때만.
+class ExpandableText extends StatefulWidget {
+  const ExpandableText(this.text, {super.key, this.maxLines = 3, this.style});
+  final String text;
+  final int maxLines;
+  final TextStyle? style;
+
+  @override
+  State<ExpandableText> createState() => _ExpandableTextState();
+}
+
+class _ExpandableTextState extends State<ExpandableText> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = widget.style ?? context.textStyles.bodyLarge!.copyWith(height: 1.6);
+    return LayoutBuilder(
+      builder: (context, c) {
+        final tp = TextPainter(
+          text: TextSpan(text: widget.text, style: style),
+          maxLines: widget.maxLines,
+          textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
+        )..layout(maxWidth: c.maxWidth);
+        final long = tp.didExceedMaxLines;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SmoothSize(
+              alignment: Alignment.topCenter,
+              child: Text(
+                widget.text,
+                style: style,
+                maxLines: _open || !long ? null : widget.maxLines,
+                overflow: _open || !long ? null : TextOverflow.ellipsis,
+              ),
+            ),
+            if (long)
+              TextButton(
+                style: TextButton.styleFrom(padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
+                onPressed: () => setState(() => _open = !_open),
+                child: Text(_open ? context.l10n.showLess : context.l10n.showMore),
+              ),
+          ],
+        );
+      },
     );
   }
 }

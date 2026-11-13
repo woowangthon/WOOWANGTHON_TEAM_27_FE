@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 
+import 'plan_travel.dart';
 import 'providers.dart';
 import 'session.dart';
 
@@ -145,6 +146,13 @@ final tripsByPlanIdProvider = Provider<Map<String, TripContext>>((ref) {
       departure: r.departure, demo: to.source == 'sample', references: references)};
     trips[to.id] = TripContext(id: r.key, version: jsonEncode([r.toJson(), ids.toList()..sort()]), departure: r.departure,
       arrival: r.arrival, modes: r.modes, facilityIds: ids, lines: r.lines, points: r.points);
+  }
+  // 앞뒤 일정 경로가 없으면, 일정에 직접 적은 이동 방법을 쓴다.
+  final travels = ref.watch(planTravelProvider);
+  for (final plan in plans) {
+    if (trips.containsKey(plan.id)) continue;
+    final travel = PlanTravelController.lookupIn(travels, plan);
+    if (travel != null) trips[plan.id] = travel.toTrip(plan, references: references);
   }
   return trips;
 });

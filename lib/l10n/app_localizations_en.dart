@@ -1202,4 +1202,191 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get applicationUnknown => 'Application status unconfirmed';
+
+  @override
+  String get planTravelTitle => 'How you\'ll get there';
+
+  @override
+  String get planTravelHint =>
+      'Add how you travel and we\'ll match strikes and road closures on that line or road to this plan.';
+
+  @override
+  String get planTravelNone => 'Not set';
+
+  @override
+  String get planTravelBus => 'Bus';
+
+  @override
+  String get planTravelSubway => 'Subway';
+
+  @override
+  String get planTravelRail => 'Train';
+
+  @override
+  String get planTravelAir => 'Plane';
+
+  @override
+  String get planTravelCar => 'Car';
+
+  @override
+  String get planTravelLines => 'Line / flight (optional)';
+
+  @override
+  String get planTravelLinesHint => 'e.g. KTX Osong→Busan, Line 2, Bus 750';
+
+  @override
+  String get planTravelOriginAdd => 'Add origin';
+
+  @override
+  String get planTravelDepartureAdd => 'Add departure time';
+
+  @override
+  String planTravelDepartAt(String time) {
+    return 'Departs $time';
+  }
+
+  @override
+  String planTravelFrom(String place) {
+    return 'from $place';
+  }
+
+  @override
+  String get planTravelDepartureAfterStart =>
+      'Departure must be before the plan starts (within 24 hours).';
+
+  @override
+  String get planTravelAirNote =>
+      'Flight status isn\'t connected yet. A plane trip is recorded but not used for alerts.';
+
+  @override
+  String get tabAlerts => 'Alerts';
+
+  @override
+  String get alertsTitle => 'Alerts';
+
+  @override
+  String get more => 'More';
+
+  @override
+  String get alertsMarkAllRead => 'Mark all as read';
+
+  @override
+  String get alertsAllRead => 'All alerts marked as read';
+
+  @override
+  String get alertsTestSent => 'Test notification sent';
+
+  @override
+  String get alertsAll => 'All';
+
+  @override
+  String get alertsEmptyTitle => 'No alerts';
+
+  @override
+  String get alertsEmptyBody =>
+      'Add a place to a plan and we\'ll watch traffic, weather and crowds for you.';
+
+  @override
+  String get alertsNoDate => 'No date';
+
+  @override
+  String get alertsTomorrow => 'Tomorrow';
+
+  @override
+  String get alertsTopicRoad => 'Roads';
+
+  @override
+  String get alertsTopicTransit => 'Transit';
+
+  @override
+  String get alertsTopicWeather => 'Weather';
+
+  @override
+  String get alertsTopicCrowd => 'Crowds';
+
+  @override
+  String get alertsCalm => 'All quiet';
+
+  @override
+  String get alertsCalmBody => 'Nothing is affecting your upcoming plans.';
+
+  @override
+  String get alertsSummary => 'alerts for your plans';
+
+  @override
+  String alertsNew(int count) {
+    return '$count new';
+  }
+
+  @override
+  String get alertsPushOn => 'Push on';
+
+  @override
+  String get alertsPushOff => 'Push off';
+
+  @override
+  String get notifyOff => 'Notifications turned off';
+
+  @override
+  String get planRouteSaved => 'Route added to your plans';
+
+  @override
+  String get planRouteRemoved => 'Route removed';
+
+  @override
+  String get planRouteError =>
+      'Couldn\'t find a route. Check the places and time.';
+
+  @override
+  String get calendarConnectedToast => 'Google Calendar connected';
+
+  @override
+  String get calendarDisconnectedToast => 'Calendar disconnected';
+
+  @override
+  String get calendarSyncedToast => 'Plans refreshed';
+
+  @override
+  String get calendarErrorToast =>
+      'Couldn\'t load your calendar. Please try again.';
+
+  @override
+  String get calendarExpiredToast =>
+      'Calendar access expired. Please reconnect.';
+
+  @override
+  String get signedOutToast => 'Signed out';
+
+  @override
+  String get interestsSaved => 'Interests saved';
+
+  @override
+  String get nameSaved => 'Name saved';
+
+  @override
+  String get refreshedToast => 'Updated';
+
+  @override
+  String get assistantCancelledToast => 'Suggestion dismissed';
+
+  @override
+  String get travelCheckError => 'Couldn\'t check travel impact';
+
+  @override
+  String get themeChanged => 'Theme changed';
+
+  @override
+  String get languageChanged => 'Language changed';
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get profileSettings => 'App settings';
+
+  @override
+  String get profileHelp => 'About';
+
+  @override
+  String get profileStageNone => 'No stage set';
 }

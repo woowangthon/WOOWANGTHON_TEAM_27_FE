@@ -1166,4 +1166,185 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get applicationUnknown => '접수 상태 미확인';
+
+  @override
+  String get planTravelTitle => '이동 방법';
+
+  @override
+  String get planTravelHint => '이동 방법을 적어두면 그 노선·도로의 파업·통제 소식을 이 일정에 맞춰 알려드려요.';
+
+  @override
+  String get planTravelNone => '선택 안 함';
+
+  @override
+  String get planTravelBus => '버스';
+
+  @override
+  String get planTravelSubway => '지하철';
+
+  @override
+  String get planTravelRail => '기차';
+
+  @override
+  String get planTravelAir => '비행기';
+
+  @override
+  String get planTravelCar => '자동차';
+
+  @override
+  String get planTravelLines => '노선·편명 (선택)';
+
+  @override
+  String get planTravelLinesHint => '예: KTX 오송→부산, 2호선, 750번';
+
+  @override
+  String get planTravelOriginAdd => '출발지 추가';
+
+  @override
+  String get planTravelDepartureAdd => '출발 시각 추가';
+
+  @override
+  String planTravelDepartAt(String time) {
+    return '$time 출발';
+  }
+
+  @override
+  String planTravelFrom(String place) {
+    return '$place에서';
+  }
+
+  @override
+  String get planTravelDepartureAfterStart => '출발 시각은 일정 시작 전(24시간 이내)이어야 해요.';
+
+  @override
+  String get planTravelAirNote =>
+      '항공 운항 정보는 아직 연결되지 않았어요. 비행기는 기록만 하고 알림 근거로 쓰지 않아요.';
+
+  @override
+  String get tabAlerts => '알림';
+
+  @override
+  String get alertsTitle => '알림';
+
+  @override
+  String get more => '더보기';
+
+  @override
+  String get alertsMarkAllRead => '모두 읽음으로 표시';
+
+  @override
+  String get alertsAllRead => '모든 알림을 읽음으로 표시했어요';
+
+  @override
+  String get alertsTestSent => '테스트 알림을 보냈어요';
+
+  @override
+  String get alertsAll => '전체';
+
+  @override
+  String get alertsEmptyTitle => '확인할 알림이 없어요';
+
+  @override
+  String get alertsEmptyBody => '일정에 장소를 넣으면 교통·날씨·혼잡을 대신 살펴볼게요.';
+
+  @override
+  String get alertsNoDate => '날짜 미정';
+
+  @override
+  String get alertsTomorrow => '내일';
+
+  @override
+  String get alertsTopicRoad => '도로';
+
+  @override
+  String get alertsTopicTransit => '대중교통';
+
+  @override
+  String get alertsTopicWeather => '날씨';
+
+  @override
+  String get alertsTopicCrowd => '혼잡';
+
+  @override
+  String get alertsCalm => '오늘은 조용해요';
+
+  @override
+  String get alertsCalmBody => '다가오는 일정에 영향을 주는 소식이 없어요.';
+
+  @override
+  String get alertsSummary => '건 · 일정에 확인할 알림';
+
+  @override
+  String alertsNew(int count) {
+    return '새 알림 $count';
+  }
+
+  @override
+  String get alertsPushOn => '푸시 켜짐';
+
+  @override
+  String get alertsPushOff => '푸시 꺼짐';
+
+  @override
+  String get notifyOff => '알림을 껐어요';
+
+  @override
+  String get planRouteSaved => '이동 경로를 일정에 추가했어요';
+
+  @override
+  String get planRouteRemoved => '이동 경로를 삭제했어요';
+
+  @override
+  String get planRouteError => '경로를 찾지 못했어요. 장소와 시간을 확인해 주세요.';
+
+  @override
+  String get calendarConnectedToast => 'Google 캘린더를 연결했어요';
+
+  @override
+  String get calendarDisconnectedToast => '캘린더 연결을 해제했어요';
+
+  @override
+  String get calendarSyncedToast => '일정을 새로 불러왔어요';
+
+  @override
+  String get calendarErrorToast => '캘린더를 불러오지 못했어요. 다시 시도해 주세요.';
+
+  @override
+  String get calendarExpiredToast => '캘린더 연결이 만료됐어요. 다시 연결해 주세요.';
+
+  @override
+  String get signedOutToast => '로그아웃했어요';
+
+  @override
+  String get interestsSaved => '관심사를 저장했어요';
+
+  @override
+  String get nameSaved => '이름을 저장했어요';
+
+  @override
+  String get refreshedToast => '최신 정보로 새로 고쳤어요';
+
+  @override
+  String get assistantCancelledToast => '제안을 넘겼어요';
+
+  @override
+  String get travelCheckError => '교통 영향을 확인하지 못했어요';
+
+  @override
+  String get themeChanged => '테마를 바꿨어요';
+
+  @override
+  String get languageChanged => '언어를 바꿨어요';
+
+  @override
+  String get profileTitle => '내 정보';
+
+  @override
+  String get profileSettings => '앱 설정';
+
+  @override
+  String get profileHelp => '도움말·정보';
+
+  @override
+  String get profileStageNone => '상황 미선택';
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'plan_actions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'plan_travel_line.dart';
 
 import '../../core/calendar_link.dart';
 import '../../core/errors.dart';
@@ -118,7 +119,7 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
           if (cal.isConnected)
             IconButton(
               tooltip: l10n.calendarSync,
-              onPressed: cal.isBusy ? null : () => ref.read(calendarProvider.notifier).sync(),
+              onPressed: cal.isBusy ? null : () => syncCalendarWithToast(context, ref),
               icon: const Icon(Icons.sync_rounded),
             ),
           const SizedBox(width: Space.sm),
@@ -126,7 +127,7 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
       ),
       floatingActionButton: Padding(
         // This nested Scaffold does not own the shell's floating navigation bar.
-        padding: const EdgeInsets.only(bottom: GlassTabBar.height + Space.md),
+        padding: EdgeInsets.only(bottom: GlassTabBar.height + Space.md + Space.sm + MediaQuery.paddingOf(context).bottom),
         child: FloatingActionButton.extended(
           onPressed: () => showPlanEditor(context, day: _month ? selected : null),
           icon: const Icon(Icons.add_rounded),
@@ -135,7 +136,7 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          if (cal.isConnected) await ref.read(calendarProvider.notifier).sync();
+          if (cal.isConnected) await syncCalendarWithToast(context, ref);
         },
         child: ListView(
           // FAB가 마지막 카드를 가리지 않도록.
@@ -387,6 +388,8 @@ class _PlanCard extends ConsumerWidget {
                       plan.location == null ? Icons.location_off_outlined : Icons.place_outlined,
                       plan.locationText.isEmpty ? l10n.noLocation : plan.locationText,
                     ),
+                    const SizedBox(height: 2),
+                    PlanTravelLine(plan: plan),
                     if (plan.location != null) ...[
                       const SizedBox(height: 6),
                       WeatherChip(location: plan.location!, date: plan.start),

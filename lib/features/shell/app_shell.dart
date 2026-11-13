@@ -10,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/l10n_ext.dart';
 import '../../core/theme.dart';
 import '../../core/widgets.dart';
+import '../../data/alerts.dart';
 import '../../data/notifications.dart';
 import '../../data/providers.dart';
 import '../../data/travel_impact.dart';
@@ -102,9 +103,9 @@ class _AppShellState extends ConsumerState<AppShell> with WidgetsBindingObserver
     final l10n = context.l10n;
     // 홈의 빨간 배지 — 아직 열어 보지 않은 신호 수.
     final seen = ref.watch(seenProvider);
-    final unseen = ref
-        .watch(insightsProvider)
-        .where((i) => i.feedback != InsightFeedback.hidden && !seen.contains('insight:${i.id}'))
+    final insights = ref.watch(insightsProvider);
+    final unseen = insights
+        .where((i) => !isAlert(i) && i.feedback != InsightFeedback.hidden && !seen.contains('insight:${i.id}'))
         .where((i) => i.eventIds.isEmpty || !seen.contains('event:${i.eventIds.first}'))
         .length;
 
@@ -123,7 +124,8 @@ class _AppShellState extends ConsumerState<AppShell> with WidgetsBindingObserver
           GlassTab(Icons.map_outlined, Icons.map_rounded, l10n.tabMap),
           GlassTab(Icons.event_note_outlined, Icons.event_note_rounded, l10n.tabPlans),
           GlassTab(Icons.explore_outlined, Icons.explore_rounded, l10n.tabDiscover),
-          GlassTab(Icons.person_outline_rounded, Icons.person_rounded, l10n.tabProfile),
+          GlassTab(Icons.notifications_none_rounded, Icons.notifications_rounded, l10n.tabAlerts,
+              badge: alertsFrom(insights, ref.watch(plansProvider)).where((i) => !seen.contains('insight:${i.id}')).length),
         ],
       ),
     );

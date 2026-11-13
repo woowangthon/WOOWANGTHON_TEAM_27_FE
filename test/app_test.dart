@@ -121,19 +121,28 @@ void main() {
     await pumpApp(tester, interests: ['ai']);
 
     expect(find.text('Events for you'), findsOneWidget);
-    // InsightEngine: 부산 출장 + 아시아드 콘서트 → 첫 카드
+    // 일정 경고(부산 출장 + 아시아드 콘서트 혼잡)는 홈이 아니라 알림 탭에만
+    expect(find.textContaining('Large concert in Busan'), findsNothing);
+    await tester.tap(find.byIcon(Icons.notifications_none_rounded).last);
+    await tester.pumpAndSettle();
+    expect(find.text('Alerts'), findsWidgets);
     expect(find.textContaining('Large concert in Busan'), findsWidgets);
 
-    // 언어 설정은 이제 프로필에
-    await tester.tap(find.byIcon(Icons.person_outline_rounded).last);
+    // 언어 설정은 프로필(홈 머리의 아바타)에 — 고를 때만 여는 시트
+    await tester.tap(find.byIcon(Icons.radar_outlined).last);
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('한국어'));
+    final router = GoRouter.of(tester.element(find.byType(HomeScreen)));
+    router.push('/profile');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Language'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('한국어'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.radar_outlined).last);
+    router.pop();
     await tester.pumpAndSettle();
     expect(find.text('나를 위한 이벤트'), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.notifications_none_rounded).last);
+    await tester.pumpAndSettle();
     expect(find.textContaining('부산 대형 콘서트'), findsWidgets);
   });
 
@@ -256,7 +265,8 @@ void main() {
     await tester.drag(find.byType(CustomScrollView), const Offset(0, -600));
     await tester.pumpAndSettle();
     expect(find.text('Due soon'), findsOneWidget);
-    expect(tester.getTopLeft(find.text('Due soon')).dy, lessThan(120)); // 화면 위쪽
+    // 일정 경고가 알림 탭으로 옮겨져 카드가 줄었다 — 그래도 화면 맨 위쪽에 남는다.
+    expect(tester.getTopLeft(find.text('Due soon')).dy, lessThan(140));
   });
 
   testWidgets('신호 창은 높게 열리고, 끌면 95%까지, 뒤로 버튼으로 닫힌다', (tester) async {
@@ -300,7 +310,7 @@ void main() {
 
   testWidgets('계정 삭제: 안쪽 화면 + 확인 → 모두 지우고 welcome으로', (tester) async {
     await pumpApp(tester, interests: ['ai'], name: 'Abbos');
-    await tester.tap(find.byIcon(Icons.person_outline_rounded).last);
+    GoRouter.of(tester.element(find.byType(HomeScreen))).push('/profile');
     await tester.pumpAndSettle();
     // 떠 있는 하단 내비게이션 아래에 가리지 않도록 — 화면 위쪽으로 스크롤한다.
     final list = find.byType(Scrollable).last;

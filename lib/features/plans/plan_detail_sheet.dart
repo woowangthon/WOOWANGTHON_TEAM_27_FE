@@ -15,6 +15,7 @@ import '../shell/app_shell.dart';
 import '../weather/weather_chip.dart';
 import 'plan_editor_sheet.dart';
 import 'plan_signals.dart';
+import 'plan_travel_line.dart';
 import 'travel_impact_sheet.dart';
 
 /// 일정 보기 (수정 전): 언제 · 어디서 · 날씨 · 주변 소식.
@@ -106,6 +107,10 @@ class PlanDetailSheet extends ConsumerWidget {
                           onPressed: map,
                           icon: const Icon(Icons.map_outlined, size: 20),
                         ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 48, top: Space.sm),
+                  child: PlanTravelLine(plan: plan, maxLines: 2),
                 ),
                 if (plan.location != null) ...[
                   const SizedBox(height: Space.md),
