@@ -1,14 +1,10 @@
 # LifeRadar — 내 일정을 챙기는 AI 동료
 
-> UI 수정 v2017: 마감 임박 공고 검색은 AI가 ID·행동을 생략해도 검증된 공고 카드와 캘린더 추가 제안을 표시합니다. 카드를 누르면 상세를 열고, 추가 버튼을 누르면 접수 마감일을 등록합니다. 일반 ‘공고’ 검색을 창업지원으로만 제한하던 분류도 수정했습니다. 홈 상단 교통 갱신 상태 문구를 제거하고 제목을 ‘나를 위한 이벤트’·‘전체 이벤트’로 바꿨습니다.
-
-> 2026-11-13 추가: 공모전 주간 수집: Android 앱이 링커리어·요즘것들·씽굿 공개 목록을 직접 수집하고, 출처별 7일 성공 주기와 6시간 재시도·백그라운드 JobScheduler를 적용합니다. 확인된 현장 세션은 공모전 전용 지도 레이어에 표시합니다. `lib/data/weekly_contests.dart`, `lib/data/contest_background.dart` 및 `android/weekly-probe/README.md`를 참고하세요. 최종 로컬 APK는 1.0.1+2016이며 실기기 수집·저장·지도 표시를 검증했습니다.
-
-공모전 수집 범위와 제한은 [구현 기록](docs/PORTAL_WEEKLY_COLLECTION.md), 이동 경로별 교통 알림의 실기기 결과는 [검증 기록](docs/verification/traffic-notifications-20261113.md)을 참고하세요. 교통 알림은 앱 실행 상태에서 검증했으며, 앱 완전 종료 중의 교통 자동 감시는 아직 구현하지 않았습니다. FE·BE는 게시된 공통 코어 커밋 SHA에 고정했습니다.
-
 > **WOOWANGTHON TEAM 27** · 2026 AI 우왕톤 · 주제 *"AI는 동료가 될 수 있을까?"* — 청년의 삶
 >
 > 저장소: **FE (이 저장소, Flutter 앱)** · [BE (데이터 파이프라인)](https://github.com/woowangthon/WOOWANGTHON_TEAM_27_BE) · [AI (판단 엔진·AI 모듈)](https://github.com/woowangthon/WOOWANGTHON_TEAM_27_AI)
+>
+> 📑 **발표 자료**: [PDF](docs/presentation/LifeRadar_Team27.pdf) · [PPTX](docs/presentation/LifeRadar_Team27.pptx) (영어, 20장) · 🎬 시연 영상: *(제출 시 YouTube 링크)* · 📱 APK: *(제출 시 Google Drive 링크)* · 현재 버전 1.0.2
 
 **LifeRadar는 내 캘린더 일정과 관심사를 실제 행사·공식 교통 통제·날씨와 연결해, 묻기 전에 "이건 당신에게 중요해요, 이유는 이거예요"라고 알려주는 앱입니다.** 갈지, 캘린더에 넣을지는 사용자가 결정합니다.
 
@@ -16,9 +12,9 @@
   <img src="docs/images/phone/home.jpg" height="400" alt="홈 — 일정과 연결된 신호 카드">
   <img src="docs/images/phone/assistant-answer.jpg" height="400" alt="AI 비서 — 실제 행사 후보 안에서 답하고 [추가]/[취소]">
   <img src="docs/images/about-me.png" height="400" alt="AI에게 나를 소개하기 — 근거 문구와 함께 제안">
-  <img src="docs/images/phone/route-results.jpg" height="400" alt="경로 주변 기회 — 추가 km·분, 관심사 필터">
+  <img src="docs/images/alerts.png" height="400" alt="알림 탭 — 내 일정에 영향을 주는 경고만, 날짜별">
 </p>
-<p align="center"><sub>Android 실기기 화면 (2026-11-10) · 나를 소개하기는 웹 화면</sub></p>
+<p align="center"><sub>Android 실기기 화면 (2026-11-10) · 나를 소개하기·알림 탭은 웹 화면 (11/14)</sub></p>
 
 ## 1. 문제
 
@@ -68,7 +64,9 @@
 | **이동 계획** | 일정마다 **이동 방법**(버스·지하철·기차·비행기·자동차)과 노선·출발지·출발 시각을 적거나, 같은 날 두 일정 사이에 **"+ 경로 추가"**로 대중교통 경로를 저장 → 그 노선·도로의 파업·통제가 이 일정의 경고가 된다. 비행기는 기록만 (항공 정보 미연결) | 어떻게 가는지 알아야 "내 이동에 영향이 있는지"를 말할 수 있다 |
 | **일정 연결 줄** | 카드마다 "11월 20일 · Busan trip / 같은 날 · 2.4 km 거리"처럼 어떤 일정과 왜 연결됐는지 | 추천의 이유가 한눈에 보여야 믿을 수 있다 |
 | **AI가 쓴 이유** | Gemini가 엔진이 고른 사실로 이유를 한국어·영어 문장으로 작성 (✨ AI 표시, 실패 시 규칙 문장) | 기계적인 "관심사와 일치" 대신 내 상황에 맞는 설명 |
-| **AI 비서** | 홈의 ✨ 버튼 → "이번 주말 뭐 하지?", "Busan trip 때 갈 만한 곳?" 질문에 실제 행사 카드로 답하고, 캘린더 추가·지도 보기를 **제안** → 사용자가 [추가]/[취소] | 필터를 고르는 대신 말로 물어보면, AI가 찾아 주고 결정은 내가 한다 |
+| **AI 비서** | 홈의 ✨ 버튼 → "이번 주말 뭐 하지?", "Busan trip 때 갈 만한 곳?" 질문에 실제 행사 카드로 답하고, 캘린더 추가·지도 보기를 **제안** → 사용자가 [추가]/[취소]. 행사·일정 밖의 질문(계산·코드·상식)은 답하지 않고 안내, 대화 중에도 추천 질문 칩. 포스터 없는 행사는 레이더 모양 기본 그림 | 필터를 고르는 대신 말로 물어보면, AI가 찾아 주고 결정은 내가 한다 |
+| **공모전·마감** | (전영우) 링커리어·요즘것들·씽굿 공개 목록을 주 1회 앱에서 수집([구현 기록](docs/PORTAL_WEEKLY_COLLECTION.md)), 접수 마감일을 캘린더에 1일 일정으로 추가, 확인된 현장 세션은 지도에 | 대외활동 마감은 여러 사이트에 흩어져 있다 |
+| **캘린더 추가** | 같은 행사는 한 번만 (Google 캘린더에서 비공개 속성으로 확인), **며칠~몇 달 이어지는 행사는 갈 날 하루를 골라** 그날만 추가 | 두 달짜리 전시가 캘린더의 모든 날을 막지 않게 |
 | **AI에게 나를 소개하기** | 자유롭게 쓴 소개글에서 Gemini가 지금 상황(학생·구직·직장인·창업·프리랜서)과 관심사를 **근거 문구와 함께 제안** → 사용자가 맞는 것만 골라 적용. 상황은 순위에 반영 (학생 → 장학금·학생 프로그램, 창업 → 창업 지원 공고) | 칩 26개로는 "졸업하고 프론트엔드 개발자로 취업 준비 중" 같은 사정을 담기 어렵다 |
 | **취향 학습** | 👍/👎/숨기기가 태그·카테고리 가중치를 바꿔 홈·발견·지도·경로를 다시 정렬 | 한 번 "이건 아니야"라고 하면 실제로 줄어들어야 한다 |
 | **경로 기반 발견** | 출발·도착·날짜 → KTX(대중교통)·자동차 경로와 15 km 안의 같은 날 행사, 추가 거리·시간. 내 관심사·종류별 필터(지도 핀도 함께), 끌어내리는 결과 패널 | 이미 정해진 이동 시간 안에서 "조금만 돌아가면 되는 기회" |
@@ -84,9 +82,9 @@
 
 | 데이터 | 출처 | 갱신 | 앱이 받는 방법 |
 |---|---|---|---|
-| 실제 행사 828건 (11/9) | 서울 열린데이터광장 문화행사 303 · KOPIS 서울 밖 공연 250 · 한국관광공사 TourAPI 축제 75 · 창업진흥원 K-Startup 공고 200 | 매일 06:00 KST | BE가 게시한 `events.json` (캐시 → 최신 다운로드 → 검증 후 교체, 오프라인 동작) |
-| 대중교통 파업 (뉴스) | 네이버 뉴스 검색 (NAVER API HUB) → Gemini 판독 (11/9: 기사 150건 → 사건 14건, 예고·조건부 11건) | 3시간마다 | BE가 게시한 `news.json` |
-| 공식 도로 통제 (서울) | 서울시 TOPIS 실시간 돌발정보 (11/9: 32건) | 3시간마다 | BE가 게시한 `traffic.json` |
+| 실제 행사 873건 (11/13) | 서울 열린데이터광장 문화행사 327 · KOPIS 서울 밖 공연 250 · 창업진흥원 K-Startup 공고 215 · 한국관광공사 TourAPI 축제 81 (+ 앱의 주간 공모전 수집) | 매일 06:00 KST | BE가 게시한 `events.json` (캐시 → 최신 다운로드 → 검증 후 교체, 오프라인 동작) |
+| 대중교통 파업 (뉴스) | 네이버 뉴스 검색 (NAVER API HUB) → Gemini 판독 (11/13: 기사 292건 → 파업 11건, 교통 영향 20건) | 3시간마다 | BE가 게시한 `news.json` |
+| 공식 도로 통제 (서울) | 서울시 TOPIS 실시간 돌발정보 + 뉴스 교통 영향 병합 (traffic v2, 11/13: 26건) | 3시간마다 | BE가 게시한 `traffic-v2.json` |
 | 공식 도로 통제 (전국) | 국가교통정보센터(ITS) 돌발상황정보 — 공사·행사·기상·재난 (11/8 기준 약 190건) | 앱 실행 시 | **앱이 기기에서 직접 조회** — ITS가 해외 IP(GitHub Actions)를 차단하기 때문 |
 | 내 일정 | Google Calendar API | 연결·새로고침 시 | 사용자 OAuth 동의 후 직접 호출 |
 | 경로 | Google Routes (대중교통) · Kakao Mobility (자동차) | 요청 시 | 직접 호출 |
@@ -166,9 +164,11 @@ flowchart LR
 
 ### 11/14 새 화면 (웹 빌드)
 
-| 알림 탭 | 알림 상세 (더 보기) | 이동 방법 입력 | 카드의 이동 줄 | 내 정보 |
+| 알림 탭 (3D) | 알림 상세 (더 보기) | 이동 방법 입력 | 카드의 이동 줄 | 내 정보 |
 |---|---|---|---|---|
 | <img src="docs/images/alerts.png" width="160"> | <img src="docs/images/alert-detail.png" width="160"> | <img src="docs/images/plan-travel.png" width="160"> | <img src="docs/images/plans-travel-line.png" width="160"> | <img src="docs/images/profile.png" width="160"> |
+| **알림 탭 (다크)** | **AI 비서 범위 안내** | **긴 행사 — 하루 고르기** | **기본 아바타 4종** | |
+| <img src="docs/images/alerts-dark.png" width="160"> | <img src="docs/images/assistant-scope.png" width="160"> | <img src="docs/images/visit-day.png" width="160"> | <img src="docs/images/avatar-picker.png" width="160"> | |
 
 더 많은 화면과 사용법: [사용자 가이드](docs/USER_GUIDE.md)
 
@@ -196,7 +196,7 @@ flutter build apk --release --split-per-abi --dart-define-from-file=env.json   #
 | 일정·로그인·날씨 | Google Calendar API, Google Sign-In (Android·웹), Google Weather |
 | 알림 | Android `flutter_local_notifications`, 웹 Notification API |
 | 디자인 | 자체 디자인 시스템 — 브랜드 #5865F2 · #23272A · #FFFFFF, 라이트/다크 (본문 대비 ≥ 4.5:1), 그라데이션·누름 애니메이션·스켈레톤, 동작 줄이기 지원, Pretendard 서브셋 글꼴 |
-| 품질 | 테스트 294개 (11/14) — FE 117 · AI 102 · BE 75, 3개 저장소 모두 GitHub Actions CI. AI 기능 4종은 실제 Gemini로 실측 평가 |
+| 품질 | 테스트 301개 (11/14) — FE 121 · AI 105 · BE 75, 3개 저장소 모두 GitHub Actions CI. AI 기능 4종은 실제 Gemini로 실측 평가 |
 | 공유·버전 | `share_plus` (기기 공유 창), `package_info_plus` (프로필의 앱 버전) |
 
 ## 10. 구현 범위와 한계 (정직하게)
@@ -237,14 +237,15 @@ flutter build apk --release --split-per-abi --dart-define-from-file=env.json   #
 
 | 이름 | 역할 |
 |---|---|
-| Abbos Aliboev | 기획 · 아키텍처 · 디자인 · 개발 (FE·BE·AI) |
-| 전영우 (Jeon Yeongwoo) | 데이터 조사 · 교통 영향 판별 규칙 설계 · 레퍼런스 디자인 |
+| Abbos Aliboev | 기획 · 아키텍처 · 디자인 · 개발 (FE·BE·AI 전반: 앱, 데이터 파이프라인, 판단 엔진, AI 모듈) |
+| 전영우 (Jeon Yeongwoo) | 교통 이슈 조사 · 이동 영향 판별 규칙 설계 · 레퍼런스 디자인, 개발: 일정별 이동 영향·두 일정 사이 경로(이동 계획), 교통 v2(뉴스·TOPIS 병합), 공모전 주간 수집·마감 캘린더 |
+
+커밋 (main, 병합 제외): FE 23 / 5 · BE 23 / 3 · AI 18 / 6 (Abbos / 전영우).
 
 
-## UTIC v2 로컬 구현 (운영 비활성)
+## 교통 v2와 UTIC (전영우, 11/11)
 
-공용 교통 모델 0.2.0과 `traffic-v2.json`을 사용하는 경로를 추가했습니다. UTIC 실 API 통제 코드·CRS·시간·완전성은 미검증이며 실제 호출은 비활성화되어 있습니다. 기존 TOPIS/ITS 경로는 유지합니다.
-
-새 기본 `TRAFFIC_URL`은 data 브랜치의 `traffic-v2.json`입니다. BE v2 게시 후 새 앱을 출시하세요. 구버전용 `traffic.json`에는 UTIC를 넣지 않습니다. 앱 설정에 UTIC 키나 저장소 토큰을 추가하지 마세요.
-
-BE/FE의 로컬 AI path override 테스트와 배포용 원격 패키지 검증은 별개입니다. AI 0.2.0 게시 후 Git 참조를 실제 immutable SHA로 고정하고 override 없는 CI를 실행해야 합니다. 이번 작업은 push/배포하지 않았습니다.
+앱은 data 브랜치의 `traffic-v2.json`(TOPIS 돌발정보 + 뉴스에서 판독한 교통 영향, 통제 병합·철회 반영)을 읽고, 일정별 이동 정보(저장한 경로·이동 방법)와 맞춰 경고를 만듭니다. 기존 `traffic.json`은 구버전 앱을 위해 유지합니다.
+경찰청 UTIC(도시 내부 집회·행사 통제) 수집 코드는 들어 있지만 **실제 호출은 비활성**입니다 — 키는 발급됐고 접속 IP 등록을 기다리는 중이라 통제 코드·좌표계·시간의 실측 검증을 하지 못했습니다. 앱 설정에 UTIC 키나 저장소 토큰을 넣지 않습니다.
+FE·BE는 공통 코어(`liferadar_core`)를 게시된 커밋 SHA로 고정해 CI에서 검증합니다.
+이동 경로별 교통 알림의 실기기 결과는 [검증 기록](docs/verification/traffic-notifications-20261113.md) — 앱 실행 상태에서 검증했고, 앱이 완전히 닫혔을 때의 교통 자동 감시는 아직 없습니다.
