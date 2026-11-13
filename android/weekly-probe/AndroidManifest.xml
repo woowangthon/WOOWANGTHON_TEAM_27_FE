@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.liferadar.weeklyprobe">
+    <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="36" />
+    <application android:label="LifeRadar Weekly Test Probe" android:hasCode="true" />
+    <instrumentation android:name="com.liferadar.weeklyprobe.WeeklyProbe"
+        android:targetPackage="com.liferadar.liferadar"
+        android:label="LifeRadar weekly collection verification" />
+</manifest>

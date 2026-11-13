@@ -108,18 +108,18 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
           // ── 한눈에: 언제 · 어디서 · 요금 · 마감 ──
           _FactsCard(
             children: [
-              if (event.placeless)
+              if (event.placeless || event.applicationStart != null)
                 _Fact(
                   icon: Icons.event_available_outlined,
                   label: l10n.applicationLabel,
-                  value: '${context.formatDate(event.isApplication ? event.applicationDate(event.start) : event.start)} – ${context.formatDate(event.isApplication ? event.applicationDate(event.end) : event.end)}',
-                )
-              else
+                  value: '${context.formatDate(event.isApplication ? event.applicationDate(event.applicationStart ?? event.start) : event.start)} – ${context.formatDate(event.isApplication ? event.applicationDate(event.deadline ?? event.end) : event.end)}',
+                ),
+              if (!event.placeless)
                 _Fact(
                   icon: Icons.calendar_today_outlined,
                   label: l10n.planWhen,
                   value: _dateRange(context, event),
-                  sub: _timeRange(context, event),
+                  sub: event.eventDatePrecision == 'date' ? null : _timeRange(context, event),
                   extra: WeatherChip(location: event.location, date: event.start),
                 ),
               if (event.placeless)

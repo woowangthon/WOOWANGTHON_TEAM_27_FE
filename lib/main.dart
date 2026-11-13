@@ -10,6 +10,7 @@ import 'core/notify/notify.dart';
 import 'core/router.dart';
 import 'core/theme.dart';
 import 'data/calendar_controller.dart';
+import 'data/contest_background.dart';
 import 'data/live_events.dart';
 import 'data/providers.dart';
 import 'data/session.dart';
@@ -27,6 +28,7 @@ Future<void> main() async {
   initGoogleSignIn().catchError((Object e) => debugPrint('Google Sign-In init failed: $e'));
   final (prefs, _) = await (SharedPreferences.getInstance(), initNotify()).wait;
   final feed = await LiveEvents.initial(prefs);
+  await ContestBackground.register().catchError((Object e) => debugPrint('Contest scheduling: ${e.runtimeType}'));
   runApp(ProviderScope(
     overrides: [
       sharedPrefsProvider.overrideWithValue(prefs),

@@ -1,0 +1,318 @@
+{
+  "real_network": true,
+  "reports": [
+    {
+      "verification_appointment": "seoul-station-to-bongeun-bridge",
+      "checked_at": "2026-11-13T17:11:30.426063",
+      "route_distance_m": 16641,
+      "route_duration_s": 4651,
+      "sources": [
+        {
+          "name": "서울 공식 실시간 돌발·운행 제한",
+          "ok": false,
+          "detail": "공식 사이트 조회 실패 · 정상 운행으로 판단하지 않습니다.",
+          "updated_at": null
+        },
+        {
+          "name": "TOPIS 도로 통제",
+          "ok": true,
+          "detail": "32건의 유효 공지",
+          "updated_at": "2026-11-13T04:33:31.871469Z"
+        },
+        {
+          "name": "파업·운행 제한 보도",
+          "ok": true,
+          "detail": "13건의 파업 기록 · 본문 검증 영향 36건",
+          "updated_at": "2026-11-13T04:33:28.703253Z"
+        },
+        {
+          "name": "공공 행사 일정",
+          "ok": true,
+          "detail": "648건 수신",
+          "updated_at": "2026-11-13T01:49:19.493332Z"
+        },
+        {
+          "name": "ITS 전국 돌발·통제",
+          "ok": false,
+          "detail": "조회 불가 · 전국 통제 여부 미확인",
+          "updated_at": null
+        },
+        {
+          "name": "현재 도로 소통",
+          "ok": true,
+          "detail": "정체 6.9 km · 서행 6.0 km · 정보 없음 0.1 km",
+          "updated_at": "2026-11-13T17:11:30.426063"
+        }
+      ],
+      "findings": [
+        {
+          "id": "travel:road:seoul-station-to-bongeun-bridge",
+          "title": "현재 경로에 정체·지체 구간",
+          "body": "현재 조회한 자동차 경로의 정체·지체 구간은 6.9 km입니다. 현재 관측이며 일정 당일의 예측이 아닙니다.",
+          "notification_eligible": true,
+          "evidence": "카카오모빌리티의 실제 도로별 교통 상태 응답입니다. 행사나 파업이 원인이라고 추정하지 않습니다.",
+          "sources": [
+            {
+              "name": "카카오모빌리티 길찾기",
+              "url": "https://map.kakao.com/"
+            }
+          ]
+        },
+        {
+          "id": "traffic:seoul-station-to-bongeun-bridge:topis-1110220",
+          "title": "seoul-station-to-bongeun-bridge 인근 교통 참고",
+          "body": "인근 교통 정보입니다. 종료 시각 또는 최신 통제 상태를 원문에서 확인해 주세요. 행사만으로 통제나 혼잡을 판단하지 않습니다.",
+          "notification_eligible": false,
+          "evidence": "서울시 TOPIS · 실시간 돌발정보 공식 정보: \"도산대로 (신사역 → 강남을지병원) 4차로 시설물보수\" (11월 13일 11:01 ~ 11월 13일 18:00)",
+          "sources": [
+            {
+              "name": "서울시 TOPIS · 실시간 돌발정보",
+              "url": "https://topis.seoul.go.kr"
+            }
+          ]
+        },
+        {
+          "id": "traffic:seoul-station-to-bongeun-bridge:topis-1071792",
+          "title": "seoul-station-to-bongeun-bridge 인근 공사 통제",
+          "body": "일정 시작 전 시간대에 일정 장소 인근(약 0.0 km)에 도로 통제가 예고되어 있습니다. 이용하실 교통수단과 접근 경로에 영향이 있는지 확인해 주세요.",
+          "notification_eligible": true,
+          "evidence": "서울시 TOPIS · 실시간 돌발정보 공식 정보: \"탄천나들목 및 봉은교 구조개선공사\" (4월 7일 10:00 ~ 5월 4일 00:00)",
+          "sources": [
+            {
+              "name": "서울시 TOPIS · 실시간 돌발정보",
+              "url": "https://topis.seoul.go.kr"
+            }
+          ]
+        },
+        {
+          "id": "traffic:seoul-station-to-bongeun-bridge:topis-1071788",
+          "title": "seoul-station-to-bongeun-bridge 인근 공사 통제",
+          "body": "일정 시작 전 시간대에 일정 장소 인근(약 0.1 km)에 도로 통제가 예고되어 있습니다. 이용하실 교통수단과 접근 경로에 영향이 있는지 확인해 주세요.",
+          "notification_eligible": true,
+          "evidence": "서울시 TOPIS · 실시간 돌발정보 공식 정보: \"탄천나들목 및 봉은교 구조개선공사\" (4월 7일 10:00 ~ 3월 1일 00:00)",
+          "sources": [
+            {
+              "name": "서울시 TOPIS · 실시간 돌발정보",
+              "url": "https://topis.seoul.go.kr"
+            }
+          ]
+        },
+        {
+          "id": "traffic:seoul-station-to-bongeun-bridge:topis-1110219",
+          "title": "seoul-station-to-bongeun-bridge 인근 교통 참고",
+          "body": "인근 교통 정보입니다. 종료 시각 또는 최신 통제 상태를 원문에서 확인해 주세요. 행사만으로 통제나 혼잡을 판단하지 않습니다.",
+          "notification_eligible": false,
+          "evidence": "서울시 TOPIS · 실시간 돌발정보 공식 정보: \"영동대로 (영동대교남단교차로 → 경기고교앞) 7차로 시설물보수\" (11월 13일 11:00 ~ 11월 13일 18:00)",
+          "sources": [
+            {
+              "name": "서울시 TOPIS · 실시간 돌발정보",
+              "url": "https://topis.seoul.go.kr"
+            }
+          ]
+        },
+        {
+          "id": "news-traffic:seoul-station-to-bongeun-bridge:c55dcbb4d0b7df4df7c57402",
+          "title": "주말마다 마라톤 — 이동 안내",
+          "body": "예정된 영향입니다. 날짜·범위·상태 또는 이동 정보가 부족하거나 충돌합니다. 최신 안내를 확인해 주세요.",
+          "notification_eligible": false,
+          "evidence": "본문 근거: “온라인 커뮤니티 실제 서울 도심에서는 주말마다 마라톤 대회가 열리면서 도로 통제와 대중교통 우회 문제가 반복되고 있다.”",
+          "sources": [
+            {
+              "name": "뉴스·공개 공지 본문",
+              "url": "https://www.seoul.co.kr/news/society/2026/11/12/20261112500004?wlog_tag3=naver"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "verification_appointment": "seoul-station-to-busan-station",
+      "checked_at": "2026-11-13T17:11:30.426063",
+      "route_distance_m": 376974,
+      "route_duration_s": 10035,
+      "sources": [
+        {
+          "name": "TOPIS 도로 통제",
+          "ok": true,
+          "detail": "32건의 유효 공지",
+          "updated_at": "2026-11-13T04:33:31.871469Z"
+        },
+        {
+          "name": "파업·운행 제한 보도",
+          "ok": true,
+          "detail": "13건의 파업 기록 · 본문 검증 영향 36건",
+          "updated_at": "2026-11-13T04:33:28.703253Z"
+        },
+        {
+          "name": "공공 행사 일정",
+          "ok": true,
+          "detail": "648건 수신",
+          "updated_at": "2026-11-13T01:49:19.493332Z"
+        },
+        {
+          "name": "서울 공식 실시간 돌발·운행 제한",
+          "ok": true,
+          "detail": "현재·예정 29건 · 버스 우회/무정차/운행 제한 4건",
+          "updated_at": "2026-11-13T17:11:30.426063"
+        },
+        {
+          "name": "ITS 전국 돌발·통제",
+          "ok": true,
+          "detail": "230건의 유효 공지 수신",
+          "updated_at": "2026-11-13T17:11:30.426063"
+        },
+        {
+          "name": "대중교통 경로",
+          "ok": true,
+          "detail": "경로 조회 성공 · 실제 정상 운행을 보장하는 실시간 운행 공지는 아닙니다.",
+          "updated_at": "2026-11-13T17:11:30.426063"
+        }
+      ],
+      "findings": []
+    },
+    {
+      "verification_appointment": "deoksugung-event-road-control",
+      "checked_at": "2026-11-13T17:11:30.426063",
+      "route_distance_m": 3155,
+      "route_duration_s": 964,
+      "sources": [
+        {
+          "name": "서울 공식 실시간 돌발·운행 제한",
+          "ok": true,
+          "detail": "현재·예정 29건 · 버스 우회/무정차/운행 제한 4건",
+          "updated_at": "2026-11-13T17:11:30.426063"
+        },
+        {
+          "name": "TOPIS 도로 통제",
+          "ok": true,
+          "detail": "61건의 유효 공지",
+          "updated_at": "2026-11-13T04:33:31.871469Z"
+        },
+        {
+          "name": "ITS 전국 돌발·통제",
+          "ok": true,
+          "detail": "230건의 유효 공지 수신",
+          "updated_at": "2026-11-13T17:11:30.426063"
+        },
+        {
+          "name": "파업·운행 제한 보도",
+          "ok": true,
+          "detail": "13건의 파업 기록 · 본문 검증 영향 36건",
+          "updated_at": "2026-11-13T04:33:28.703253Z"
+        },
+        {
+          "name": "공공 행사 일정",
+          "ok": true,
+          "detail": "648건 수신",
+          "updated_at": "2026-11-13T01:49:19.493332Z"
+        },
+        {
+          "name": "현재 도로 소통",
+          "ok": true,
+          "detail": "정체 2.8 km · 서행 0.1 km · 정보 없음 0.3 km",
+          "updated_at": "2026-11-13T17:11:30.426063"
+        }
+      ],
+      "findings": [
+        {
+          "id": "travel:road:deoksugung-event-road-control",
+          "title": "현재 경로에 정체·지체 구간",
+          "body": "현재 조회한 자동차 경로의 정체·지체 구간은 2.8 km입니다. 현재 관측이며 일정 당일의 예측이 아닙니다.",
+          "notification_eligible": true,
+          "evidence": "카카오모빌리티의 실제 도로별 교통 상태 응답입니다. 행사나 파업이 원인이라고 추정하지 않습니다.",
+          "sources": [
+            {
+              "name": "카카오모빌리티 길찾기",
+              "url": "https://map.kakao.com/"
+            }
+          ]
+        },
+        {
+          "id": "news-traffic:deoksugung-event-road-control:c55dcbb4d0b7df4df7c57402",
+          "title": "주말마다 마라톤 — 이동 안내",
+          "body": "예정된 영향입니다. 날짜·범위·상태 또는 이동 정보가 부족하거나 충돌합니다. 최신 안내를 확인해 주세요.",
+          "notification_eligible": false,
+          "evidence": "본문 근거: “온라인 커뮤니티 실제 서울 도심에서는 주말마다 마라톤 대회가 열리면서 도로 통제와 대중교통 우회 문제가 반복되고 있다.”",
+          "sources": [
+            {
+              "name": "뉴스·공개 공지 본문",
+              "url": "https://www.seoul.co.kr/news/society/2026/11/12/20261112500004?wlog_tag3=naver"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "verification_appointment": "sinchon-official-bus-diversion",
+      "checked_at": "2026-11-13T17:11:30.426063",
+      "route_distance_m": 3237,
+      "route_duration_s": 1728,
+      "sources": [
+        {
+          "name": "서울 공식 실시간 돌발·운행 제한",
+          "ok": true,
+          "detail": "현재·예정 29건 · 버스 우회/무정차/운행 제한 4건",
+          "updated_at": "2026-11-13T17:11:30.426063"
+        },
+        {
+          "name": "TOPIS 도로 통제",
+          "ok": true,
+          "detail": "61건의 유효 공지",
+          "updated_at": "2026-11-13T04:33:31.871469Z"
+        },
+        {
+          "name": "ITS 전국 돌발·통제",
+          "ok": true,
+          "detail": "230건의 유효 공지 수신",
+          "updated_at": "2026-11-13T17:11:30.426063"
+        },
+        {
+          "name": "파업·운행 제한 보도",
+          "ok": true,
+          "detail": "13건의 파업 기록 · 본문 검증 영향 36건",
+          "updated_at": "2026-11-13T04:33:28.703253Z"
+        },
+        {
+          "name": "공공 행사 일정",
+          "ok": true,
+          "detail": "648건 수신",
+          "updated_at": "2026-11-13T01:49:19.493332Z"
+        },
+        {
+          "name": "대중교통 경로",
+          "ok": true,
+          "detail": "경로 조회 성공 · 실제 정상 운행을 보장하는 실시간 운행 공지는 아닙니다.",
+          "updated_at": "2026-11-13T17:11:30.426063"
+        }
+      ],
+      "findings": [
+        {
+          "id": "news-traffic:sinchon-official-bus-diversion:c55dcbb4d0b7df4df7c57402",
+          "title": "주말마다 마라톤 — 이동 안내",
+          "body": "예정된 영향입니다. 날짜·범위·상태 또는 이동 정보가 부족하거나 충돌합니다. 최신 안내를 확인해 주세요.",
+          "notification_eligible": false,
+          "evidence": "본문 근거: “온라인 커뮤니티 실제 서울 도심에서는 주말마다 마라톤 대회가 열리면서 도로 통제와 대중교통 우회 문제가 반복되고 있다.”",
+          "sources": [
+            {
+              "name": "뉴스·공개 공지 본문",
+              "url": "https://www.seoul.co.kr/news/society/2026/11/12/20261112500004?wlog_tag3=naver"
+            }
+          ]
+        },
+        {
+          "id": "travel:transit:sinchon-official-bus-diversion:topis-1109316",
+          "title": "인근 대중교통 우회·이용 제한 공식 안내",
+          "body": "- 신촌 연세로 차 없는 거리\n- 운영시간 : 매주 일요일 09:00 ~ 22:00 \n- 시행구간 및 시행방법 : 연세로 (신촌전철역~연세대학교 앞 550m), 버스노선 우회 운행 후 교통통제\n* 창천교회→연대 앞 57m 구간 미운영\n이동 시간대와 0.2 km 이내에서 겹치는 공식 공지입니다. 해당 정류장·역·방향의 이용 가능 여부를 확인하세요. 전체 노선 이용 불가를 뜻하지 않습니다.",
+          "notification_eligible": true,
+          "evidence": "서울시 TOPIS의 현재·예정 운행 제한 원문과 실제 좌표·시간을 비교했습니다.",
+          "sources": [
+            {
+              "name": "서울시 TOPIS 실시간 공개 공지",
+              "url": "https://topis.seoul.go.kr/?accId=1109316"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.liferadar.trafficprobe">
+  <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="36" />
+  <application android:label="LifeRadar Traffic Verification" android:hasCode="true" />
+  <instrumentation android:name="com.liferadar.trafficprobe.TrafficProbe" android:targetPackage="com.liferadar.liferadar" />
+</manifest>

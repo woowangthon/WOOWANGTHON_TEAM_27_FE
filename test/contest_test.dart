@@ -10,6 +10,7 @@ import 'package:liferadar/core/theme.dart';
 import 'package:liferadar/data/providers.dart';
 import 'package:liferadar/features/discover/discover_screen.dart';
 import 'package:liferadar/features/event/event_detail_sheet.dart';
+import 'package:liferadar/features/map/map_screen.dart';
 import 'package:liferadar/l10n/app_localizations.dart';
 import 'package:liferadar/services/calendar_api.dart';
 import 'package:liferadar_core/liferadar_core.dart';
@@ -62,6 +63,10 @@ Future<void> pump(WidgetTester tester, Widget child) async {
 }
 
 void main() {
+  testWidgets('map offers a dedicated contest layer', (tester) async {
+    await pump(tester, const MapScreen());
+    expect(find.text('공모전'), findsOneWidget);
+  });
   test('placeless does not imply nationwide; category survives feed/cache', () {
     expect(discoverRegionOf(contest()), '미확인');
     expect(discoverRegionOf(contest(city: '전국')), '전국');

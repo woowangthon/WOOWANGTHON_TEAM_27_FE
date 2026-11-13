@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:async';
+import 'package:flutter/widgets.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -18,6 +20,8 @@ import 'session.dart';
 import 'plan_routes.dart';
 import 'news_traffic.dart';
 import 'travel_impact.dart';
+import 'weekly_contests.dart';
+import 'contest_background.dart';
 
 export 'event_feed.dart' show EventFeed;
 export 'seen.dart' show seenProvider;
@@ -40,11 +44,34 @@ final liveEventsEnabledProvider = Provider<bool>((ref) => false);
 final eventFeedProvider = NotifierProvider<EventFeedController, EventFeed>(EventFeedController.new);
 
 class EventFeedController extends Notifier<EventFeed> {
+  WeeklyContests? _contests;
   @override
   EventFeed build() {
     final initial = ref.watch(initialEventFeedProvider);
-    if (ref.watch(liveEventsEnabledProvider)) Future.microtask(refresh);
+    if (ref.watch(liveEventsEnabledProvider)) {
+      _contests = WeeklyContests(ref.read(sharedPrefsProvider), seed: initial);
+      Future.microtask(refresh);
+      Future.microtask(refreshContests);
+      final timer = Timer.periodic(const Duration(minutes: 5), (_) => refreshContests());
+      final lifecycle = AppLifecycleListener(onResume: refreshContests);
+      ref.onDispose(() { timer.cancel(); lifecycle.dispose(); });
+      final cached = _contests!.cached();
+      if (cached != null) return initial.withMissingContestSourceFrom(cached);
+    }
     return initial;
+  }
+
+  Future<void> refreshContests() async {
+    final collector = _contests;
+    if (collector == null) return;
+    try {
+      final collected = await ContestBackground.collect(collector);
+      await collector.prefs.reload();
+      final fresh = collected ?? collector.cached();
+      if (fresh != null && ref.mounted) state = state.withMissingContestSourceFrom(fresh);
+    } catch (error) {
+      debugPrint('Contest refresh: ${error.runtimeType}');
+    }
   }
 
   /// 새 피드가 있으면 교체한다. 결과: 갱신 여부.
@@ -132,13 +159,27 @@ final mapEventsProvider = Provider<List<RadarEvent>>((ref) {
   final taste = ref.watch(tasteProvider);
   final all = ref.watch(eventsProvider);
   final real = all
-      .where((e) => !e.isSample && !e.placeless && !e.end.isBefore(today) && e.start.isBefore(horizon))
+      .where((e) => !e.isSample && !e.placeless && e.applicationVisible(now) &&
+          !e.end.isBefore(today) && e.start.isBefore(horizon))
       .toList()
     ..sort((a, b) {
       final s = taste.score(b, interests).compareTo(taste.score(a, interests));
       return s != 0 ? s : a.start.compareTo(b.start);
     });
   return [...all.where((e) => e.isSample), ...real.take(mapEventLimit)];
+});
+
+/// Physical contest sessions have their own map layer, independent of the
+/// recommendation limit. Reception dates never stand in for venue dates.
+final mapContestEventsProvider = Provider<List<RadarEvent>>((ref) {
+  final now = ref.watch(nowProvider);
+  final today = DateTime(now.year, now.month, now.day);
+  final horizon = today.add(const Duration(days: 90));
+  return ref.watch(eventsProvider).where((e) => e.isApplication && !e.isSample &&
+      !e.placeless && e.applicationVisible(now) && !e.end.isBefore(today) &&
+      e.start.isBefore(horizon) && e.location.lat.isFinite && e.location.lng.isFinite &&
+      e.location.lat >= 33 && e.location.lat <= 39 && e.location.lng >= 124 && e.location.lng <= 132)
+      .toList()..sort((a,b) => a.start.compareTo(b.start));
 });
 
 final eventByIdProvider = Provider.family<RadarEvent?, String>((ref, id) {

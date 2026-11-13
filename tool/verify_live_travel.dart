@@ -71,7 +71,7 @@ Future<void> main(List<String> args) async {
         TravelMode.transit,
       ),
       await run('deoksugung-event-road-control', const GeoPoint(37.5547,126.9706),
-        const GeoPoint(37.5662,126.9750), DateTime(2026,11,12,12), TravelMode.car),
+        const GeoPoint(37.5662,126.9750), now.add(const Duration(hours: 1)), TravelMode.car),
       await run('sinchon-official-bus-diversion', const GeoPoint(37.5573,126.9255),
         const GeoPoint(37.5645,126.9388), DateTime(2026,11,15,11), TravelMode.transit),
     ];

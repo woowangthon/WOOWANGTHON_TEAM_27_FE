@@ -1,5 +1,9 @@
 # LifeRadar — 내 일정을 챙기는 AI 동료
 
+> 2026-11-13 추가: 공모전 주간 수집: Android 앱이 링커리어·요즘것들·씽굿 공개 목록을 직접 수집하고, 출처별 7일 성공 주기와 6시간 재시도·백그라운드 JobScheduler를 적용합니다. 확인된 현장 세션은 공모전 전용 지도 레이어에 표시합니다. `lib/data/weekly_contests.dart`, `lib/data/contest_background.dart` 및 `android/weekly-probe/README.md`를 참고하세요. 최종 로컬 APK는 1.0.1+2016이며 실기기 수집·저장·지도 표시를 검증했습니다.
+
+공모전 수집 범위와 제한은 [구현 기록](docs/PORTAL_WEEKLY_COLLECTION.md), 이동 경로별 교통 알림의 실기기 결과는 [검증 기록](docs/verification/traffic-notifications-20261113.md)을 참고하세요. 교통 알림은 앱 실행 상태에서 검증했으며, 앱 완전 종료 중의 교통 자동 감시는 아직 구현하지 않았습니다. FE·BE는 게시된 공통 코어 커밋 SHA에 고정했습니다.
+
 > **WOOWANGTHON TEAM 27** · 2026 AI 우왕톤 · 주제 *"AI는 동료가 될 수 있을까?"* — 청년의 삶
 >
 > 저장소: **FE (이 저장소, Flutter 앱)** · [BE (데이터 파이프라인)](https://github.com/woowangthon/WOOWANGTHON_TEAM_27_BE) · [AI (판단 엔진·AI 모듈)](https://github.com/woowangthon/WOOWANGTHON_TEAM_27_AI)

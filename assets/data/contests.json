@@ -38,6 +38,18 @@
       "license": null,
       "count": 1,
       "verifiedAt": "2026-11-12T03:32:09.000Z"
+    },
+    {
+      "id": "contest-linkareer",
+      "name": "링커리어 · 수동 확인",
+      "status": "success",
+      "coverage": "reviewed-records-only",
+      "access": "manual-public-page-review",
+      "automatedCollectionEnabled": false,
+      "reuseConditions": "unconfirmed",
+      "license": null,
+      "count": 2,
+      "verifiedAt": "2026-11-13T05:49:36.928686Z"
     }
   ],
   "events": [
@@ -597,6 +609,128 @@
       "eligibilityText": "한국원자력연구원 방문 또는 연구원의 프로그램·콘텐츠 체험 경험이 필요. 연령 제한 없이 국민 참여 가능. 개인당 1편, 만 14세 미만은 보호자 서명 필요.",
       "audience": "restricted",
       "participationMode": "unknown"
+    },
+    {
+      "id": "contest-linkareer-svc-hyundai-2026-opening",
+      "title": {
+        "ko": "SVC Seoul 주거생활 AI 해커톤 · 대면 프로그램",
+        "en": "SVC Seoul 주거생활 AI 해커톤 · 대면 프로그램"
+      },
+      "description": {
+        "ko": "앤에이솔루션 · SVC Seoul AI 해커톤 운영국\n대면 프로그램 현장 일정. 전체 프로그램은 12/7~12/11이며 12/8~10은 온라인 활동입니다. 선발 참가팀 대상이며 접수한다고 참가가 확정되지는 않습니다. 현장 시각은 상세 일정 재확인 필요.",
+        "en": "앤에이솔루션 · SVC Seoul AI 해커톤 운영국\n대면 프로그램 현장 일정. 전체 프로그램은 12/7~12/11이며 12/8~10은 온라인 활동입니다. 선발 참가팀 대상이며 접수한다고 참가가 확정되지는 않습니다. 현장 시각은 상세 일정 재확인 필요."
+      },
+      "category": "contest",
+      "tags": [
+        "contest",
+        "ai",
+        "startup"
+      ],
+      "start": "2026-12-07T00:00:00.000",
+      "end": "2026-12-07T00:00:00.000",
+      "venue": "SVC Seoul B1 오픈스테이지 · 서울 마포구 양화로 136",
+      "city": "서울",
+      "lat": 37.5546947163181,
+      "lng": 126.921532386619,
+      "url": "https://linkareer.com/activity/363236",
+      "deadline": "2026-11-29T00:00:00.000",
+      "source": "contest-linkareer",
+      "sourceName": "링커리어 · 수동 확인",
+      "applicationStatus": "open",
+      "deadlinePrecision": "date",
+      "lastVerifiedAt": "2026-11-13T05:49:36.928686Z",
+      "eligibilityText": "국내 대학·대학원 재학·휴학 중인 학생, 팀 단위 참여",
+      "participationMode": "hybrid",
+      "applicationStart": "2026-11-10T00:00:00.000",
+      "eventDatePrecision": "date",
+      "contestId": "svc-hyundai-2026",
+      "sessionId": "opening",
+      "evidence": {
+        "application": {
+          "url": "https://linkareer.com/activity/363236",
+          "quote": "2026. 11. 10.(화) ~ 11. 29.(일)"
+        },
+        "eligibility": {
+          "url": "https://linkareer.com/activity/363236",
+          "quote": "국내 대학교에 재학·휴학 중인 대학생 및 대학원생"
+        },
+        "venue": {
+          "url": "https://www.onoffmix.com/event/353176",
+          "quote": "서울 마포구 양화로 136 SVC Seoul B1 오픈스테이지"
+        },
+        "coordinates": {
+          "url": "https://dapi.kakao.com/v2/local/search/address.json?query=%EC%84%9C%EC%9A%B8%20%EB%A7%88%ED%8F%AC%EA%B5%AC%20%EC%96%91%ED%99%94%EB%A1%9C%20136",
+          "quote": "Kakao address search: x=126.921532386619, y=37.5546947163181",
+          "provider": "Kakao Local address search",
+          "address": "서울 마포구 양화로 136",
+          "verifiedAt": "2026-11-13T05:49:36.928686Z"
+        },
+        "schedule": {
+          "url": "https://linkareer.com/activity/363236",
+          "quote": "12. 7.(월)"
+        }
+      }
+    },
+    {
+      "id": "contest-linkareer-svc-hyundai-2026-final",
+      "title": {
+        "ko": "SVC Seoul 주거생활 AI 해커톤 · 최종 발표·시상",
+        "en": "SVC Seoul 주거생활 AI 해커톤 · 최종 발표·시상"
+      },
+      "description": {
+        "ko": "앤에이솔루션 · SVC Seoul AI 해커톤 운영국\n최종 발표·시상 현장 일정. 전체 프로그램은 12/7~12/11이며 12/8~10은 온라인 활동입니다. 선발 참가팀 대상이며 접수한다고 참가가 확정되지는 않습니다. 현장 시각은 상세 일정 재확인 필요.",
+        "en": "앤에이솔루션 · SVC Seoul AI 해커톤 운영국\n최종 발표·시상 현장 일정. 전체 프로그램은 12/7~12/11이며 12/8~10은 온라인 활동입니다. 선발 참가팀 대상이며 접수한다고 참가가 확정되지는 않습니다. 현장 시각은 상세 일정 재확인 필요."
+      },
+      "category": "contest",
+      "tags": [
+        "contest",
+        "ai",
+        "startup"
+      ],
+      "start": "2026-12-11T00:00:00.000",
+      "end": "2026-12-11T00:00:00.000",
+      "venue": "SVC Seoul B1 오픈스테이지 · 서울 마포구 양화로 136",
+      "city": "서울",
+      "lat": 37.5546947163181,
+      "lng": 126.921532386619,
+      "url": "https://linkareer.com/activity/363236",
+      "deadline": "2026-11-29T00:00:00.000",
+      "source": "contest-linkareer",
+      "sourceName": "링커리어 · 수동 확인",
+      "applicationStatus": "open",
+      "deadlinePrecision": "date",
+      "lastVerifiedAt": "2026-11-13T05:49:36.928686Z",
+      "eligibilityText": "국내 대학·대학원 재학·휴학 중인 학생, 팀 단위 참여",
+      "participationMode": "hybrid",
+      "applicationStart": "2026-11-10T00:00:00.000",
+      "eventDatePrecision": "date",
+      "contestId": "svc-hyundai-2026",
+      "sessionId": "final",
+      "evidence": {
+        "application": {
+          "url": "https://linkareer.com/activity/363236",
+          "quote": "2026. 11. 10.(화) ~ 11. 29.(일)"
+        },
+        "eligibility": {
+          "url": "https://linkareer.com/activity/363236",
+          "quote": "국내 대학교에 재학·휴학 중인 대학생 및 대학원생"
+        },
+        "venue": {
+          "url": "https://www.onoffmix.com/event/353176",
+          "quote": "서울 마포구 양화로 136 SVC Seoul B1 오픈스테이지"
+        },
+        "coordinates": {
+          "url": "https://dapi.kakao.com/v2/local/search/address.json?query=%EC%84%9C%EC%9A%B8%20%EB%A7%88%ED%8F%AC%EA%B5%AC%20%EC%96%91%ED%99%94%EB%A1%9C%20136",
+          "quote": "Kakao address search: x=126.921532386619, y=37.5546947163181",
+          "provider": "Kakao Local address search",
+          "address": "서울 마포구 양화로 136",
+          "verifiedAt": "2026-11-13T05:49:36.928686Z"
+        },
+        "schedule": {
+          "url": "https://linkareer.com/activity/363236",
+          "quote": "12. 11.(금)"
+        }
+      }
     }
   ]
 }

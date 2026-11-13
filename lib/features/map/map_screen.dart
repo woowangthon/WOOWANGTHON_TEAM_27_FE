@@ -23,7 +23,7 @@ import 'marker_icons.dart';
 
 enum MapMode { explore, myMap, route }
 
-enum MapLayer { plans, recommended, route }
+enum MapLayer { plans, recommended, contests, route }
 
 class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
@@ -40,7 +40,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   String? _mapError;
   int _mapGeneration = 0;
   MapMode _mode = MapMode.explore;
-  final Set<MapLayer> _layers = {MapLayer.plans, MapLayer.recommended};
+  final Set<MapLayer> _layers = {MapLayer.plans, MapLayer.recommended, MapLayer.contests};
 
   /// 레이어별로 그려진 Poi (숨기기/보이기용).
   final Map<MapLayer, List<km.Poi>> _pois = {for (final l in MapLayer.values) l: []};
@@ -110,6 +110,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     ref.listen<String?>(routeFilterProvider, (_, _) {
       _drawing = _drawing.then((_) => _applyRouteFilter()).catchError((_) {});
     });
+    ref.listen<List<RadarEvent>>(mapEventsProvider, (_, _) {
+      _drawing = _drawing.then((_) => _drawRecommended()).catchError((_) {});
+    });
+    ref.listen<List<RadarEvent>>(mapContestEventsProvider, (_, _) {
+      _drawing = _drawing.then((_) => _drawContests()).catchError((_) {});
+    });
 
     final p = context.palette;
     // 다크 모드에서는 지도 타일도 어둡게 (웹: CSS 필터).
@@ -172,6 +178,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     children: [
                       _layerChip(MapLayer.plans, l10n.layerPlans, AppColors.plan, floating),
                       _layerChip(MapLayer.recommended, l10n.layerRecommended, AppColors.recommended, floating),
+                      _layerChip(MapLayer.contests, context.categoryLabel(EventCategory.contest), AppColors.contest, floating),
                       _layerChip(MapLayer.route, l10n.layerRoute, AppColors.route, floating),
                     ],
                   ),
@@ -371,7 +378,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     _readyTimeout?.cancel();
     _map = controller;
     if (mounted) setState(() => _ready = true);
-    await _drawOverlays();
+    _drawing = _drawing.then((_) => _drawOverlays());
+    await _drawing;
     final route = ref.read(routeProvider);
     if (route.route != null) {
       _drawRoute(route, fit: true);
@@ -386,11 +394,20 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 
   Future<void> _drawOverlays() async {
+    await _drawPlans(ref.read(plansProvider));
+    await _drawRecommended();
+    await _drawContests();
+  }
+
+  Future<void> _drawRecommended() async {
     final map = _map;
     if (map == null) return;
-    final events = ref.read(mapEventsProvider);
+    final events = ref.read(mapEventsProvider).where((e) => !e.isApplication);
 
-    await _drawPlans(ref.read(plansProvider));
+    for (final poi in _pois[MapLayer.recommended]!) {
+      await poi.remove();
+    }
+    _pois[MapLayer.recommended]!.clear();
 
     for (final e in events) {
       final icon = await MarkerIcons.pin(AppColors.recommended, categoryIcon(e.category));
@@ -403,6 +420,44 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       );
       _pois[MapLayer.recommended]!.add(poi);
     }
+  }
+
+  /// Contests are not subject to the general recommendation marker limit.
+  Future<void> _drawContests() async {
+    final map = _map;
+    if (map == null) return;
+    for (final poi in _pois[MapLayer.contests]!) { await poi.remove(); }
+    _pois[MapLayer.contests]!.clear();
+    final groups = <String,List<RadarEvent>>{};
+    for (final e in ref.read(mapContestEventsProvider)) {
+      final key = '${e.location.lat.toStringAsFixed(5)},${e.location.lng.toStringAsFixed(5)}';
+      groups.putIfAbsent(key, () => []).add(e);
+    }
+    final icon = await MarkerIcons.pin(AppColors.contest, categoryIcon(EventCategory.contest));
+    for (final entry in groups.entries) {
+      final sessions = entry.value;
+      _pois[MapLayer.contests]!.add(await map.labelLayer.addPoi(
+        _ll(sessions.first.location), id: 'contest:${entry.key}',
+        style: km.PoiStyle(icon: icon, textStyle: const [km.PoiTextStyle(size: 12, color: Colors.black87, stroke: 2, strokeColor: Colors.white)]),
+        text: sessions.length > 1 ? '${sessions.length}' : '',
+        visible: _layers.contains(MapLayer.contests),
+        onClick: () => sessions.length == 1 ? _openEvent(sessions.single) : _openContestSessions(sessions),
+      ));
+    }
+  }
+
+  void _openContestSessions(List<RadarEvent> sessions) {
+    if (!mounted) return;
+    showModalBottomSheet<void>(context: context, showDragHandle: true, builder: (sheetContext) => SafeArea(
+      child: ListView(shrinkWrap: true, children: [
+        for (final e in sessions) ListTile(
+          leading: const Icon(Icons.emoji_events_outlined),
+          title: Text(context.tr(e.title)),
+          subtitle: Text('${context.formatDate(e.start)} · ${e.venue}'),
+          onTap: () { Navigator.pop(sheetContext); _openEvent(e); },
+        ),
+      ]),
+    ));
   }
 
   /// "My Plans" 마커 — Google 캘린더 동기화 후 다시 그린다.
@@ -553,17 +608,20 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         await _setLayer(MapLayer.route, false);
         await _setLayer(MapLayer.plans, true);
         await _setLayer(MapLayer.recommended, true);
+        await _setLayer(MapLayer.contests, true);
         await _fitAll();
       case MapMode.myMap:
         await _setLayer(MapLayer.route, false);
         await _setLayer(MapLayer.plans, true);
         await _setLayer(MapLayer.recommended, false);
+        await _setLayer(MapLayer.contests, false);
         final pts = ref.read(plansProvider).where((p) => p.location != null).map((p) => _ll(p.location!)).toList();
         await _fit(pts);
       case MapMode.route:
         // 복잡하지 않도록 경로와 그 주변 행사만.
         await _setLayer(MapLayer.plans, false);
         await _setLayer(MapLayer.recommended, false);
+        await _setLayer(MapLayer.contests, false);
         await _setLayer(MapLayer.route, true);
     }
   }
@@ -571,7 +629,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   Future<void> _fitAll() async {
     final pts = [
       ...ref.read(plansProvider).where((p) => p.location != null).map((p) => _ll(p.location!)),
-      ...ref.read(mapEventsProvider).map((e) => _ll(e.location)),
+      if (_layers.contains(MapLayer.recommended)) ...ref.read(mapEventsProvider).where((e) => !e.isApplication).map((e) => _ll(e.location)),
+      if (_layers.contains(MapLayer.contests)) ...ref.read(mapContestEventsProvider).map((e) => _ll(e.location)),
     ];
     await _fit(pts);
   }
@@ -600,9 +659,10 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       return;
     }
     final event = ref.read(eventByIdProvider(id));
-    if (event == null || _map == null) return;
+    if (event == null || event.placeless || _map == null) return;
     ref.read(mapFocusProvider.notifier).focus(null);
-    if (!_layers.contains(MapLayer.recommended)) await _setLayer(MapLayer.recommended, true);
+    final layer = event.isApplication ? MapLayer.contests : MapLayer.recommended;
+    if (!_layers.contains(layer)) await _setLayer(layer, true);
     await _map!.moveCamera(
       km.CameraUpdate.newCenterPosition(_ll(event.location), zoomLevel: 14),
       animation: const km.CameraAnimation(800),

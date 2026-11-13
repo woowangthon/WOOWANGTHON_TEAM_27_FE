@@ -175,6 +175,7 @@ abstract final class AppColors {
   static const brand = Color(0xFF5865F2);
   static const plan = Color(0xFF5865F2);
   static const recommended = Color(0xFFE8890C);
+  static const contest = Color(0xFF8B5CF6);
   static const route = Color(0xFF0D9488);
 }
 

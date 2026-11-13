@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-11-13T19:10:13.1922215+09:00",
+  "fixtureReplay": true,
+  "diagnostic": {
+    "permission": "granted",
+    "fixtureReplay": true,
+    "enabled": true,
+    "strikeSent": true,
+    "duplicateSuppressed": true,
+    "otherRouteSuppressed": true,
+    "otherTimeSuppressed": true,
+    "eventClosureSent": true,
+    "sent": 2,
+    "passed": true
+  },
+  "deliverySource": "LifeRadar production SignalNotifier and Android notification plugin",
+  "productionApkSha256": "9d238a832821d5a4ef77890aa0d94301c56f4423fcb23078f8fc588efd255f52",
+  "androidInspection": [
+    "INSTRUMENTATION_RESULT: appPreferenceEnabled=true",
+    "INSTRUMENTATION_RESULT: osNotificationsEnabled=true",
+    "INSTRUMENTATION_RESULT: signalsChannelImportance=4",
+    "INSTRUMENTATION_RESULT: verificationNotificationCount=2",
+    "INSTRUMENTATION_RESULT: verificationNotificationTitles=[\"[검증용] 일정 알림 · 서울 행사 도로 통제 — 이동 안내\",\"[검증용] 일정 알림 · 서울 버스 파업 — 이동 안내\"]",
+    "INSTRUMENTATION_CODE: 0"
+  ],
+  "cleanup": {
+    "verificationNotificationsRemaining": 0,
+    "probeRemoved": true,
+    "appRunning": true,
+    "productionVersionCode": 2016,
+    "productionRestored": true
+  }
+}

@@ -30,7 +30,7 @@ class EventFeed {
     final metadata = sourceMetadata.where((s)=>!_removedSources.contains(s['id'])).toList();
     final names = {...sources};
     DateTime? observed(Map<String, dynamic> m, DateTime? fallback) =>
-        DateTime.tryParse('${m['verifiedAt'] ?? m['lastSuccessAt'] ?? ''}') ?? fallback;
+        DateTime.tryParse('${m['cacheSnapshot'] == true && m['coverage'] == 'incremental-public-pages' ? m['snapshotAt'] : m['verifiedAt'] ?? m['lastSuccessAt'] ?? ''}') ?? fallback;
     for (final old in previous.sourceMetadata) {
       final source = old['id'];
       if (_removedSources.contains(source)) continue;
@@ -38,7 +38,8 @@ class EventFeed {
       final current = metadata.where((m) => m['id'] == source).firstOrNull;
       final oldAt = observed(old, previous.generatedAt);
       final currentAt = current == null ? null : observed(current, generatedAt);
-      final currentFailed = current != null && ['failed','partial','disabled'].contains(current['status']);
+      final currentFailed = current != null && ['failed','partial','disabled'].contains(current['status']) &&
+          !(current['cacheSnapshot'] == true && current['coverage'] == 'incremental-public-pages');
       if (current != null && !currentFailed && (oldAt == null || (currentAt != null && !oldAt.isAfter(currentAt)))) continue;
       merged.removeWhere((e) => e.source == source);
       // Older apps classified the same stable K-Startup IDs as startupSupport.

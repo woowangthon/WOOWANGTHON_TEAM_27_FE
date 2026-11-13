@@ -58,7 +58,7 @@ class CalendarApi {
     final d = application ? e.applicationDate(e.deadline!) : e.start;
     return {
       'summary':title,
-      if (!e.placeless) 'location':'${e.venue}, ${e.city}',
+      if (!application && !e.placeless) 'location':'${e.venue}, ${e.city}',
       'description':[
         'Added by LifeRadar',
         if(application) 'Application deadline / 접수 마감 (KST). Not an event schedule.',

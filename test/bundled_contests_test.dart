@@ -34,7 +34,10 @@ void main() {
     final all = feed.events.where((e) => e.isApplication).toList();
     expect(all.length, greaterThanOrEqualTo(17));
     expect(all.map((e) => e.source).toSet().length, greaterThanOrEqualTo(4));
-    expect(all.every((e) => e.placeless && e.lastVerifiedAt != null && e.deadlinePrecision != null), isTrue);
+    expect(all.every((e) => e.lastVerifiedAt != null && e.deadlinePrecision != null), isTrue);
+    final onsite = all.where((e) => !e.placeless).toList();
+    expect(onsite, hasLength(2));
+    expect(onsite.every((e) => e.applicationStart != null && e.eventDatePrecision == 'date'), isTrue);
     expect(all.every((e) => e.isFree == null), isTrue);
     expect(contests.every((e) => e.placeless && e.lastVerifiedAt != null), isTrue);
     expect(contests.any((e) => e.title.ko.contains('캐릭터')), isTrue);
@@ -96,7 +99,7 @@ void main() {
       client:MockClient((_)async=>http.Response.bytes(utf8.encode(legacy('2026-11-14T00:00:00Z')),200)));
     expect(fresh,isNotNull);
     expect(fresh!.events.any((e)=>e.id.startsWith('kstartup-')),isFalse);
-    expect(fresh.events.where((e)=>e.isApplication),hasLength(17));
+    expect(fresh.events.where((e)=>e.isApplication),hasLength(19));
     expect(EventFeed.parse(prefs.getString(LiveEvents.prefsKey)!).events.any((e)=>e.source.contains('kstartup')),isFalse);
   });
 }
