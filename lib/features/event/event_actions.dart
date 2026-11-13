@@ -28,7 +28,16 @@ Future<bool> addEventToCalendar(BuildContext context, WidgetRef ref, RadarEvent 
     });
     title = '${l10n.kindDeadline}: $title';
   }
+  // 며칠·몇 달 이어지는 전시·축제를 그대로 넣으면 캘린더의 모든 날이 막힌다 →
+  // 갈 날 하루를 고르게 하고 그날만 넣는다.
+  if (!event.isApplication && !event.placeless && spansSeveralDays(event)) {
+    final day = await _pickVisitDay(context, event, ref.read(nowProvider));
+    if (day == null) return false; // 취소
+    target = visitOn(event, day);
+  }
+  if (!context.mounted) return false;
   final added = ref.read(calendarAddedProvider.notifier);
+  Toast.progress(l10n.addingToCalendar);
   try {
     await ref.read(calendarProvider.notifier).addEvent(target, title: title);
     await added.mark(event.id);
@@ -39,7 +48,7 @@ Future<bool> addEventToCalendar(BuildContext context, WidgetRef ref, RadarEvent 
     Toast.show(l10n.calendarAlreadyAdded, type: ToastType.info);
     return true;
   } on CalendarAddInProgress {
-    return false; // 첫 요청이 끝나면 그쪽이 결과를 알린다
+    return false; // 첫 요청이 끝나면 그쪽이 결과를 알린다 (진행 토스트는 그대로)
   } catch (e) {
     final notConfigured = e.toString().contains('not-configured');
     Toast.show(
@@ -48,4 +57,39 @@ Future<bool> addEventToCalendar(BuildContext context, WidgetRef ref, RadarEvent 
     );
     return false;
   }
+}
+
+/// 시작일과 끝나는 날이 다르다 (밤 12시를 넘는 공연 하나는 제외: 24시간 이하).
+bool spansSeveralDays(RadarEvent e) {
+  final a = DateTime(e.start.year, e.start.month, e.start.day);
+  final b = DateTime(e.end.year, e.end.month, e.end.day);
+  return b.isAfter(a) && e.end.difference(e.start) > const Duration(hours: 24);
+}
+
+/// [day] 하루만의 일정. 행사에 하루 운영 시간(예: 10:00–18:00)이 있으면 그 시간,
+/// 없으면 종일 — 시간을 지어내지 않는다.
+RadarEvent visitOn(RadarEvent e, DateTime day) {
+  final hasHours = (e.start.hour != 0 || e.start.minute != 0) &&
+      (e.end.hour * 60 + e.end.minute) > (e.start.hour * 60 + e.start.minute);
+  final start = hasHours ? DateTime(day.year, day.month, day.day, e.start.hour, e.start.minute) : DateTime(day.year, day.month, day.day);
+  final end = hasHours
+      ? DateTime(day.year, day.month, day.day, e.end.hour, e.end.minute)
+      : DateTime(day.year, day.month, day.day).add(const Duration(days: 1));
+  return RadarEvent.fromJson({...e.toJson(), 'start': start.toIso8601String(), 'end': end.toIso8601String()});
+}
+
+Future<DateTime?> _pickVisitDay(BuildContext context, RadarEvent e, DateTime now) {
+  final today = DateTime(now.year, now.month, now.day);
+  final first = DateTime(e.start.year, e.start.month, e.start.day);
+  final last = DateTime(e.end.year, e.end.month, e.end.day);
+  final from = first.isBefore(today) ? today : first;
+  final to = last.isBefore(from) ? from : last;
+  return showDatePicker(
+    context: context,
+    initialDate: from,
+    firstDate: from,
+    lastDate: to,
+    helpText: context.l10n.visitDayTitle,
+    confirmText: context.l10n.visitDayConfirm,
+  );
 }

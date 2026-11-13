@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 
+import '../event/event_cover.dart';
 import '../../core/toast.dart';
 import '../../core/l10n_ext.dart';
 import '../../core/theme.dart';
@@ -120,6 +121,7 @@ class _AssistantScreenState extends ConsumerState<AssistantScreen> {
                         ),
                 ),
               ),
+              if (messages.isNotEmpty && !busy) _FollowUps(onPick: _send),
               _Composer(controller: _input, focus: _focus, busy: busy, onSend: _send),
             ],
           ),
@@ -188,6 +190,51 @@ class _AiOrbState extends State<AiOrb> with SingleTickerProviderStateMixin {
 
 // ───────────────────────── 첫 화면 ─────────────────────────
 
+/// 추천 질문 — 처음 화면의 카드와, 대화 중 입력창 위의 칩이 같은 목록을 쓴다.
+List<(IconData, String)> assistantSuggestions(BuildContext context, WidgetRef ref) {
+  final l10n = context.l10n;
+  final now = ref.watch(nowProvider);
+  final today = DateTime(now.year, now.month, now.day);
+  // 추천 질문에 쓸 일정: 장소가 있는 다가오는 일정 중 가장 긴 것 (보통 여행·출장).
+  final upcoming = ref.watch(plansProvider).where((x) => !x.end.isBefore(today) && x.location != null).toList()
+    ..sort((a, b) => b.end.difference(b.start).compareTo(a.end.difference(a.start)));
+  final nextTrip = upcoming.firstOrNull;
+  return [
+    (Icons.weekend_outlined, l10n.assistantSuggestWeekend),
+    if (nextTrip != null) (Icons.luggage_outlined, l10n.assistantSuggestPlan(nextTrip.title)),
+    (Icons.hourglass_bottom_rounded, l10n.assistantSuggestDeadline),
+    (Icons.palette_outlined, l10n.assistantSuggestFree),
+  ];
+}
+
+/// 대화 중 입력창 위의 추천 질문 칩 (가로로 밀기).
+class _FollowUps extends ConsumerWidget {
+  const _FollowUps({required this.onPick});
+  final ValueChanged<String> onPick;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final p = context.palette;
+    final items = assistantSuggestions(context, ref);
+    return SizedBox(
+      height: 44,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
+        itemCount: items.length,
+        separatorBuilder: (_, _) => const SizedBox(width: Space.sm),
+        itemBuilder: (_, i) => ActionChip(
+          avatar: Icon(items[i].$1, size: 16, color: p.primaryStrong),
+          label: Text(items[i].$2),
+          onPressed: () => onPick(items[i].$2),
+          side: BorderSide(color: p.border),
+          backgroundColor: p.surface,
+        ),
+      ),
+    );
+  }
+}
+
 class _Intro extends ConsumerWidget {
   const _Intro({required this.onPick});
   final ValueChanged<String> onPick;
@@ -197,19 +244,7 @@ class _Intro extends ConsumerWidget {
     final l10n = context.l10n;
     final p = context.palette;
     final t = context.textStyles;
-    final now = ref.watch(nowProvider);
-    final today = DateTime(now.year, now.month, now.day);
-    // 추천 질문에 쓸 일정: 장소가 있는 다가오는 일정 중 가장 긴 것 (보통 여행·출장).
-    final upcoming = ref.watch(plansProvider).where((x) => !x.end.isBefore(today) && x.location != null).toList()
-      ..sort((a, b) => b.end.difference(b.start).compareTo(a.end.difference(a.start)));
-    final nextTrip = upcoming.firstOrNull;
-
-    final suggestions = <(IconData, String)>[
-      (Icons.weekend_outlined, l10n.assistantSuggestWeekend),
-      if (nextTrip != null) (Icons.luggage_outlined, l10n.assistantSuggestPlan(nextTrip.title)),
-      (Icons.hourglass_bottom_rounded, l10n.assistantSuggestDeadline),
-      (Icons.palette_outlined, l10n.assistantSuggestFree),
-    ];
+    final suggestions = assistantSuggestions(context, ref);
 
     return ListView(
       key: const ValueKey('intro'),
@@ -445,7 +480,7 @@ class _BotMessage extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 출처 표시: AI 답인지, 조건 검색 규칙 문장인지 + 코드가 읽은 조건.
-          Wrap(
+          if (!message.offTopic) Wrap(
             spacing: Space.xs,
             runSpacing: Space.xs,
             children: [
@@ -481,7 +516,7 @@ class _BotMessage extends ConsumerWidget {
                   onStatus: (s) => ref.read(assistantProvider.notifier).setActionStatus(index, i, s),
                 ),
               ),
-          if (!message.fromAi && message.text.isNotEmpty) ...[
+          if (!message.fromAi && !message.offTopic && message.text.isNotEmpty) ...[
             const SizedBox(height: Space.sm),
             Text(l10n.assistantRuleNote, style: t.labelSmall!.copyWith(color: p.textMuted)),
           ],
@@ -539,9 +574,9 @@ class _MiniEventCard extends ConsumerWidget {
                           event.imageUrl!,
                           fit: BoxFit.cover,
                           webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
-                          errorBuilder: (_, _, _) => _CategoryArt(event.category),
+                          errorBuilder: (_, _, _) => EventCover(category: event.category, seed: event.id),
                         )
-                      : _CategoryArt(event.category),
+                      : EventCover(category: event.category, seed: event.id),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(Space.md, Space.sm, Space.md, Space.sm),
@@ -568,25 +603,6 @@ class _MiniEventCard extends ConsumerWidget {
   }
 }
 
-class _CategoryArt extends StatelessWidget {
-  const _CategoryArt(this.category);
-  final EventCategory category;
-
-  @override
-  Widget build(BuildContext context) {
-    final p = context.palette;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [p.primarySoft, p.surfaceAlt],
-        ),
-      ),
-      child: Center(child: Icon(categoryIcon(category), color: p.primaryStrong, size: 28)),
-    );
-  }
-}
 
 /// 제안 행동: "캘린더에 추가할까요?" [취소] [추가]. 누르기 전에는 아무것도 바뀌지 않는다.
 class _ActionCard extends ConsumerWidget {

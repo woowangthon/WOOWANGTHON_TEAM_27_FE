@@ -17,7 +17,11 @@ class AssistantMessage {
     this.fromAi = false,
     this.loading = false,
     this.understood = '',
+    this.offTopic = false,
   });
+
+  /// 앱 범위 밖 질문에 대한 안내 (출처 배지 없이).
+  final bool offTopic;
 
   final bool fromUser;
   final String text;
@@ -40,6 +44,7 @@ class AssistantMessage {
     actionStatus: [...actionStatus]..[i] = s,
     fromAi: fromAi,
     understood: understood,
+    offTopic: offTopic,
   );
 }
 
@@ -77,6 +82,18 @@ class AssistantController extends Notifier<List<AssistantMessage>> {
       AssistantMessage(fromUser: true, text: text),
       const AssistantMessage(fromUser: false, loading: true),
     ];
+
+    // 계산·코드·숙제처럼 앱과 무관한 것이 분명하면 AI에 보내지 않고 바로 안내한다.
+    if (Assistant.isOffTopic(text)) {
+      await Future<void>.delayed(const Duration(milliseconds: 350)); // 타이핑 점이 잠깐 보이게
+      if (!ref.mounted || conversation != _conversation) return;
+      state = [
+        for (final m in state)
+          if (!m.loading) m,
+        AssistantMessage(fromUser: false, text: Assistant.offTopicReply(lang: lang).text, offTopic: true),
+      ];
+      return;
+    }
 
     final now = ref.read(nowProvider);
     final plans = ref.read(plansProvider);

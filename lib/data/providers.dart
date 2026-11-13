@@ -277,39 +277,91 @@ final tasteProvider = Provider<Taste>((ref) {
   return Taste.from(ref.watch(insightFeedbackProvider), events).withStage(ref.watch(lifeStageProvider));
 });
 
-/// 규칙 기반 인사이트 = InsightEngine(일정, 행사, 관심사, 날씨).
-/// 입력이 하나라도 바뀌면 자동으로 다시 계산한다.
-final baseInsightsProvider = Provider<List<Insight>>((ref) {
-  final plans = ref.watch(plansProvider);
-  final now = ref.watch(nowProvider);
-  final today = DateTime(now.year, now.month, now.day);
+/// 일정별 날씨 (10일 예보 범위 안). 예보는 장소마다 따로 도착하므로 0.4초 동안 모아
+/// 한 번에 바꾼다 — 일정이 많으면 도착할 때마다 엔진을 다시 돌려 화면이 멈췄다.
+final planWeatherProvider = NotifierProvider<PlanWeatherController, Map<String, DailyWeather>>(PlanWeatherController.new);
 
-  // 10일 예보 범위 안의 일정에 대한 날씨 (캐시된 provider 사용).
-  final weather = <String, DailyWeather>{};
-  for (final p in plans) {
-    if (p.location == null) continue;
-    final day = DateTime(p.start.year, p.start.month, p.start.day);
-    final ahead = day.difference(today).inDays;
-    if (ahead < 0 || ahead > 9) continue;
-    final days = ref.watch(forecastProvider(forecastKey(p.location!, 'ko'))).value;
-    final w = days?.where((d) => d.date == day).firstOrNull;
-    if (w != null) weather[p.id] = w;
+class PlanWeatherController extends Notifier<Map<String, DailyWeather>> {
+  Timer? _timer;
+  String _signature = '';
+
+  @override
+  Map<String, DailyWeather> build() {
+    final plans = ref.watch(plansProvider);
+    final now = ref.watch(nowProvider);
+    ref.onDispose(() => _timer?.cancel());
+    for (final k in _keys(plans, now)) {
+      ref.listen(forecastProvider(k), (_, _) => _schedule());
+    }
+    final value = _read(plans, now);
+    _signature = _sign(value);
+    return value;
   }
 
+  void _schedule() {
+    _timer?.cancel();
+    _timer = Timer(const Duration(milliseconds: 400), () {
+      if (!ref.mounted) return;
+      final value = _read(ref.read(plansProvider), ref.read(nowProvider));
+      final sig = _sign(value);
+      if (sig == _signature) return; // 같은 내용이면 다시 계산하지 않는다
+      _signature = sig;
+      state = value;
+    });
+  }
+
+  static Iterable<(Plan, DateTime, ForecastKey)> _eligible(List<Plan> plans, DateTime now) sync* {
+    final today = DateTime(now.year, now.month, now.day);
+    for (final p in plans) {
+      if (p.location == null) continue;
+      final day = DateTime(p.start.year, p.start.month, p.start.day);
+      final ahead = day.difference(today).inDays;
+      if (ahead < 0 || ahead > 9) continue;
+      yield (p, day, forecastKey(p.location!, 'ko'));
+    }
+  }
+
+  static Set<ForecastKey> _keys(List<Plan> plans, DateTime now) => {for (final e in _eligible(plans, now)) e.$3};
+
+  Map<String, DailyWeather> _read(List<Plan> plans, DateTime now) {
+    final out = <String, DailyWeather>{};
+    for (final (p, day, k) in _eligible(plans, now)) {
+      final w = ref.read(forecastProvider(k)).value?.where((d) => d.date == day).firstOrNull;
+      if (w != null) out[p.id] = w;
+    }
+    return out;
+  }
+
+  static String _sign(Map<String, DailyWeather> m) =>
+      [for (final e in m.entries) '${e.key}:${e.value.date}:${e.value.rainChance}:${e.value.likelyRain}'].join('|');
+}
+
+/// 규칙 엔진 결과 (일정·행사·관심사·날씨·교통 통제·파업). 가장 무거운 계산이라
+/// 교통 영향 확인 결과처럼 자주 바뀌는 값은 여기에 넣지 않고 아래에서 합친다.
+final engineInsightsProvider = Provider<List<Insight>>((ref) {
+  final plans = ref.watch(plansProvider);
+  final now = ref.watch(nowProvider);
   final news = ref.watch(newsFeedProvider);
   final verifiedStrikeSources = {for (final impact in news.trafficImpacts) if (impact.type == 'STRIKE') impact.sourceUrl};
-  final regular = const InsightEngine().build(
+  return const InsightEngine().build(
     plans: plans,
     events: ref.watch(eventsProvider),
     interests: ref.watch(interestsProvider),
     now: now,
-    weatherByPlanId: weather,
+    weatherByPlanId: ref.watch(planWeatherProvider),
     taste: ref.watch(tasteProvider),
     traffic: ref.watch(trafficFeedProvider).activeAt(now.toUtc()),
     trafficNow: now.toUtc(),
     strikes: news.active.where((s) => !verifiedStrikeSources.contains(s.url)).toList(),
     tripsByPlanId: ref.watch(tripsByPlanIdProvider),
   );
+});
+
+/// 규칙 기반 인사이트 = 엔진 결과 + 일정별 교통 영향 확인 + 뉴스 교통 판정.
+final baseInsightsProvider = Provider<List<Insight>>((ref) {
+  final plans = ref.watch(plansProvider);
+  final now = ref.watch(nowProvider);
+  final regular = ref.watch(engineInsightsProvider);
   return InsightEngine.rank([
     ...{for (final i in [
       ...regular,

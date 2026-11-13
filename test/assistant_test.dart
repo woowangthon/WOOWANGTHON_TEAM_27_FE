@@ -187,4 +187,26 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Cancelled'), findsOneWidget);
   });
+
+  testWidgets('AI 비서: 계산·코드 질문은 AI에 보내지 않고 범위 안내만 (카드 없음)', (tester) async {
+    var calls = 0;
+    final gemini = GeminiClient(
+      apiKey: 'test',
+      client: MockClient((req) async {
+        // 홈 카드 문장 요청은 세지 않는다 — AI 비서 요청만.
+        if (req.body.contains('ONLY help with LifeRadar')) calls++;
+        return http.Response('{}', 500);
+      }),
+    );
+    await pumpApp(tester, interests: ['ai'], overrides: [geminiApiProvider.overrideWithValue(gemini)]);
+    await _open(tester);
+    await tester.enterText(find.byType(TextField), '2+2는 몇이야?');
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.arrow_upward_rounded));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pumpAndSettle();
+    expect(calls, 0);
+    expect(find.textContaining('events and your plans'), findsOneWidget);
+    expect(find.byType(ActionChip), findsWidgets); // 대화 중에도 추천 질문
+  });
 }

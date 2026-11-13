@@ -627,5 +627,11 @@
   "profileStageNone": "No stage set",
   "calendarAlreadyAdded": "Already in your calendar",
   "calendarAddedLabel": "Added to calendar",
-  "planSavedCalendar": "Plan saved to Google Calendar"
+  "planSavedCalendar": "Plan saved to Google Calendar",
+  "planSaving": "Saving…",
+  "planDeleting": "Deleting…",
+  "visitDayTitle": "Which day will you go? Only that day is added",
+  "visitDayConfirm": "Add this day",
+  "avatarTitle": "Profile picture",
+  "avatarChanged": "Profile picture updated"
 }

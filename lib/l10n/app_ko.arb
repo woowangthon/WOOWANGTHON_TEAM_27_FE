@@ -423,5 +423,11 @@
   "profileStageNone": "상황 미선택",
   "calendarAlreadyAdded": "이미 캘린더에 있는 일정이에요",
   "calendarAddedLabel": "캘린더에 추가됨",
-  "planSavedCalendar": "일정을 저장하고 Google 캘린더에도 넣었어요"
+  "planSavedCalendar": "일정을 저장하고 Google 캘린더에도 넣었어요",
+  "planSaving": "저장하는 중…",
+  "planDeleting": "삭제하는 중…",
+  "visitDayTitle": "언제 갈까요? 그날 하루만 캘린더에 넣어요",
+  "visitDayConfirm": "이날 추가",
+  "avatarTitle": "프로필 사진",
+  "avatarChanged": "프로필 사진을 바꿨어요"
 }

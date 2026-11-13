@@ -7,6 +7,7 @@ import '../../core/theme.dart';
 import '../../core/widgets.dart';
 import '../../core/share.dart';
 import 'event_actions.dart';
+import 'event_cover.dart';
 import '../../data/calendar_added.dart';
 import '../../data/providers.dart';
 import 'package:liferadar_core/liferadar_core.dart';
@@ -101,7 +102,9 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
         controller: controller,
         padding: const EdgeInsets.fromLTRB(Space.gutter, 0, Space.gutter, Space.xl),
         children: [
-          if (event.imageUrl != null) ...[_Poster(event.imageUrl!), const SizedBox(height: Space.lg)],
+          // 포스터가 없어도 같은 자리에 기본 그림 — 화면 모양이 일정하게.
+          _Poster(event.imageUrl, event: event),
+          const SizedBox(height: Space.lg),
 
           // ── 무엇: 카테고리 (차분하게) + 제목 ──
           QuietTags([
@@ -386,8 +389,9 @@ class _Fact extends StatelessWidget {
 
 /// 행사 포스터. 웹에서 다른 도메인 이미지는 CORS가 없을 수 있다 — HTML <img>로 대체한다.
 class _Poster extends StatelessWidget {
-  const _Poster(this.url);
-  final String url;
+  const _Poster(this.url, {required this.event});
+  final String? url;
+  final RadarEvent event;
 
   @override
   Widget build(BuildContext context) {
@@ -395,15 +399,17 @@ class _Poster extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(Radii.lg),
       child: Container(
-        height: 200,
+        height: url == null ? 140 : 200,
         color: p.surfaceAlt,
         alignment: Alignment.center,
-        child: Image.network(
-          url,
+        child: url == null
+            ? SizedBox.expand(child: EventCover(category: event.category, seed: event.id, iconSize: 40))
+            : Image.network(
+          url!,
           fit: BoxFit.contain,
           height: 200,
           webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
-          errorBuilder: (_, _, _) => Icon(Icons.image_not_supported_outlined, color: p.textMuted),
+          errorBuilder: (_, _, _) => SizedBox.expand(child: EventCover(category: event.category, seed: event.id, iconSize: 40)),
           loadingBuilder: (context, child, progress) =>
               progress == null ? child : const Shimmer(child: SkeletonBox(height: 200)),
         ),

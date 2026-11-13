@@ -168,11 +168,17 @@ class CalendarController extends Notifier<CalendarState> {
   }
 
   /// 캘린더의 일정을 삭제한다.
+  /// 목록에서 먼저 지우고(바로 보이게) 캘린더에 요청한다. 실패하면 되돌린다.
   Future<void> deletePlan(Plan plan) async {
     final id = plan.calendarEventId;
     if (id == null) return;
-    await _withApi((api) => api.delete(id));
     _replaceCalendarPlans((list) => list.where((x) => x.id != plan.id).toList());
+    try {
+      await _withApi((api) => api.delete(id));
+    } catch (_) {
+      _replaceCalendarPlans((list) => [...list.where((x) => x.id != plan.id), plan]);
+      rethrow;
+    }
   }
 
   void _replaceCalendarPlans(List<Plan> Function(List<Plan>) edit) {

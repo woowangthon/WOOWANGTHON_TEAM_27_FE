@@ -134,6 +134,7 @@ Google 로그인 → `calendar.events` 권한 → 향후 90일 일정 읽기 →
 
 | type | 색 | 언제 |
 |---|---|---|
+| `loading` | 남색 + 스피너 | 네트워크 작업 중 (`Toast.progress`) — 결과 토스트가 대체 |
 | `success` | 초록 | 저장·추가·연결 완료 |
 | `info` | 회색 | 삭제·해제·읽음 처리·새로 고침 같은 중립 결과 |
 | `warning` | 주황 | 권한 거절, 만료, 오래된 입력 |
@@ -186,6 +187,7 @@ flutter test --platform chrome test/google_api_test.dart   # 웹(dart2js) 전용
 | `A circle cannot have a border radius` (디버그만) | `copyWith(borderRadius: null)`은 radius를 지우지 않음 → 새 `BoxDecoration` |
 | Gemini `404 no longer available` / `429 quota` | 구형 모델 미지원 / 무료 할당량 초과 → `GeminiClient`가 예비 모델로 전환, 실패 시 규칙 문장 |
 | 웹에서 행사 포스터가 안 보임 | 이미지 서버 CORS 없음 → `<img>` 대체 전략 |
+| 일정이 바뀌면 몇 초간 멈춤 | 장소별 날씨 예보가 따로 도착할 때마다 `InsightEngine`을 다시 돌렸다 → `planWeatherProvider`가 0.4초 모아 한 번에, 교통 영향 확인 결과는 `engineInsightsProvider` 밖에서 합친다. 캘린더 쓰기 뒤 `sync()`는 기다리지 않는다 |
 | 바텀 시트 아래쪽이 떠 있는 내비게이션에 가려짐 | `showModalBottomSheet(useRootNavigator: true)` |
 | 탭을 다시 열 때 `setState() called during build` (Riverpod) | 가려진 탭이 보는 provider를 다른 파생 provider가 다시 보면 resume 중 갱신된다 → 파생값은 함수로 계산 (`alertsFrom`) |
 | `Route` 이름 충돌 | Flutter `Route` vs Kakao `Route` → `import ... as km` |

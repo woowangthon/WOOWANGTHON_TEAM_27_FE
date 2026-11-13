@@ -2623,6 +2623,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Plan saved to Google Calendar'**
   String get planSavedCalendar;
+
+  /// No description provided for @planSaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving…'**
+  String get planSaving;
+
+  /// No description provided for @planDeleting.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting…'**
+  String get planDeleting;
+
+  /// No description provided for @visitDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Which day will you go? Only that day is added'**
+  String get visitDayTitle;
+
+  /// No description provided for @visitDayConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Add this day'**
+  String get visitDayConfirm;
+
+  /// No description provided for @avatarTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile picture'**
+  String get avatarTitle;
+
+  /// No description provided for @avatarChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile picture updated'**
+  String get avatarChanged;
 }
 
 class _AppLocalizationsDelegate
