@@ -453,10 +453,11 @@ class EventCard extends ConsumerWidget {
       duration: Motion.of(context, Motion.normal),
       // 열어 본 행사: 살짝만 흐리게 + 테두리 없이.
       opacity: seen ? 0.82 : 1,
-      child: Card(
-        shape: seen ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(Radii.lg)) : null,
-        child: InkWell(
-          onTap: () => showEventDetail(
+      // 3D 블록: 새 행사는 아래 입술, 열어 본 행사는 평평하게.
+      child: Press3D(
+        face: context.palette.surface,
+        lip: seen ? null : cardLip(context),
+        onTap: () => showEventDetail(
             context,
             event,
             onShowOnMap: event.placeless ? null : () {
@@ -523,7 +524,6 @@ class EventCard extends ConsumerWidget {
             ),
           ),
         ),
-      ),
     );
   }
 }

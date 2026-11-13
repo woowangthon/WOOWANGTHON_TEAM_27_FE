@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:liferadar_core/liferadar_core.dart';
@@ -183,6 +184,7 @@ const appFontFamily = 'LifeRadarSans';
 
 ThemeData buildTheme(Brightness brightness) {
   final p = brightness == Brightness.dark ? AppPalette.dark : AppPalette.light;
+  final dark = brightness == Brightness.dark;
   final scheme = ColorScheme(
     brightness: brightness,
     primary: p.primary,
@@ -247,7 +249,8 @@ ThemeData buildTheme(Brightness brightness) {
     scaffoldBackgroundColor: p.background,
     canvasColor: p.background,
     dividerColor: p.border,
-    splashFactory: InkRipple.splashFactory,
+    // 안드로이드: 누른 자리에서 반짝이며 퍼지는 물결 (웹은 셰이더 지원이 달라 기본 물결).
+    splashFactory: !kIsWeb && defaultTargetPlatform == TargetPlatform.android ? InkSparkle.splashFactory : InkRipple.splashFactory,
     visualDensity: VisualDensity.standard,
     extensions: [p],
     pageTransitionsTheme: const PageTransitionsTheme(builders: {
@@ -303,7 +306,14 @@ ThemeData buildTheme(Brightness brightness) {
         padding: const EdgeInsets.symmetric(horizontal: Space.xl),
         shape: rounded(Radii.md),
         textStyle: text.labelLarge,
-        elevation: 0,
+        animationDuration: const Duration(milliseconds: 120),
+      ).copyWith(
+        // 3D 버튼: 평소에는 아래 그림자, 누르면 그림자가 사라지며 "눌린다". 비활성은 평평.
+        elevation: WidgetStateProperty.resolveWith((st) {
+          if (st.contains(WidgetState.disabled) || st.contains(WidgetState.pressed)) return 0;
+          return dark ? 0 : 3;
+        }),
+        shadowColor: WidgetStatePropertyAll(Color.lerp(p.primary, Colors.black, 0.35)!.withValues(alpha: 0.55)),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(

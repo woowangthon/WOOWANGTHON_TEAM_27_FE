@@ -104,7 +104,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               padding: const EdgeInsets.fromLTRB(Space.gutter, 0, Space.gutter, Space.md),
               child: FadeSlideIn(
                 index: i,
-                child: Pressable(child: InsightCard(insight: shown[i])),
+                child: InsightCard(insight: shown[i]),
               ),
             ),
         ],
@@ -549,10 +549,11 @@ class InsightCard extends ConsumerWidget {
       duration: Motion.of(context, Motion.normal),
       // 열어 본 카드: 살짝만 흐리게 + 테두리 없이 (새 카드와 한눈에 구분).
       opacity: isSeen ? 0.82 : 1,
-      child: Card(
-        shape: isSeen ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(Radii.lg)) : null,
-        child: InkWell(
-          onTap: () => openSignal(context, ref, insight),
+      // 3D 블록: 새 카드는 아래 입술, 열어 본 카드는 평평하게.
+      child: Press3D(
+        face: p.surface,
+        lip: isSeen ? null : cardLip(context),
+        onTap: () => openSignal(context, ref, insight),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(Space.lg, Space.md, Space.sm, Space.xs),
             child: Column(
@@ -619,7 +620,6 @@ class InsightCard extends ConsumerWidget {
               ],
             ),
           ),
-        ),
       ),
     );
   }
