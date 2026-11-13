@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 
+import '../../core/toast.dart';
 import '../../core/l10n_ext.dart';
 import '../../core/theme.dart';
 import '../../core/widgets.dart';
@@ -455,7 +456,7 @@ class _BotMessage extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: Space.sm),
-          Text(message.text, style: t.bodyMedium!.copyWith(height: 1.6)),
+          ExpandableText(message.text, maxLines: 4, style: t.bodyMedium!.copyWith(height: 1.6)),
           if (events.isNotEmpty) ...[
             const SizedBox(height: Space.md),
             SizedBox(
@@ -623,7 +624,10 @@ class _ActionCard extends ConsumerWidget {
         children: [
           TextButton(
             style: TextButton.styleFrom(foregroundColor: p.textMuted, minimumSize: const Size(56, 40)),
-            onPressed: () => onStatus(ActionStatus.cancelled),
+            onPressed: () {
+              onStatus(ActionStatus.cancelled);
+              Toast.show(l10n.assistantCancelledToast, type: ToastType.info);
+            },
             child: Text(l10n.cancel),
           ),
           const SizedBox(width: Space.xs),

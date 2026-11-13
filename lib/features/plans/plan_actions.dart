@@ -37,3 +37,19 @@ Future<bool> deletePlanWithConfirm(BuildContext context, WidgetRef ref, Plan pla
     return false;
   }
 }
+
+
+/// 캘린더 다시 불러오기 + 결과 토스트 (동기화 버튼·당겨서 새로 고침).
+Future<void> syncCalendarWithToast(BuildContext context, WidgetRef ref) async {
+  final l10n = context.l10n;
+  await ref.read(calendarProvider.notifier).sync();
+  final s = ref.read(calendarProvider);
+  if (s.status == CalendarStatus.error) {
+    Toast.show(
+      s.error == 'expired' ? l10n.calendarExpiredToast : l10n.calendarErrorToast,
+      type: s.error == 'expired' ? ToastType.warning : ToastType.error,
+    );
+  } else {
+    Toast.show(l10n.calendarSyncedToast, type: ToastType.info);
+  }
+}

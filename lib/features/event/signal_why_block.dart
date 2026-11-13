@@ -7,6 +7,8 @@ import '../../core/theme.dart';
 import '../../core/widgets.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 
+final _ruleCode = RegExp(r'^[A-Z0-9_]+$');
+
 /// 신호 종류 → (이름, 아이콘, 톤). 카드와 상세 화면이 같은 모습이 되도록.
 (String, IconData, Tone) insightKindMeta(BuildContext context, InsightKind kind) {
   final l10n = context.l10n;
@@ -19,16 +21,25 @@ import 'package:liferadar_core/liferadar_core.dart';
 }
 
 /// "이 신호가 뜬 이유" — 신호 종류에 맞는 부드러운 색의 작은 블록(선·테두리 없음):
-/// 종류 + 신뢰도, 핵심 문장 하나, 그 아래 이유(차분하게).
+/// 처음에는 핵심 문장 두 줄만. "더 보기"를 누르면 이유·교통 근거·출처까지 펼친다.
 /// [standalone] — 행사 없는 신호 창: 제목, 신호 표시, 출처 링크도 여기에.
-class SignalWhyBlock extends StatelessWidget {
+class SignalWhyBlock extends StatefulWidget {
   const SignalWhyBlock({super.key, required this.insight, this.standalone = false});
 
   final Insight insight;
   final bool standalone;
 
   @override
+  State<SignalWhyBlock> createState() => _SignalWhyBlockState();
+}
+
+class _SignalWhyBlockState extends State<SignalWhyBlock> {
+  bool _open = false;
+
+  @override
   Widget build(BuildContext context) {
+    final insight = widget.insight;
+    final standalone = widget.standalone;
     final l10n = context.l10n;
     final p = context.palette;
     final t = context.textStyles;
@@ -70,14 +81,26 @@ class SignalWhyBlock extends StatelessWidget {
           ),
           const SizedBox(height: Space.sm),
           if (standalone) ...[Text(context.tr(insight.title), style: t.titleMedium), const SizedBox(height: Space.xs)],
-          Text(context.tr(insight.body), style: t.bodyMedium!.copyWith(color: p.text, height: 1.5)),
+          SmoothSize(
+            alignment: Alignment.topCenter,
+            child: Text(
+              context.tr(insight.body),
+              maxLines: _open ? null : 2,
+              overflow: _open ? null : TextOverflow.ellipsis,
+              style: t.bodyMedium!.copyWith(color: p.text, height: 1.5),
+            ),
+          ),
+          if (_open) ...[
           const SizedBox(height: Space.sm),
           Text(context.tr(insight.why), style: t.bodySmall),
           if (insight.trafficContext != null) TrafficMetadata(insight.trafficContext!, detailed: true),
-          if (standalone) ...[
-            if (insight.signals.isNotEmpty) ...[
+          ],
+          if (_open && standalone) ...[
+            // 규칙 코드(예: AMBIGUOUS_CORE_FIELDS)는 사람에게 보여주지 않는다.
+            if (insight.signals.where((s) => !_ruleCode.hasMatch(context.tr(s.summary))).toList() case final tags
+                when tags.isNotEmpty) ...[
               const SizedBox(height: Space.md),
-              QuietTags([for (final s in insight.signals) QuietTag(context.tr(s.summary), icon: signalIcon(s.type))]),
+              QuietTags([for (final s in tags) QuietTag(context.tr(s.summary), icon: signalIcon(s.type))]),
             ],
             const SizedBox(height: Space.md),
             Text('${l10n.sources} · ${insight.sources.map((s) => s.title).join(', ')}', style: t.labelSmall),
@@ -92,6 +115,19 @@ class SignalWhyBlock extends StatelessWidget {
                 ),
               ),
           ],
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                visualDensity: VisualDensity.compact,
+                foregroundColor: fg,
+              ),
+              onPressed: () => setState(() => _open = !_open),
+              icon: Icon(_open ? Icons.expand_less_rounded : Icons.expand_more_rounded, size: 18),
+              label: Text(_open ? l10n.showLess : l10n.showMore),
+            ),
+          ),
         ],
       ),
     );

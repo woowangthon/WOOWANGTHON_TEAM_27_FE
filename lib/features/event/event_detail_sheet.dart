@@ -186,7 +186,7 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
 
           // ── 내용 ──
           SectionHeader(l10n.eventAbout, padding: const EdgeInsets.fromLTRB(0, Space.xl, 0, Space.sm)),
-          _ExpandableText(context.tr(event.description)),
+          ExpandableText(context.tr(event.description), maxLines: 4),
 
           if (matched.isNotEmpty) ...[
             const SizedBox(height: Space.lg),
@@ -371,57 +371,6 @@ class _Fact extends StatelessWidget {
           if (trailing != null) ...[const SizedBox(width: Space.sm), trailing!],
         ],
       ),
-    );
-  }
-}
-
-/// 긴 설명: 6줄까지, 나머지는 "더 보기"로.
-class _ExpandableText extends StatefulWidget {
-  const _ExpandableText(this.text);
-  final String text;
-
-  @override
-  State<_ExpandableText> createState() => _ExpandableTextState();
-}
-
-class _ExpandableTextState extends State<_ExpandableText> {
-  bool _open = false;
-  static const _lines = 6;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.textStyles;
-    final style = t.bodyLarge!.copyWith(height: 1.6);
-    return LayoutBuilder(
-      builder: (context, c) {
-        final tp = TextPainter(
-          text: TextSpan(text: widget.text, style: style),
-          maxLines: _lines,
-          textDirection: Directionality.of(context),
-          textScaler: MediaQuery.textScalerOf(context),
-        )..layout(maxWidth: c.maxWidth);
-        final long = tp.didExceedMaxLines;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SmoothSize(
-              alignment: Alignment.topCenter,
-              child: Text(
-                widget.text,
-                style: style,
-                maxLines: _open || !long ? null : _lines,
-                overflow: _open || !long ? null : TextOverflow.ellipsis,
-              ),
-            ),
-            if (long)
-              TextButton(
-                style: TextButton.styleFrom(padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
-                onPressed: () => setState(() => _open = !_open),
-                child: Text(_open ? context.l10n.showLess : context.l10n.showMore),
-              ),
-          ],
-        );
-      },
     );
   }
 }

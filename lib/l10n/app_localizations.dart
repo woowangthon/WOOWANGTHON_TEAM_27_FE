@@ -2257,6 +2257,354 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Application status unconfirmed'**
   String get applicationUnknown;
+
+  /// No description provided for @planTravelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How you\'ll get there'**
+  String get planTravelTitle;
+
+  /// No description provided for @planTravelHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add how you travel and we\'ll match strikes and road closures on that line or road to this plan.'**
+  String get planTravelHint;
+
+  /// No description provided for @planTravelNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get planTravelNone;
+
+  /// No description provided for @planTravelBus.
+  ///
+  /// In en, this message translates to:
+  /// **'Bus'**
+  String get planTravelBus;
+
+  /// No description provided for @planTravelSubway.
+  ///
+  /// In en, this message translates to:
+  /// **'Subway'**
+  String get planTravelSubway;
+
+  /// No description provided for @planTravelRail.
+  ///
+  /// In en, this message translates to:
+  /// **'Train'**
+  String get planTravelRail;
+
+  /// No description provided for @planTravelAir.
+  ///
+  /// In en, this message translates to:
+  /// **'Plane'**
+  String get planTravelAir;
+
+  /// No description provided for @planTravelCar.
+  ///
+  /// In en, this message translates to:
+  /// **'Car'**
+  String get planTravelCar;
+
+  /// No description provided for @planTravelLines.
+  ///
+  /// In en, this message translates to:
+  /// **'Line / flight (optional)'**
+  String get planTravelLines;
+
+  /// No description provided for @planTravelLinesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. KTX Osong→Busan, Line 2, Bus 750'**
+  String get planTravelLinesHint;
+
+  /// No description provided for @planTravelOriginAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add origin'**
+  String get planTravelOriginAdd;
+
+  /// No description provided for @planTravelDepartureAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add departure time'**
+  String get planTravelDepartureAdd;
+
+  /// No description provided for @planTravelDepartAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Departs {time}'**
+  String planTravelDepartAt(String time);
+
+  /// No description provided for @planTravelFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'from {place}'**
+  String planTravelFrom(String place);
+
+  /// No description provided for @planTravelDepartureAfterStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure must be before the plan starts (within 24 hours).'**
+  String get planTravelDepartureAfterStart;
+
+  /// No description provided for @planTravelAirNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Flight status isn\'t connected yet. A plane trip is recorded but not used for alerts.'**
+  String get planTravelAirNote;
+
+  /// No description provided for @tabAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get tabAlerts;
+
+  /// No description provided for @alertsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get alertsTitle;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
+
+  /// No description provided for @alertsMarkAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read'**
+  String get alertsMarkAllRead;
+
+  /// No description provided for @alertsAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'All alerts marked as read'**
+  String get alertsAllRead;
+
+  /// No description provided for @alertsTestSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Test notification sent'**
+  String get alertsTestSent;
+
+  /// No description provided for @alertsAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get alertsAll;
+
+  /// No description provided for @alertsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No alerts'**
+  String get alertsEmptyTitle;
+
+  /// No description provided for @alertsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a place to a plan and we\'ll watch traffic, weather and crowds for you.'**
+  String get alertsEmptyBody;
+
+  /// No description provided for @alertsNoDate.
+  ///
+  /// In en, this message translates to:
+  /// **'No date'**
+  String get alertsNoDate;
+
+  /// No description provided for @alertsTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get alertsTomorrow;
+
+  /// No description provided for @alertsTopicRoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Roads'**
+  String get alertsTopicRoad;
+
+  /// No description provided for @alertsTopicTransit.
+  ///
+  /// In en, this message translates to:
+  /// **'Transit'**
+  String get alertsTopicTransit;
+
+  /// No description provided for @alertsTopicWeather.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather'**
+  String get alertsTopicWeather;
+
+  /// No description provided for @alertsTopicCrowd.
+  ///
+  /// In en, this message translates to:
+  /// **'Crowds'**
+  String get alertsTopicCrowd;
+
+  /// No description provided for @alertsCalm.
+  ///
+  /// In en, this message translates to:
+  /// **'All quiet'**
+  String get alertsCalm;
+
+  /// No description provided for @alertsCalmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is affecting your upcoming plans.'**
+  String get alertsCalmBody;
+
+  /// No description provided for @alertsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'alerts for your plans'**
+  String get alertsSummary;
+
+  /// No description provided for @alertsNew.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} new'**
+  String alertsNew(int count);
+
+  /// No description provided for @alertsPushOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Push on'**
+  String get alertsPushOn;
+
+  /// No description provided for @alertsPushOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Push off'**
+  String get alertsPushOff;
+
+  /// No description provided for @notifyOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications turned off'**
+  String get notifyOff;
+
+  /// No description provided for @planRouteSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Route added to your plans'**
+  String get planRouteSaved;
+
+  /// No description provided for @planRouteRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Route removed'**
+  String get planRouteRemoved;
+
+  /// No description provided for @planRouteError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t find a route. Check the places and time.'**
+  String get planRouteError;
+
+  /// No description provided for @calendarConnectedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Calendar connected'**
+  String get calendarConnectedToast;
+
+  /// No description provided for @calendarDisconnectedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar disconnected'**
+  String get calendarDisconnectedToast;
+
+  /// No description provided for @calendarSyncedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Plans refreshed'**
+  String get calendarSyncedToast;
+
+  /// No description provided for @calendarErrorToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load your calendar. Please try again.'**
+  String get calendarErrorToast;
+
+  /// No description provided for @calendarExpiredToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar access expired. Please reconnect.'**
+  String get calendarExpiredToast;
+
+  /// No description provided for @signedOutToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out'**
+  String get signedOutToast;
+
+  /// No description provided for @interestsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Interests saved'**
+  String get interestsSaved;
+
+  /// No description provided for @nameSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Name saved'**
+  String get nameSaved;
+
+  /// No description provided for @refreshedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get refreshedToast;
+
+  /// No description provided for @assistantCancelledToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion dismissed'**
+  String get assistantCancelledToast;
+
+  /// No description provided for @travelCheckError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t check travel impact'**
+  String get travelCheckError;
+
+  /// No description provided for @themeChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme changed'**
+  String get themeChanged;
+
+  /// No description provided for @languageChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Language changed'**
+  String get languageChanged;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileTitle;
+
+  /// No description provided for @profileSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'App settings'**
+  String get profileSettings;
+
+  /// No description provided for @profileHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get profileHelp;
+
+  /// No description provided for @profileStageNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No stage set'**
+  String get profileStageNone;
 }
 
 class _AppLocalizationsDelegate

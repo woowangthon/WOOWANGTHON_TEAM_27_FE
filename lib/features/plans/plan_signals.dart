@@ -58,6 +58,9 @@ List<PlanSignal> planSignals(BuildContext context, WidgetRef ref, Plan plan) {
     Tone.accent => 1,
     _ => 2,
   };
+  // 같은 문장(같은 통제를 다룬 공지·기사 여러 개)은 한 줄만.
+  final texts = <String>{};
+  out.retainWhere((s) => texts.add(s.text));
   return out..sort((a, b) => rank(a).compareTo(rank(b)));
 }
 

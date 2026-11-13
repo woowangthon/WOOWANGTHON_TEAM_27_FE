@@ -10,6 +10,7 @@ import '../../core/l10n_ext.dart';
 import '../../core/theme.dart';
 import '../../core/toast.dart';
 import '../../core/widgets.dart';
+import '../../data/alerts.dart';
 import '../../data/calendar_controller.dart';
 import '../../data/providers.dart';
 import '../../data/session.dart';
@@ -38,7 +39,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final session = ref.watch(sessionProvider);
     final cal = ref.watch(calendarProvider);
     final now = ref.watch(nowProvider);
-    final all = ref.watch(insightsProvider).where((i) => i.feedback != InsightFeedback.hidden).toList();
+    // 일정 경고는 알림 탭에서만 — 홈은 새 소식·기회·마감.
+    final all = ref.watch(insightsProvider).where((i) => !isAlert(i) && i.feedback != InsightFeedback.hidden).toList();
     final forPlans = all.where((i) => i.planId != null).toList();
     final deadlines = all.where((i) => i.kind == InsightKind.deadline).toList()
       ..sort((a, b) => _deadlineOf(ref, a).compareTo(_deadlineOf(ref, b)));
@@ -127,6 +129,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             onRefresh: () async {
               if (cal.isConnected) await ref.read(calendarProvider.notifier).sync();
               ref.invalidate(forecastProvider);
+              if (!context.mounted) return;
+              final failed = ref.read(calendarProvider).status == CalendarStatus.error;
+              Toast.show(
+                failed ? l10n.calendarErrorToast : l10n.refreshedToast,
+                type: failed ? ToastType.error : ToastType.info,
+              );
             },
             child: CustomScrollView(
               slivers: [
@@ -153,7 +161,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           label: l10n.tabProfile,
                           child: InkWell(
                             customBorder: const CircleBorder(),
-                            onTap: () => context.go('/profile'),
+                            onTap: () => context.push('/profile'),
                             child: AppAvatar(photoUrl: session?.photoUrl, name: name, size: 40),
                           ),
                         ),
@@ -395,6 +403,8 @@ void openSignal(BuildContext context, WidgetRef ref, Insight insight) {
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
+    // 떠 있는 하단 내비게이션 위로 — 창의 아래쪽이 가려지지 않게.
+    useRootNavigator: true,
     builder: (context) => SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(Space.gutter, 0, Space.gutter, Space.xl),

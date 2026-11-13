@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 
+import '../../core/toast.dart';
 import '../../core/errors.dart';
 import '../../core/l10n_ext.dart';
 import '../../core/theme.dart';
@@ -20,6 +21,7 @@ Future<void> showPlanRouteSheet(
   context: context,
   isScrollControlled: true,
   useSafeArea: true,
+  useRootNavigator: true, // 하단 내비게이션이 저장 버튼을 가리지 않게
   builder: (_) => _PlanRouteSheet(from: from, to: to, saved: saved),
 );
 
@@ -133,7 +135,10 @@ class _PlanRouteSheetState extends ConsumerState<_PlanRouteSheet> {
       if (!mounted) return;
       setState(() => _result = result);
     } catch (e) {
-      if (mounted) setState(() => _error = friendlyError(context.l10n, e));
+      if (mounted) {
+        setState(() => _error = friendlyError(context.l10n, e));
+        Toast.show(context.l10n.planRouteError, type: ToastType.error);
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -169,6 +174,7 @@ class _PlanRouteSheetState extends ConsumerState<_PlanRouteSheet> {
             currentTo == null ||
             !route!.matches(currentFrom, currentTo))) {
       setState(() => _error = context.l10n.planRouteStale);
+      Toast.show(context.l10n.planRouteStale, type: ToastType.warning);
       return;
     }
     setState(() {
@@ -182,9 +188,19 @@ class _PlanRouteSheetState extends ConsumerState<_PlanRouteSheet> {
       } else {
         await controller.save(route!);
       }
-      if (mounted) Navigator.pop(context);
+      if (mounted) {
+        Toast.show(
+          remove ? context.l10n.planRouteRemoved : context.l10n.planRouteSaved,
+          type: remove ? ToastType.info : ToastType.success,
+        );
+        Navigator.pop(context);
+      }
     } catch (e) {
-      if (mounted) setState(() => _error = friendlyError(context.l10n, e));
+      if (mounted) {
+        final msg = friendlyError(context.l10n, e);
+        setState(() => _error = msg);
+        Toast.show(msg, type: ToastType.error);
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../data/session.dart';
+import '../features/alerts/alerts_screen.dart';
 import '../features/auth/login_screen.dart';
 import '../features/discover/discover_screen.dart';
 import '../features/home/home_screen.dart';
@@ -54,6 +55,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/onboarding', pageBuilder: (_, s) => _fadePage(s, const OnboardingScreen())),
       GoRoute(path: '/account', builder: (_, _) => const AccountScreen()),
+      // 프로필은 홈 머리의 아바타로 연다 (아래 탭은 알림).
+      GoRoute(path: '/profile', builder: (_, _) => const ProfileScreen()),
       GoRoute(path: '/interests', builder: (_, _) => const OnboardingScreen(editing: true)),
       // AI 비서 — 아래에서 올라오는 전체 화면.
       GoRoute(
@@ -86,7 +89,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(routes: [GoRoute(path: '/map', builder: (_, _) => const MapScreen())]),
           StatefulShellBranch(routes: [GoRoute(path: '/plans', builder: (_, _) => const PlansScreen())]),
           StatefulShellBranch(routes: [GoRoute(path: '/discover', builder: (_, _) => const DiscoverScreen())]),
-          StatefulShellBranch(routes: [GoRoute(path: '/profile', builder: (_, _) => const ProfileScreen())]),
+          StatefulShellBranch(routes: [GoRoute(path: '/alerts', builder: (_, _) => const AlertsScreen())]),
         ],
       ),
     ],
