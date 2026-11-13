@@ -1416,4 +1416,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get avatarChanged => 'Profile picture updated';
+
+  @override
+  String get planSavedLocalOnly =>
+      'Couldn\'t reach Google Calendar — saved on this device';
 }

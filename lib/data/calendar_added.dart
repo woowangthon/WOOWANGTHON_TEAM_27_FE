@@ -16,6 +16,12 @@ class CalendarAddedController extends Notifier<Set<String>> {
     return (ref.read(sharedPrefsProvider).getStringList(_key) ?? const []).toSet();
   }
 
+  Future<void> unmark(String eventId) async {
+    if (!state.contains(eventId)) return;
+    state = {...state}..remove(eventId);
+    await ref.read(sharedPrefsProvider).setStringList(_key, state.toList());
+  }
+
   Future<void> mark(String eventId) async {
     if (state.contains(eventId)) return;
     state = {...state, eventId};

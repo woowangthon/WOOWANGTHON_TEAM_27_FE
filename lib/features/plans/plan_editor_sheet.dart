@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -256,21 +258,35 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
     final navigator = Navigator.of(context);
     setState(() => _saving = true);
     try {
+      // 창이 닫힌 뒤에도 쓸 수 있게 먼저 잡아 둔다 (위젯의 ref는 닫히면 못 쓴다).
       final plans = ref.read(plansProvider.notifier);
-      if (_isCalendarPlan || _toCalendar) Toast.progress(l10n.planSaving);
+      final calendar = ref.read(calendarProvider.notifier);
+      // 이동 방법은 기기에만 저장한다 (캘린더 ID가 바뀌어도 제목+시작 시각으로 찾는다).
+      await ref.read(planTravelProvider.notifier).save(_travelFor(plan), previousPlanId: _plan?.id);
       if (_isCalendarPlan) {
-        await ref.read(calendarProvider.notifier).savePlan(plan);
+        // 목록에 바로 반영 → 캘린더 저장은 뒤에서, 실패하면 되돌린다.
+        final before = _plan!;
+        calendar.preview(plan);
+        unawaited(calendar.savePlan(plan).catchError((Object e) {
+          calendar.preview(before);
+          Toast.show(l10n.planSaveError(friendlyError(l10n, e)), type: ToastType.error);
+        }));
       } else if (_toCalendar) {
-        // 캘린더에 새 일정으로 기록되므로 앱 안의 사본은 필요 없다.
-        await ref.read(calendarProvider.notifier).savePlan(plan.copyWith(source: 'local'));
-        if (_plan?.source == 'local') await plans.removeLocal(plan.id);
+        // 우선 기기에 저장해 바로 보이게 하고, 캘린더에 들어가면 기기 사본을 지운다.
+        // 캘린더 저장이 실패해도 입력한 일정은 잃지 않는다.
+        await plans.saveLocal(plan);
+        unawaited(() async {
+          try {
+            await calendar.savePlan(plan.copyWith(source: 'local'));
+            await plans.removeLocal(plan.id);
+          } catch (_) {
+            Toast.show(l10n.planSavedLocalOnly, type: ToastType.warning);
+          }
+        }());
       } else {
         await plans.saveLocal(plan);
       }
-      // 이동 방법은 기기에만 저장한다 (캘린더 ID가 바뀌어도 제목+시작 시각으로 찾는다).
-      await ref.read(planTravelProvider.notifier).save(_travelFor(plan), previousPlanId: _plan?.id);
       Toast.show(_toCalendar || _isCalendarPlan ? l10n.planSavedCalendar : l10n.planSaved);
-      // 저장하는 동안 사용자가 창을 닫았을 수도 있다 — 그때 pop하면 아래 화면이 닫힌다.
       if (mounted) navigator.pop();
     } catch (e) {
       Toast.show(l10n.planSaveError(friendlyError(l10n, e)), type: ToastType.error);

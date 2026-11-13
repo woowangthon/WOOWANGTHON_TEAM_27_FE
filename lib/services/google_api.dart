@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import 'timeout_client.dart';
+
 import '../core/env.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 
@@ -9,7 +11,7 @@ import 'package:liferadar_core/liferadar_core.dart';
 /// 한국에서 Google은 자동차 길찾기를 제공하지 않아 자동차는 Kakao를 사용한다.
 class GoogleApi {
   GoogleApi({http.Client? client, String? apiKey})
-      : _client = client ?? http.Client(),
+      : _client = TimeoutClient(client ?? http.Client()),
         _key = apiKey ?? Env.googleApiKey;
 
   final http.Client _client;

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liferadar_core/liferadar_core.dart';
@@ -37,27 +39,36 @@ Future<bool> addEventToCalendar(BuildContext context, WidgetRef ref, RadarEvent 
   }
   if (!context.mounted) return false;
   final added = ref.read(calendarAddedProvider.notifier);
-  Toast.progress(l10n.addingToCalendar);
-  try {
-    await ref.read(calendarProvider.notifier).addEvent(target, title: title);
-    await added.mark(event.id);
-    Toast.show(l10n.addedToCalendar);
-    return true;
-  } on CalendarAlreadyAdded {
-    await added.mark(event.id);
-    Toast.show(l10n.calendarAlreadyAdded, type: ToastType.info);
-    return true;
-  } on CalendarAddInProgress {
-    return false; // 첫 요청이 끝나면 그쪽이 결과를 알린다 (진행 토스트는 그대로)
-  } catch (e) {
-    final notConfigured = e.toString().contains('not-configured');
-    Toast.show(
-      notConfigured ? l10n.calendarNotConfigured : l10n.calendarAddFailed,
-      type: notConfigured ? ToastType.warning : ToastType.error,
-    );
+  final calendar = ref.read(calendarProvider.notifier);
+  if (!isCalendarAvailable(calendar)) {
+    Toast.show(l10n.calendarNotConfigured, type: ToastType.warning);
     return false;
   }
+  // 먼저 "추가했어요"를 보여주고 창을 닫는다. 실제 요청은 뒤에서 —
+  // 이미 있었거나 실패하면 토스트를 그 결과로 바꾸고 표시를 되돌린다.
+  await added.mark(event.id);
+  Toast.show(l10n.addedToCalendar);
+  unawaited(() async {
+    try {
+      await calendar.addEvent(target, title: title);
+    } on CalendarAlreadyAdded {
+      Toast.show(l10n.calendarAlreadyAdded, type: ToastType.info);
+    } on CalendarAddInProgress {
+      // 같은 행사의 첫 요청이 결과를 알린다.
+    } catch (e) {
+      await added.unmark(event.id);
+      final notConfigured = e.toString().contains('not-configured');
+      Toast.show(
+        notConfigured ? l10n.calendarNotConfigured : l10n.calendarAddFailed,
+        type: notConfigured ? ToastType.warning : ToastType.error,
+      );
+    }
+  }());
+  return true;
 }
+
+/// 캘린더 기능을 쓸 수 있는지 (Google 로그인 설정). 테스트의 가짜 캘린더는 항상 가능.
+bool isCalendarAvailable(CalendarController c) => c.runtimeType != CalendarController || isGoogleSignInConfigured;
 
 /// 시작일과 끝나는 날이 다르다 (밤 12시를 넘는 공연 하나는 제외: 24시간 이하).
 bool spansSeveralDays(RadarEvent e) {

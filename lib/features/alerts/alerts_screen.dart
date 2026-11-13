@@ -149,9 +149,9 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                         padding: const EdgeInsets.fromLTRB(Space.gutter, Space.xl, Space.gutter, Space.sm),
                         child: Row(
                           children: [
-                            Text(dayLabel(entry.key), style: t.titleSmall),
+                            _DayPill(dayLabel(entry.key), today: entry.key == today),
                             const SizedBox(width: Space.sm),
-                            Expanded(child: Divider(color: context.palette.border, height: 1)),
+                            Text('${entry.value.length}', style: t.labelLarge!.copyWith(color: context.palette.textMuted)),
                           ],
                         ),
                       ),
@@ -191,15 +191,16 @@ String _topicLabel(BuildContext context, AlertTopic t) {
   };
 }
 
-Color _topicColor(BuildContext context, AlertTopic t) {
-  final p = context.palette;
-  return switch (t) {
-    AlertTopic.road => p.accent,
-    AlertTopic.transit => p.danger,
-    AlertTopic.weather => p.info,
-    AlertTopic.crowd => p.primary,
-  };
-}
+/// 종류별 밝은 색 (다크 모드에서도 같은 색 — 채도가 높아 어두운 배경에서도 잘 보인다).
+Color _topicColor(BuildContext context, AlertTopic t) => switch (t) {
+  AlertTopic.road => const Color(0xFFFF9600), // 주황
+  AlertTopic.transit => const Color(0xFFFF4B6E), // 산호빨강
+  AlertTopic.weather => const Color(0xFF1CB0F6), // 하늘
+  AlertTopic.crowd => context.palette.primary, // 브랜드 #5865F2
+};
+
+/// 3D "입술" — 같은 색을 어둡게 한 아래 그림자 (Duolingo 버튼처럼).
+Color _lip(Color c) => Color.lerp(c, Colors.black, 0.22)!;
 
 /// 맨 위 요약: 큰 숫자 하나 + 종류별 비율 막대. 알림이 없으면 "조용한 날".
 class _Summary extends StatelessWidget {
@@ -222,8 +223,13 @@ class _Summary extends StatelessWidget {
         gradient: calm ? null : p.brandGradient,
         color: calm ? p.surface : null,
         borderRadius: BorderRadius.circular(Radii.xl),
-        border: calm ? Border.all(color: p.border) : null,
-        boxShadow: calm ? null : [BoxShadow(color: p.primary.withValues(alpha: 0.25), blurRadius: 24, offset: const Offset(0, 10))],
+
+        boxShadow: calm
+            ? [BoxShadow(color: p.border, offset: const Offset(0, 4))]
+            : [
+                BoxShadow(color: _lip(p.primary), offset: const Offset(0, 5)),
+                BoxShadow(color: p.primary.withValues(alpha: 0.30), blurRadius: 24, offset: const Offset(0, 14)),
+              ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,8 +276,11 @@ class _Summary extends StatelessWidget {
                         Expanded(
                           flex: n,
                           child: Container(
-                            margin: const EdgeInsets.only(right: 2),
-                            color: Colors.white.withValues(alpha: 0.35 + 0.15 * tp.index),
+                            margin: const EdgeInsets.only(right: 3),
+                            decoration: BoxDecoration(
+                              color: tp == AlertTopic.crowd ? Colors.white : _topicColor(context, tp),
+                              borderRadius: BorderRadius.circular(999),
+                            ),
                           ),
                         ),
                   ],
@@ -316,6 +325,77 @@ class _Summary extends StatelessWidget {
   }
 }
 
+/// 눌리는 3D 블록 — 아래쪽 "입술"(어두운 그림자)이 있고, 누르면 그만큼 내려간다.
+class _Press3D extends StatefulWidget {
+  const _Press3D({required this.child, required this.face, required this.lip, this.onTap, this.radius = Radii.lg, this.depth = 4});
+  final Widget child;
+  final Color face, lip;
+  final VoidCallback? onTap;
+  final double radius, depth;
+
+  @override
+  State<_Press3D> createState() => _Press3DState();
+}
+
+class _Press3DState extends State<_Press3D> {
+  bool _down = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final d = _down ? 0.0 : widget.depth;
+    final duration = Motion.of(context, const Duration(milliseconds: 90));
+    return GestureDetector(
+      onTapDown: widget.onTap == null ? null : (_) => setState(() => _down = true),
+      onTapCancel: () => setState(() => _down = false),
+      onTapUp: (_) => setState(() => _down = false),
+      onTap: widget.onTap == null
+          ? null
+          : () {
+              HapticFeedback.selectionClick();
+              widget.onTap!();
+            },
+      child: AnimatedContainer(
+        duration: duration,
+        margin: EdgeInsets.only(top: widget.depth - d),
+        decoration: BoxDecoration(
+          color: widget.face,
+          borderRadius: BorderRadius.circular(widget.radius),
+          boxShadow: [
+            BoxShadow(color: widget.lip, offset: Offset(0, d)),
+            if (!_down) BoxShadow(color: widget.lip.withValues(alpha: 0.18), blurRadius: 16, offset: Offset(0, d + 6)),
+          ],
+        ),
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+/// 날짜 묶음 제목 — 오늘은 브랜드 색으로 채운 알약.
+class _DayPill extends StatelessWidget {
+  const _DayPill(this.label, {required this.today});
+  final String label;
+  final bool today;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final face = today ? p.primary : p.primarySoft;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: Space.md, vertical: 5),
+      decoration: BoxDecoration(
+        color: face,
+        borderRadius: BorderRadius.circular(999),
+        boxShadow: [BoxShadow(color: today ? _lip(p.primary) : p.primary.withValues(alpha: 0.18), offset: const Offset(0, 3))],
+      ),
+      child: Text(
+        label,
+        style: context.textStyles.labelLarge!.copyWith(color: today ? p.onPrimary : p.primaryStrong, fontWeight: FontWeight.w800),
+      ),
+    );
+  }
+}
+
 class _TopicChip extends StatelessWidget {
   const _TopicChip({required this.label, required this.count, required this.selected, required this.onTap, this.icon, this.color});
   final String label;
@@ -329,22 +409,32 @@ class _TopicChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = context.palette;
     final c = color ?? p.primary;
+    final fg = selected ? Colors.white : p.text;
     return Padding(
-      padding: const EdgeInsets.only(right: Space.sm),
-      child: FilterChip(
-        selected: selected,
-        showCheckmark: false,
-        onSelected: (_) => onTap(),
-        avatar: icon == null ? null : Icon(icon, size: 16, color: selected ? c : p.textMuted),
-        label: Text('$label $count'),
-        selectedColor: c.withValues(alpha: 0.14),
-        side: BorderSide(color: selected ? c : p.border),
+      padding: const EdgeInsets.only(right: Space.sm, bottom: 4),
+      child: _Press3D(
+        onTap: onTap,
+        face: selected ? c : p.surface,
+        lip: selected ? _lip(c) : p.border,
+        radius: 999,
+        depth: 3,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Space.md, vertical: 7),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[Icon(icon, size: 16, color: selected ? Colors.white : c), const SizedBox(width: 6)],
+              Text('$label $count', style: context.textStyles.labelLarge!.copyWith(color: fg, fontWeight: FontWeight.w700)),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
-/// 알림 한 줄: 종류 아이콘 · 제목 한 줄 · 어느 일정인지. 새 알림은 점.
+/// 알림 한 줄: 밝은 종류 아이콘 · 제목 한 줄 · 어느 일정인지. 테두리 없이 3D 블록.
+/// 새 알림은 종류 색의 입술, 읽은 알림은 차분한 회색 입술.
 class _AlertTile extends ConsumerWidget {
   const _AlertTile({required this.alert, required this.plan, required this.unseen});
   final Insight alert;
@@ -362,75 +452,64 @@ class _AlertTile extends ConsumerWidget {
     final event = alert.eventIds.isEmpty ? null : ref.watch(eventByIdProvider(alert.eventIds.first));
     final headline = context.tr(event?.title ?? alert.title);
 
-    return AnimatedOpacity(
-      duration: Motion.of(context, Motion.normal),
-      opacity: unseen ? 1 : 0.62,
-      child: Material(
-        color: p.surface,
-        borderRadius: BorderRadius.circular(Radii.lg),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(Radii.lg),
-          onTap: () {
-            ref.read(seenProvider.notifier).mark(['insight:${alert.id}']);
-            openSignal(context, ref, alert);
-          },
-          child: Container(
-            padding: const EdgeInsets.all(Space.md),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(Radii.lg),
-              border: Border.all(color: unseen ? color.withValues(alpha: 0.45) : p.border),
+    return _Press3D(
+      onTap: () {
+        ref.read(seenProvider.notifier).mark(['insight:${alert.id}']);
+        openSignal(context, ref, alert);
+      },
+      face: p.surface,
+      lip: unseen ? color.withValues(alpha: 0.55) : p.border,
+      child: Padding(
+        padding: const EdgeInsets.all(Space.md),
+        child: Row(
+          children: [
+            // 아이콘 구슬 — 밝은 색 + 아래 입술
+            Container(
+              width: 46,
+              height: 46,
+              decoration: BoxDecoration(
+                color: unseen ? color : color.withValues(alpha: 0.18),
+                shape: BoxShape.circle,
+                boxShadow: unseen ? [BoxShadow(color: _lip(color), offset: const Offset(0, 3))] : null,
+              ),
+              child: Icon(alertTopicIcon(topic), color: unseen ? Colors.white : color, size: 23),
             ),
-            child: Row(
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(color: color.withValues(alpha: 0.14), shape: BoxShape.circle),
-                  child: Icon(alertTopicIcon(topic), color: color, size: 22),
-                ),
-                const SizedBox(width: Space.md),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        headline,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: t.titleSmall,
-                      ),
-                      if (plan != null) ...[
-                        const SizedBox(height: 3),
-                        Row(
-                          children: [
-                            Icon(Icons.event_note_rounded, size: 14, color: p.textMuted),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                [?when, plan!.title].join(' · '),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: t.bodySmall,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ],
+            const SizedBox(width: Space.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    headline,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: t.titleSmall!.copyWith(
+                      fontWeight: unseen ? FontWeight.w800 : FontWeight.w600,
+                      color: unseen ? p.text : p.textMuted,
+                    ),
                   ),
-                ),
-                if (unseen)
-                  Container(
-                    width: 9,
-                    height: 9,
-                    margin: const EdgeInsets.only(left: Space.sm),
-                    decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-                  )
-                else
-                  Icon(Icons.chevron_right_rounded, color: p.textMuted),
-              ],
+                  if (plan != null) ...[
+                    const SizedBox(height: 3),
+                    Text(
+                      [?when, plan!.title].join(' · '),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: t.bodySmall,
+                    ),
+                  ],
+                ],
+              ),
             ),
-          ),
+            if (unseen)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                margin: const EdgeInsets.only(left: Space.sm),
+                decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(999)),
+                child: Text('NEW', style: t.labelSmall!.copyWith(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 10)),
+              )
+            else
+              Icon(Icons.chevron_right_rounded, color: p.textMuted),
+          ],
         ),
       ),
     );

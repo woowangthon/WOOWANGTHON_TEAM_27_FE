@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import 'timeout_client.dart';
+
 import 'package:liferadar_core/liferadar_core.dart';
 
 /// Google Calendar REST API (v3) — 사용자의 OAuth 액세스 토큰 사용.
 /// Scope: https://www.googleapis.com/auth/calendar.events (읽기, 추가, 수정, 삭제).
 class CalendarApi {
-  CalendarApi(this._accessToken, {http.Client? client}) : _client = client ?? http.Client();
+  CalendarApi(this._accessToken, {http.Client? client}) : _client = TimeoutClient(client ?? http.Client());
 
   static const scope = 'https://www.googleapis.com/auth/calendar.events';
   static const _base = 'https://www.googleapis.com/calendar/v3/calendars/primary/events';

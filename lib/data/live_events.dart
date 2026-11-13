@@ -21,7 +21,7 @@ abstract final class LiveEvents {
     final raw = prefs.getString(prefsKey);
     if (raw == null) return bundled;
     try {
-      return EventFeed.newest(bundled, EventFeed.parse(raw)).withMissingContestSourceFrom(bundled);
+      return EventFeed.newest(bundled, await EventFeed.parseInBackground(raw)).withMissingContestSourceFrom(bundled);
     } catch (_) {
       return bundled;
     }
@@ -43,10 +43,11 @@ abstract final class LiveEvents {
         return null;
       }
       final raw = utf8.decode(res.bodyBytes);
-      final feed = EventFeed.parse(raw);
+      final feed = await EventFeed.parseInBackground(raw);
       if (!feed.isUsable || !feed.isNewerThan(current)) return null;
       final merged = feed.withMissingContestSourceFrom(current);
-      await prefs.setString(prefsKey, jsonEncode(merged.toJson()));
+      // 받은 원문이 아니라 합친 피드를 캐시한다 (인코딩도 백그라운드에서).
+      await prefs.setString(prefsKey, kIsWeb ? jsonEncode(merged.toJson()) : await compute(_encode, merged));
       return merged;
     } catch (e) {
       debugPrint('LiveEvents: $e'); // 인터넷 없음 — 기존 피드로 계속한다
@@ -56,3 +57,5 @@ abstract final class LiveEvents {
     }
   }
 }
+
+String _encode(EventFeed f) => jsonEncode(f.toJson());

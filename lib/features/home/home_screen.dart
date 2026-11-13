@@ -45,11 +45,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final forPlans = all.where((i) => i.planId != null).toList();
     final deadlines = all.where((i) => i.kind == InsightKind.deadline).toList()
       ..sort((a, b) => _deadlineOf(ref, a).compareTo(_deadlineOf(ref, b)));
-    final shown = switch (_filter) {
+    final shown = _stable(switch (_filter) {
       HomeFilter.all => all,
       HomeFilter.plans => forPlans,
       HomeFilter.deadlines => deadlines,
-    };
+    });
     // 사용자가 입력한 이름; 없으면 Google 이름의 첫 단어.
     final name =
         ref.watch(profileNameProvider) ?? (session == null || session.isGuest ? null : session.name?.split(' ').first);
@@ -98,10 +98,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         key: ValueKey(_filter),
         children: [
           for (var i = 0; i < shown.length; i++)
+            // 키는 목록의 직접 자식에 — 순서가 바뀌어도 카드가 다시 만들어지지(깜빡이지) 않는다.
             Padding(
+              key: ValueKey('${_filter.name}-${shown[i].id}'),
               padding: const EdgeInsets.fromLTRB(Space.gutter, 0, Space.gutter, Space.md),
               child: FadeSlideIn(
-                key: ValueKey('${_filter.name}-${shown[i].id}'),
                 index: i,
                 child: Pressable(child: InsightCard(insight: shown[i])),
               ),
@@ -128,6 +129,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           },
           child: RefreshIndicator(
             onRefresh: () async {
+              _order.clear(); // 새로 고치면 취향이 반영된 새 순서
               if (cal.isConnected) await ref.read(calendarProvider.notifier).sync();
               ref.invalidate(forecastProvider);
               if (!context.mounted) return;
@@ -224,6 +226,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
+  /// 화면에 보이는 동안의 카드 순서. 👍를 누르면 취향 점수가 바뀌어 순위가 다시 매겨지는데,
+  /// 누른 카드가 손가락 아래에서 다른 곳으로 튀지 않도록 이미 본 카드는 자리를 지킨다.
+  /// 새 카드는 순위대로 뒤에 붙고, 👎 카드는 맨 아래로. 새로 고침·필터 변경 때 다시 정렬.
+  final List<String> _order = [];
+
+  List<Insight> _stable(List<Insight> ranked) {
+    final known = {for (var i = 0; i < _order.length; i++) _order[i]: i};
+    final rank = {for (var i = 0; i < ranked.length; i++) ranked[i].id: i};
+    int key(Insight x) => known[x.id] ?? _order.length + rank[x.id]!;
+    final liked = ranked.where((x) => x.feedback != InsightFeedback.dislike).toList()
+      ..sort((a, b) => key(a).compareTo(key(b)));
+    final disliked = ranked.where((x) => x.feedback == InsightFeedback.dislike).toList();
+    final out = [...liked, ...disliked];
+    _order
+      ..clear()
+      ..addAll(out.map((x) => x.id));
+    return out;
+  }
+
   /// 앞/뒤 — 카드가 어느 방향으로 밀릴지 정한다.
   bool _forward = true;
 
@@ -233,6 +254,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     setState(() {
       _forward = f.index > _filter.index;
       _filter = f;
+      _order.clear();
     });
   }
 
@@ -501,8 +523,8 @@ class InsightCard extends ConsumerWidget {
           cancelLabel: l10n.keep,
         );
         if (!undo) return;
-        await notifier.clear(insight.id);
         Toast.show(l10n.feedbackCleared, type: ToastType.info);
+        await notifier.clear(insight.id);
         return;
       }
       if (f == InsightFeedback.dislike) {
@@ -517,8 +539,10 @@ class InsightCard extends ConsumerWidget {
         );
         if (!ok) return;
       }
-      await notifier.set(insight.id, f);
+      // 화면과 토스트가 먼저, 기기 저장은 그 뒤에.
       Toast.show(f == InsightFeedback.like ? l10n.feedbackLiked : l10n.feedbackDisliked);
+      HapticFeedback.lightImpact();
+      await notifier.set(insight.id, f);
     }
 
     return AnimatedOpacity(

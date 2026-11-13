@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import 'timeout_client.dart';
+
 import '../core/env.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 
@@ -9,7 +11,7 @@ import 'package:liferadar_core/liferadar_core.dart';
 /// ⚠️ 현재는 클라이언트에서 호출한다 (CORS 허용). 이후 서버 프록시로 옮긴다.
 class KakaoApi {
   KakaoApi({http.Client? client, String? restKey})
-      : _client = client ?? http.Client(),
+      : _client = TimeoutClient(client ?? http.Client()),
         _key = restKey ?? Env.kakaoRestApiKey;
 
   final http.Client _client;
