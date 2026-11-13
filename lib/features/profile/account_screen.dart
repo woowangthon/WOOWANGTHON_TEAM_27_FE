@@ -33,6 +33,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
     );
     if (!ok || !mounted) return;
     setState(() => _deleting = true);
+    Toast.progress(l10n.planDeleting);
     await deleteAccountAndData(ref);
     if (!mounted) return;
     Toast.show(l10n.accountDeleted, type: ToastType.info);

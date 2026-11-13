@@ -451,8 +451,10 @@ class EventCard extends ConsumerWidget {
     final seen = ref.watch(seenProvider).contains('event:${event.id}');
     return AnimatedOpacity(
       duration: Motion.of(context, Motion.normal),
-      opacity: seen ? 0.6 : 1,
+      // 열어 본 행사: 살짝만 흐리게 + 테두리 없이.
+      opacity: seen ? 0.82 : 1,
       child: Card(
+        shape: seen ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(Radii.lg)) : null,
         child: InkWell(
           onTap: () => showEventDetail(
             context,

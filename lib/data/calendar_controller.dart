@@ -20,6 +20,11 @@ class CalendarState {
 
   bool get isConnected => status == CalendarStatus.connected || status == CalendarStatus.syncing;
   bool get isBusy => status == CalendarStatus.connecting || status == CalendarStatus.syncing;
+
+  /// 처음 불러오는 중 (아직 보여줄 일정이 없음) — 이때만 화면을 스켈레톤으로 바꾼다.
+  /// 저장·삭제 뒤의 새로 고침은 지금 목록을 그대로 두고 뒤에서 한다 (화면이 비지 않게).
+  bool get isInitialLoading =>
+      status == CalendarStatus.connecting || (status == CalendarStatus.syncing && lastSync == null);
 }
 
 /// Google Sign-In은 앱 시작 시 한 번 초기화한다 (웹: GIS SDK 로드).
@@ -206,9 +211,10 @@ class CalendarController extends Notifier<CalendarState> {
     final token = _token;
     _token = null;
     if (token != null) {
-      try {
-        await GoogleSignIn.instance.authorizationClient.clearAuthorizationToken(accessToken: token);
-      } catch (_) {}
+      // 권한 해제 요청은 기다리지 않는다 — 화면은 바로 바뀐다.
+      unawaited(GoogleSignIn.instance.authorizationClient
+          .clearAuthorizationToken(accessToken: token)
+          .catchError((Object _) {}));
     }
     ref.read(plansProvider.notifier).resetToSample();
     state = const CalendarState();

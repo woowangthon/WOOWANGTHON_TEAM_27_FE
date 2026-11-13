@@ -109,9 +109,8 @@ class SessionController extends Notifier<Session?> {
   Future<void> signOut() async {
     await ref.read(calendarProvider.notifier).disconnect();
     if (isGoogleSignInConfigured && state?.kind == SessionKind.google) {
-      try {
-        await GoogleSignIn.instance.signOut();
-      } catch (_) {}
+      // Google 쪽 로그아웃은 뒤에서 — 사용자는 바로 로그인 화면으로.
+      unawaited(GoogleSignIn.instance.signOut().catchError((Object _) {}));
     }
     await ref.read(sharedPrefsProvider).remove(_key);
     state = null;
