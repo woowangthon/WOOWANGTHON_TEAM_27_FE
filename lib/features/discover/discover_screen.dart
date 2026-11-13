@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../event/event_cover.dart';
 import '../../core/l10n_ext.dart';
 import '../../core/theme.dart';
 import '../../core/widgets.dart';
@@ -387,7 +388,6 @@ class _PosterCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.textStyles;
-    final p = context.palette;
     return SizedBox(
       width: 136,
       child: InkWell(
@@ -412,10 +412,7 @@ class _PosterCard extends ConsumerWidget {
                   fit: BoxFit.cover,
                   // 웹: CORS가 없는 포스터 서버도 <img>로 보여준다.
                   webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
-                  errorBuilder: (_, _, _) => ColoredBox(
-                    color: p.surfaceAlt,
-                    child: Icon(categoryIcon(event.category), color: p.textMuted),
-                  ),
+                  errorBuilder: (_, _, _) => EventCover(category: event.category, seed: event.id),
                 ),
               ),
             ),
@@ -500,23 +497,26 @@ class EventCard extends ConsumerWidget {
                   ),
                 ),
                 trailing ??
-                    (event.imageUrl != null
-                        ? Padding(
-                            padding: const EdgeInsets.only(left: Space.sm),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(Radii.sm),
-                              child: Image.network(
-                                event.imageUrl!,
-                                width: 56,
-                                height: 74,
-                                fit: BoxFit.cover,
-                                // 웹: CORS가 없는 포스터 서버도 <img>로 보여준다.
-                                webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
-                                errorBuilder: (_, _, _) => const SizedBox(width: 56),
-                              ),
-                            ),
-                          )
-                        : Icon(Icons.chevron_right_rounded, color: context.palette.textMuted)),
+                    Padding(
+                      padding: const EdgeInsets.only(left: Space.sm),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(Radii.sm),
+                        child: SizedBox(
+                          width: 56,
+                          height: 74,
+                          // 포스터가 없으면 기본 그림 — 목록의 모양이 들쭉날쭉하지 않게.
+                          child: event.imageUrl == null
+                              ? EventCover(category: event.category, seed: event.id, iconSize: 18)
+                              : Image.network(
+                                  event.imageUrl!,
+                                  fit: BoxFit.cover,
+                                  // 웹: CORS가 없는 포스터 서버도 <img>로 보여준다.
+                                  webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
+                                  errorBuilder: (_, _, _) => EventCover(category: event.category, seed: event.id, iconSize: 18),
+                                ),
+                        ),
+                      ),
+                    ),
               ],
             ),
           ),

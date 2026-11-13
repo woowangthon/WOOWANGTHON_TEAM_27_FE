@@ -1356,4 +1356,22 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get planSavedCalendar => '일정을 저장하고 Google 캘린더에도 넣었어요';
+
+  @override
+  String get planSaving => '저장하는 중…';
+
+  @override
+  String get planDeleting => '삭제하는 중…';
+
+  @override
+  String get visitDayTitle => '언제 갈까요? 그날 하루만 캘린더에 넣어요';
+
+  @override
+  String get visitDayConfirm => '이날 추가';
+
+  @override
+  String get avatarTitle => '프로필 사진';
+
+  @override
+  String get avatarChanged => '프로필 사진을 바꿨어요';
 }

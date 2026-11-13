@@ -10,6 +10,7 @@ import '../../data/calendar_controller.dart';
 import '../../data/notifications.dart';
 import '../../data/providers.dart';
 import '../../data/session.dart';
+import 'user_avatar.dart';
 
 /// 내 정보 — 카드 안의 카드 없이, 한 장의 목록으로.
 /// 위: 나(사진·이름·관심사). 아래: 연결 · 앱 설정 · 정보. 각 줄은 "이름 ··· 현재 값".
@@ -44,6 +45,7 @@ class ProfileScreen extends ConsumerWidget {
         Toast.show(l10n.calendarDisconnectedToast, type: ToastType.info);
         return;
       }
+      Toast.progress(l10n.calendarConnecting);
       await c.connect();
       final s = ref.read(calendarProvider);
       if (s.isConnected) {
@@ -78,7 +80,11 @@ class ProfileScreen extends ConsumerWidget {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                AppAvatar(photoUrl: session?.photoUrl, name: displayName, size: 84),
+                Semantics(
+                  button: true,
+                  label: l10n.avatarTitle,
+                  child: GestureDetector(onTap: () => showAvatarPicker(context, ref), child: const UserAvatar(size: 84)),
+                ),
                 Positioned(
                   right: -4,
                   bottom: -4,
@@ -87,10 +93,10 @@ class ProfileScreen extends ConsumerWidget {
                     shape: CircleBorder(side: BorderSide(color: p.background, width: 3)),
                     child: InkWell(
                       customBorder: const CircleBorder(),
-                      onTap: () => context.push('/name?edit=1'),
+                      onTap: () => showAvatarPicker(context, ref),
                       child: Padding(
                         padding: const EdgeInsets.all(6),
-                        child: Icon(Icons.edit_rounded, size: 15, color: p.onPrimary, semanticLabel: l10n.editName),
+                        child: Icon(Icons.photo_camera_rounded, size: 15, color: p.onPrimary, semanticLabel: l10n.avatarTitle),
                       ),
                     ),
                   ),
@@ -99,12 +105,25 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: Space.md),
-          Text(
-            displayName ?? l10n.guestName,
-            textAlign: TextAlign.center,
-            style: t.headlineSmall,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          // 이름 — 누르면 수정 (연필 표시).
+          Center(
+            child: InkWell(
+              borderRadius: BorderRadius.circular(Radii.md),
+              onTap: () => context.push('/name?edit=1'),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Space.sm, vertical: 2),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(displayName ?? l10n.guestName, style: t.headlineSmall, maxLines: 1, overflow: TextOverflow.ellipsis),
+                    ),
+                    const SizedBox(width: Space.xs),
+                    Icon(Icons.edit_outlined, size: 18, color: p.textMuted, semanticLabel: l10n.editName),
+                  ],
+                ),
+              ),
+            ),
           ),
           const SizedBox(height: 2),
           Text(

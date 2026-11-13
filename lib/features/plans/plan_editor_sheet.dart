@@ -257,6 +257,7 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
     setState(() => _saving = true);
     try {
       final plans = ref.read(plansProvider.notifier);
+      if (_isCalendarPlan || _toCalendar) Toast.progress(l10n.planSaving);
       if (_isCalendarPlan) {
         await ref.read(calendarProvider.notifier).savePlan(plan);
       } else if (_toCalendar) {

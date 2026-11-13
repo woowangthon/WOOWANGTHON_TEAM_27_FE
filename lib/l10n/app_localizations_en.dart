@@ -1398,4 +1398,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planSavedCalendar => 'Plan saved to Google Calendar';
+
+  @override
+  String get planSaving => 'Saving…';
+
+  @override
+  String get planDeleting => 'Deleting…';
+
+  @override
+  String get visitDayTitle => 'Which day will you go? Only that day is added';
+
+  @override
+  String get visitDayConfirm => 'Add this day';
+
+  @override
+  String get avatarTitle => 'Profile picture';
+
+  @override
+  String get avatarChanged => 'Profile picture updated';
 }

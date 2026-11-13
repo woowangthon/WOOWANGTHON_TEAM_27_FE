@@ -10,7 +10,9 @@ enum ToastType {
   success(Color(0xFF15803D)),
   error(Color(0xFFC62828)),
   warning(Color(0xFFB45309)),
-  info(Color(0xFF23272A));
+  info(Color(0xFF23272A)),
+  /// 진행 중 (저장·삭제·불러오기) — 결과 토스트가 이 토스트를 대체한다.
+  loading(Color(0xFF3F4AB8));
 
   const ToastType(this.color);
   final Color color;
@@ -45,6 +47,7 @@ class Toast {
           if (_entry == entry) {
             _entry = null;
             _viewKey = null;
+            _type = null;
           }
           if (entry.mounted) entry.remove();
         },
@@ -52,6 +55,7 @@ class Toast {
     );
     _entry = entry;
     _viewKey = key;
+    _type = type;
     overlay.insert(entry);
   }
 
@@ -61,6 +65,23 @@ class Toast {
     _viewKey = null;
     if (e != null && e.mounted) e.remove();
   }
+
+  /// 오래 걸리는 작업 동안 띄워 두는 토스트 (스피너). 끝나면 [show]가 대체한다.
+  /// 결과 토스트를 못 띄우는 경우를 위해 20초 뒤에는 스스로 닫힌다.
+  static void progress(String message) =>
+      show(message, type: ToastType.loading, duration: const Duration(seconds: 20));
+
+  /// [task]를 실행하는 동안 진행 토스트를 띄운다. 결과 토스트는 호출한 쪽이 띄운다.
+  static Future<T> during<T>(String message, Future<T> Function() task) async {
+    progress(message);
+    try {
+      return await task();
+    } finally {
+      if (_type == ToastType.loading) hide();
+    }
+  }
+
+  static ToastType? _type;
 
   /// 테스트용: 현재 표시 중인 토스트 닫기.
   static void hide() => _viewKey?.currentState?._close();
@@ -175,18 +196,35 @@ class _ToastViewState extends State<_ToastView> with SingleTickerProviderStateMi
                       child: Stack(children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: Space.xl + 2, vertical: Space.md + 1),
-                          child: Text(
-                            widget.message,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  height: 1.35,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (widget.type == ToastType.loading) ...[
+                                // "동작 줄이기"면 멈춘 아이콘 (끝없는 애니메이션 없음).
+                                SizedBox.square(
+                                  dimension: 16,
+                                  child: reduce
+                                      ? const Icon(Icons.hourglass_top_rounded, size: 16, color: Colors.white)
+                                      : const CircularProgressIndicator(strokeWidth: 2.2, color: Colors.white),
                                 ),
+                                const SizedBox(width: Space.md),
+                              ],
+                              Flexible(
+                                child: Text(
+                                  widget.message,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        height: 1.35,
+                                      ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        // 남은 시간 — 아래쪽 가는 막대.
-                        if (!reduce)
+                        // 남은 시간 — 아래쪽 가는 막대 (진행 중 토스트에는 없다).
+                        if (!reduce && widget.type != ToastType.loading)
                           Positioned(
                             left: 0,
                             right: 0,

@@ -26,6 +26,7 @@ Future<bool> deletePlanWithConfirm(BuildContext context, WidgetRef ref, Plan pla
   if (!ok) return false;
   try {
     if (plan.source == 'gcal') {
+      Toast.progress(l10n.planDeleting);
       await ref.read(calendarProvider.notifier).deletePlan(plan);
     } else {
       await ref.read(plansProvider.notifier).removeLocal(plan.id);
@@ -42,6 +43,7 @@ Future<bool> deletePlanWithConfirm(BuildContext context, WidgetRef ref, Plan pla
 /// 캘린더 다시 불러오기 + 결과 토스트 (동기화 버튼·당겨서 새로 고침).
 Future<void> syncCalendarWithToast(BuildContext context, WidgetRef ref) async {
   final l10n = context.l10n;
+  Toast.progress(l10n.calendarSyncing);
   await ref.read(calendarProvider.notifier).sync();
   final s = ref.read(calendarProvider);
   if (s.status == CalendarStatus.error) {

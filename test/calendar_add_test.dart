@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:liferadar/data/calendar_controller.dart';
+import 'package:liferadar/features/event/event_actions.dart';
 import 'package:liferadar/features/event/event_detail_sheet.dart';
 import 'package:liferadar/features/home/home_screen.dart';
 import 'package:liferadar/services/calendar_api.dart';
@@ -78,5 +79,27 @@ void main() {
     expect(find.text('Already in your calendar'), findsOneWidget);
     await tester.pump(const Duration(seconds: 6));
     await tester.pumpAndSettle();
+  });
+
+  test('두 달짜리 전시는 고른 하루만: 운영 시간이 있으면 그 시간, 없으면 종일', () {
+    final base = fixtures.contest().toJson();
+    RadarEvent ev(DateTime a, DateTime b) => RadarEvent.fromJson({
+      ...base, 'id': 'expo', 'placeless': false, 'deadline': null, 'kind': 'event',
+      'start': a.toIso8601String(), 'end': b.toIso8601String(),
+    });
+    final hours = ev(DateTime(2026, 11, 1, 10), DateTime(2026, 12, 31, 18));
+    expect(spansSeveralDays(hours), isTrue);
+    final one = visitOn(hours, DateTime(2026, 11, 20));
+    expect(one.start, DateTime(2026, 11, 20, 10));
+    expect(one.end, DateTime(2026, 11, 20, 18));
+
+    final dates = ev(DateTime(2026, 11, 1), DateTime(2026, 12, 31));
+    final day = visitOn(dates, DateTime(2026, 11, 20));
+    final body = CalendarApi.eventBody(day, title: '전시');
+    expect(body['start'], {'date': '2026-11-20'});
+    expect(body['end'], {'date': '2026-11-21'});
+
+    // 자정을 넘는 공연 하나(24시간 이하)는 그대로
+    expect(spansSeveralDays(ev(DateTime(2026, 11, 20, 20), DateTime(2026, 11, 21, 1))), isFalse);
   });
 }

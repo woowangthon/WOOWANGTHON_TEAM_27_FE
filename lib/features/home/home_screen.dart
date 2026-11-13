@@ -16,6 +16,7 @@ import '../../data/providers.dart';
 import '../../data/session.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 import '../event/event_detail_sheet.dart';
+import '../profile/user_avatar.dart';
 import '../event/signal_why_block.dart';
 import '../weather/weather_chip.dart';
 
@@ -162,7 +163,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           child: InkWell(
                             customBorder: const CircleBorder(),
                             onTap: () => context.push('/profile'),
-                            child: AppAvatar(photoUrl: session?.photoUrl, name: name, size: 40),
+                            child: const UserAvatar(size: 40),
                           ),
                         ),
                       ],

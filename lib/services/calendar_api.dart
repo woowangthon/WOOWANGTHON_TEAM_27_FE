@@ -87,6 +87,9 @@ class CalendarApi {
       } else if (application) ...{
         'start':{'dateTime':e.deadline!.toUtc().toIso8601String()},
         'end':{'dateTime':e.deadline!.toUtc().add(const Duration(minutes:1)).toIso8601String()},
+      } else if (_wholeDays(e)) ...{
+        // 시각 없이 하루(또는 며칠) — 종일 일정. 몇 시인지 지어내지 않는다.
+        'start':{'date':day(e.start)},'end':{'date':day(e.end)},
       } else ...{
         'start':{'dateTime':_local(e.start),'timeZone':'Asia/Seoul'},
         'end':{'dateTime':_local(e.end),'timeZone':'Asia/Seoul'},
@@ -130,6 +133,9 @@ class CalendarApi {
       },
     };
   }
+
+  static bool _wholeDays(RadarEvent e) =>
+      e.start.hour == 0 && e.start.minute == 0 && e.end.hour == 0 && e.end.minute == 0 && e.end.isAfter(e.start);
 
   /// 일정 시각은 한국 시간으로 저장됨 — 시간대를 포함한 "로컬" ISO로 보낸다.
   static String _local(DateTime d) => DateTime(d.year, d.month, d.day, d.hour, d.minute)
