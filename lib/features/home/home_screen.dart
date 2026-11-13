@@ -62,7 +62,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     // 카드 목록 (필터가 바뀌면 옆으로 밀리며 교체).
     final Widget cards;
-    if (cal.isBusy) {
+    if (cal.isInitialLoading) {
       cards = const Shimmer(
         key: ValueKey('busy'),
         child: Padding(
@@ -547,8 +547,10 @@ class InsightCard extends ConsumerWidget {
 
     return AnimatedOpacity(
       duration: Motion.of(context, Motion.normal),
-      opacity: isSeen ? 0.6 : 1,
+      // 열어 본 카드: 살짝만 흐리게 + 테두리 없이 (새 카드와 한눈에 구분).
+      opacity: isSeen ? 0.82 : 1,
       child: Card(
+        shape: isSeen ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(Radii.lg)) : null,
         child: InkWell(
           onTap: () => openSignal(context, ref, insight),
           child: Padding(

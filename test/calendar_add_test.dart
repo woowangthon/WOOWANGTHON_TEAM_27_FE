@@ -102,4 +102,11 @@ void main() {
     // 자정을 넘는 공연 하나(24시간 이하)는 그대로
     expect(spansSeveralDays(ev(DateTime(2026, 11, 20, 20), DateTime(2026, 11, 21, 1))), isFalse);
   });
+
+  test('새로 고침 중에는 목록을 그대로 둔다 — 스켈레톤은 처음 불러올 때만', () {
+    expect(const CalendarState(status: CalendarStatus.connecting).isInitialLoading, isTrue);
+    expect(const CalendarState(status: CalendarStatus.syncing).isInitialLoading, isTrue);
+    expect(CalendarState(status: CalendarStatus.syncing, lastSync: DateTime(2026, 11, 14)).isInitialLoading, isFalse);
+    expect(CalendarState(status: CalendarStatus.connected, lastSync: DateTime(2026, 11, 14)).isInitialLoading, isFalse);
+  });
 }

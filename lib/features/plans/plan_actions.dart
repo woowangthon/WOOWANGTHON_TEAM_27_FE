@@ -26,22 +26,25 @@ Future<bool> deletePlanWithConfirm(BuildContext context, WidgetRef ref, Plan pla
     destructive: true,
   );
   if (!ok) return false;
-  try {
-    if (plan.source == 'gcal') {
-      // 목록에서 바로 지우고(deletePlan이 먼저 지운다) 캘린더 요청은 뒤에서.
-      // 실패하면 일정이 다시 나타나고 토스트가 오류로 바뀐다.
-      unawaited(ref.read(calendarProvider.notifier).deletePlan(plan).catchError((Object e) {
-        Toast.show(l10n.planSaveError(friendlyError(l10n, e)), type: ToastType.error);
-      }));
-    } else {
-      await ref.read(plansProvider.notifier).removeLocal(plan.id);
+  // 1) 토스트가 먼저 (같은 프레임), 2) 확인 창이 닫히는 첫 프레임이 그려진 뒤에 지운다 —
+  // 목록·신호 다시 계산이 닫히는 애니메이션과 겹쳐 멈춘 것처럼 보이지 않게.
+  // 3) 캘린더 요청은 뒤에서. 실패하면 일정이 돌아오고 토스트가 오류로 바뀐다.
+  final plans = ref.read(plansProvider.notifier);
+  final calendar = ref.read(calendarProvider.notifier);
+  Toast.show(l10n.planDeleted, type: ToastType.info);
+  unawaited(() async {
+    await WidgetsBinding.instance.endOfFrame;
+    try {
+      if (plan.source == 'gcal') {
+        await calendar.deletePlan(plan);
+      } else {
+        await plans.removeLocal(plan.id);
+      }
+    } catch (e) {
+      Toast.show(l10n.planSaveError(friendlyError(l10n, e)), type: ToastType.error);
     }
-    Toast.show(l10n.planDeleted, type: ToastType.info);
-    return true;
-  } catch (e) {
-    Toast.show(l10n.planSaveError(friendlyError(l10n, e)), type: ToastType.error);
-    return false;
-  }
+  }());
+  return true;
 }
 
 

@@ -146,7 +146,7 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
               padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
               child: _CalendarCard(onOpenMonth: () => _setMonth(true)),
             ),
-            if (cal.isBusy)
+            if (cal.isInitialLoading)
               const Shimmer(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(Space.gutter, Space.xxl, Space.gutter, 0),
