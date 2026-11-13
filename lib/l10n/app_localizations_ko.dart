@@ -1133,4 +1133,37 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get planRouteSearch => '경로 찾기';
+
+  @override
+  String get categoryContest => '공모전';
+
+  @override
+  String get applicationDeadline => '접수 마감';
+
+  @override
+  String get eligibilityLabel => '참가자격';
+
+  @override
+  String get eligibilityUnknown => '참가자격 원문 확인';
+
+  @override
+  String get verificationDelayed => '업데이트 지연 · 접수 상태 원문 확인';
+
+  @override
+  String get verifiedAtLabel => '마지막 검증';
+
+  @override
+  String get applicationOpen => '접수 중';
+
+  @override
+  String get applicationUpcoming => '접수 예정';
+
+  @override
+  String get applicationClosed => '접수 마감';
+
+  @override
+  String get applicationCancelled => '취소';
+
+  @override
+  String get applicationUnknown => '접수 상태 미확인';
 }

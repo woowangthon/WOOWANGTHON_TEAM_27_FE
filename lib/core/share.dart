@@ -11,7 +11,7 @@ import 'toast.dart';
 Future<void> shareEvent(BuildContext context, RadarEvent e) async {
   final l10n = context.l10n;
   final sameDay = DateUtils.isSameDay(e.start, e.end);
-  final when = sameDay
+  final when = e.isApplication && e.deadline != null ? '${l10n.applicationDeadline}: ${context.formatDate(e.applicationDate(e.deadline!))}' : sameDay
       ? context.formatDateTime(e.start)
       : '${context.formatDate(e.start)} – ${context.formatDate(e.end)}';
   final link = e.registerUrl ?? e.url;

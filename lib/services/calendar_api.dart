@@ -44,23 +44,40 @@ class CalendarApi {
     final res = await _client.post(
       Uri.parse(_base),
       headers: _headers,
-      body: jsonEncode({
-        'summary': title,
-        'location': '${e.venue}, ${e.city}',
-        'description': [
-          'Added by LifeRadar',
-          if (e.registerUrl != null) 'Register: ${e.registerUrl}',
-          if (e.url != null) e.url,
-        ].join('\n'),
-        'start': {'dateTime': _local(e.start), 'timeZone': 'Asia/Seoul'},
-        'end': {'dateTime': _local(e.end), 'timeZone': 'Asia/Seoul'},
-        'extendedProperties': {
-          'private': {'liferadarEventId': e.id},
-        },
-      }),
+      body: jsonEncode(eventBody(e,title:title)),
     );
     _check(res);
     return (jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>)['htmlLink'] as String?;
+  }
+
+  /// Application dates are deadlines, never a multi-week event. Date-only
+  /// deadlines use Calendar date fields; no fabricated time or place.
+  static Map<String,dynamic> eventBody(RadarEvent e,{required String title}) {
+    String day(DateTime d) => '${d.year.toString().padLeft(4,'0')}-${d.month.toString().padLeft(2,'0')}-${d.day.toString().padLeft(2,'0')}';
+    final application = e.isApplication && e.deadline != null;
+    final d = application ? e.applicationDate(e.deadline!) : e.start;
+    return {
+      'summary':title,
+      if (!e.placeless) 'location':'${e.venue}, ${e.city}',
+      'description':[
+        'Added by LifeRadar',
+        if(application) 'Application deadline / 접수 마감 (KST). Not an event schedule.',
+        if(e.eligibilityText != null) 'Eligibility: ${e.eligibilityText}',
+        if(e.registerUrl != null) 'Register: ${e.registerUrl}',
+        if(e.url != null) e.url,
+      ].join('\n'),
+      if (application && e.deadlinePrecision == 'date') ...{
+        'start':{'date':day(d)},'end':{'date':day(d.add(const Duration(days:1)))},
+      } else if (application) ...{
+        'start':{'dateTime':e.deadline!.toUtc().toIso8601String()},
+        'end':{'dateTime':e.deadline!.toUtc().add(const Duration(minutes:1)).toIso8601String()},
+      } else ...{
+        'start':{'dateTime':_local(e.start),'timeZone':'Asia/Seoul'},
+        'end':{'dateTime':_local(e.end),'timeZone':'Asia/Seoul'},
+      },
+      'extendedProperties':{'private':{'liferadarEventId':e.id,
+        if(application) 'liferadarDateMeaning':'application-deadline'}},
+    };
   }
 
   /// 사용자 일정을 캘린더에 기록한다: [eventId]가 없으면 새로, 있으면 수정.

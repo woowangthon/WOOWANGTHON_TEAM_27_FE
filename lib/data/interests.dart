@@ -35,6 +35,7 @@ const interestOptions = <InterestOption>[
   InterestOption('data', LocalizedText(ko: '데이터', en: 'Data'), Icons.insights, Hue.blue, InterestGroup.tech),
   InterestOption('startup', LocalizedText(ko: '스타트업', en: 'Startups'), Icons.rocket_launch_outlined, Hue.orange, InterestGroup.tech),
   InterestOption('design', LocalizedText(ko: '디자인', en: 'Design'), Icons.palette_outlined, Hue.pink, InterestGroup.tech),
+  InterestOption('contest', LocalizedText(ko: '공모전', en: 'Contests'), Icons.emoji_events_outlined, Hue.amber, InterestGroup.growth),
   // 커리어와 학습
   InterestOption('career', LocalizedText(ko: '채용·커리어', en: 'Careers & jobs'), Icons.work_outline, Hue.sky, InterestGroup.growth),
   InterestOption('student', LocalizedText(ko: '학생 프로그램', en: 'Student programs'), Icons.school_outlined, Hue.teal, InterestGroup.growth),

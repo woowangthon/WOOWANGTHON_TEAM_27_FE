@@ -92,8 +92,9 @@ class SignalNotifier {
       if (i.kind == InsightKind.deadline) {
         final e = i.eventIds.isEmpty ? null : ref.read(eventByIdProvider(i.eventIds.first));
         final d = e?.deadline;
-        if (d == null) return false;
-        final left = DateTime(d.year, d.month, d.day).difference(today).inDays;
+        if (d == null || e == null || !e.applicationActionable(now)) return false;
+        final display = e.isApplication ? e.applicationDate(d) : d;
+        final left = DateTime(display.year, display.month, display.day).difference(today).inDays;
         return left >= 0 && left <= 2;
       }
       if (i.kind == InsightKind.planAlert) {

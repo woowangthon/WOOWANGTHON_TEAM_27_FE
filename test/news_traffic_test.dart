@@ -199,7 +199,7 @@ void main() {
     },
   );
   test(
-    'region-only reference is visible and does not send a system warning',
+    'strike without saved line produces no card or system warning',
     () async {
       var delivered = 0;
       final c = await _container((title, body, {tag}) async {
@@ -210,7 +210,7 @@ void main() {
           .read(baseInsightsProvider)
           .where((i) => i.id.startsWith('news-traffic:'))
           .toList();
-      expect(insights, isNotEmpty);
+      expect(insights, isEmpty);
       expect(insights.every((i) => i.notificationEligible == false), isTrue);
       await c.read(signalNotifierProvider).dispatch(insights);
       expect(delivered, 0);
@@ -296,7 +296,7 @@ void main() {
       final resolved = c
           .read(newsTrafficDecisionsProvider)
           .where((e) => e.decision == NewsTrafficDecision.resolved);
-      expect(resolved, isNotEmpty);
+      expect(resolved, isEmpty);
       await c
           .read(signalNotifierProvider)
           .dispatch(resolved.map((e) => e.toInsight()).toList());

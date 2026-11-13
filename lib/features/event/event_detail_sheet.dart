@@ -82,7 +82,7 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
     final ongoing = event.start.isBefore(DateTime(now.year, now.month, now.day));
 
     final addButton = FilledButton.icon(
-      onPressed: _adding ? null : _addToCalendar,
+      onPressed: _adding || !event.applicationActionable(now) ? null : _addToCalendar,
       icon: _adding ? AppSpinner(color: p.textMuted) : const Icon(Icons.event_available_outlined),
       label: Text(_adding ? l10n.addingToCalendar : l10n.addToCalendar),
     );
@@ -97,7 +97,8 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
           // ── 무엇: 카테고리 (차분하게) + 제목 ──
           QuietTags([
             QuietTag(context.categoryLabel(event.category), icon: categoryIcon(event.category)),
-            if (ongoing) QuietTag(l10n.ongoing),
+            if (event.isApplication) QuietTag(event.applicationStale(now) ? l10n.verificationDelayed : switch(event.applicationStatusAt(now)) { 'open' => l10n.applicationOpen, 'upcoming' => l10n.applicationUpcoming, 'closed' => l10n.applicationClosed, 'cancelled' => l10n.applicationCancelled, _ => l10n.applicationUnknown })
+            else if (ongoing) QuietTag(l10n.ongoing),
             if (event.isSample) QuietTag(l10n.sampleData),
           ]),
           const SizedBox(height: Space.sm),
@@ -111,7 +112,7 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
                 _Fact(
                   icon: Icons.event_available_outlined,
                   label: l10n.applicationLabel,
-                  value: '${context.formatDate(event.start)} – ${context.formatDate(event.end)}',
+                  value: '${context.formatDate(event.isApplication ? event.applicationDate(event.start) : event.start)} – ${context.formatDate(event.isApplication ? event.applicationDate(event.end) : event.end)}',
                 )
               else
                 _Fact(
@@ -125,7 +126,7 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
                 _Fact(
                   icon: Icons.apartment_outlined,
                   label: l10n.organizer,
-                  value: event.venue.isEmpty ? l10n.nationwide : event.venue,
+                  value: event.venue.isEmpty ? l10n.applicationUnknown : event.venue,
                   sub: event.city == '전국' ? l10n.nationwide : event.city,
                 )
               else
@@ -145,6 +146,13 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
                           icon: const Icon(Icons.map_outlined, size: 20),
                         ),
                 ),
+              if (event.isApplication)
+                _Fact(icon: Icons.badge_outlined, label:l10n.eligibilityLabel,
+                  value:event.eligibilityText ?? l10n.eligibilityUnknown),
+              if (event.isApplication && event.lastVerifiedAt != null)
+                _Fact(icon:Icons.update_outlined,label:l10n.verifiedAtLabel,
+                  value:'${context.formatDateTime(event.lastVerifiedAt!.toUtc().add(const Duration(hours:9)))} KST',
+                  sub:event.applicationStale(now) ? l10n.verificationDelayed : null),
               if (event.isFree == true || event.price != null)
                 _Fact(
                   icon: Icons.confirmation_number_outlined,
@@ -155,10 +163,11 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
               if (event.deadline != null)
                 _Fact(
                   icon: Icons.hourglass_bottom_rounded,
-                  label: l10n.kindDeadline,
-                  value: context.formatDate(event.deadline!),
+                  label: event.isApplication ? l10n.applicationDeadline : l10n.kindDeadline,
+                  value: context.formatDate(event.isApplication ? event.applicationDate(event.deadline!) : event.deadline!),
+                  sub: event.deadlinePrecision == 'datetime' ? '${event.applicationDate(event.deadline!).hour.toString().padLeft(2,'0')}:${event.applicationDate(event.deadline!).minute.toString().padLeft(2,'0')} KST' : null,
                   tone: Tone.accent,
-                  trailing: _daysLeft(context, event.deadline!),
+                  trailing: event.applicationStale(now) ? null : _daysLeft(context, event.isApplication ? event.applicationDate(event.deadline!) : event.deadline!),
                 ),
               if (o != null)
                 _Fact(
@@ -189,7 +198,7 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
             ]),
           ],
 
-          // ── 출처 (공공누리 — 출처 표시 의무) + 번역 안내 ──
+          // ── 출처 + 번역 안내 (출처명은 라이선스 허가를 뜻하지 않음) ──
           if (!event.isSample) ...[
             const SizedBox(height: Space.xl),
             Divider(color: p.border, height: 1),
@@ -238,11 +247,11 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
                   icon: const Icon(Icons.ios_share_rounded),
                 ),
                 const SizedBox(width: Space.sm),
-                if (event.registerUrl != null) ...[
+                if (event.registerUrl != null || (event.isApplication && event.url != null)) ...[
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () => launchUrl(Uri.parse(event.registerUrl!), mode: LaunchMode.externalApplication),
-                      child: Text(event.placeless ? l10n.applyNow : l10n.register),
+                      onPressed: event.registerUrl != null && !event.applicationActionable(now) ? null : () => launchUrl(Uri.parse(event.registerUrl ?? event.url!), mode: LaunchMode.externalApplication),
+                      child: Text(event.registerUrl == null ? l10n.openSource : event.placeless ? l10n.applyNow : l10n.register),
                     ),
                   ),
                   const SizedBox(width: Space.sm),

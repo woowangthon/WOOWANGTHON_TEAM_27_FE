@@ -552,5 +552,16 @@
   "planRouteSave": "Add this route to plans",
   "planRouteStale": "These plans have changed. Close this sheet and add the route again.",
   "planRouteTitle": "Travel plan",
-  "planRouteSearch": "Find transit route"
+  "planRouteSearch": "Find transit route",
+  "categoryContest": "Contest",
+  "applicationDeadline": "Application deadline",
+  "eligibilityLabel": "Eligibility",
+  "eligibilityUnknown": "Check original eligibility",
+  "verificationDelayed": "Update delayed · check application status at source",
+  "verifiedAtLabel": "Last verified",
+  "applicationOpen": "Applications open",
+  "applicationUpcoming": "Applications upcoming",
+  "applicationClosed": "Applications closed",
+  "applicationCancelled": "Cancelled",
+  "applicationUnknown": "Application status unconfirmed"
 }

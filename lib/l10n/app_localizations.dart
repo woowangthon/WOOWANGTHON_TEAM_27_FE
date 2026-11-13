@@ -2191,6 +2191,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Find transit route'**
   String get planRouteSearch;
+
+  /// No description provided for @categoryContest.
+  ///
+  /// In en, this message translates to:
+  /// **'Contest'**
+  String get categoryContest;
+
+  /// No description provided for @applicationDeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Application deadline'**
+  String get applicationDeadline;
+
+  /// No description provided for @eligibilityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Eligibility'**
+  String get eligibilityLabel;
+
+  /// No description provided for @eligibilityUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Check original eligibility'**
+  String get eligibilityUnknown;
+
+  /// No description provided for @verificationDelayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Update delayed · check application status at source'**
+  String get verificationDelayed;
+
+  /// No description provided for @verifiedAtLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Last verified'**
+  String get verifiedAtLabel;
+
+  /// No description provided for @applicationOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Applications open'**
+  String get applicationOpen;
+
+  /// No description provided for @applicationUpcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Applications upcoming'**
+  String get applicationUpcoming;
+
+  /// No description provided for @applicationClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Applications closed'**
+  String get applicationClosed;
+
+  /// No description provided for @applicationCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get applicationCancelled;
+
+  /// No description provided for @applicationUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Application status unconfirmed'**
+  String get applicationUnknown;
 }
 
 class _AppLocalizationsDelegate

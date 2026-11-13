@@ -212,7 +212,7 @@ void main() {
     expect(report.route?.distanceMeters, 1000);
     expect(report.insights.any((i) => i.id.startsWith('travel:road:') && i.notificationEligible == true), isTrue);
     expect(report.insights.any((i) => i.id.startsWith('travel:strike:')), isFalse);
-    expect(report.insights.any((i) => i.id.startsWith('travel:event:')), isTrue);
+    expect(report.insights.any((i) => i.id.startsWith('travel:event:')), isFalse);
   });
 
   test('unknown road state is never reported as free flowing', () async {
@@ -236,13 +236,11 @@ void main() {
     expect(() => service.check(_plan(source: 'sample'), now: _now), throwsArgumentError);
   });
 
-  test('rail strike is a possible restriction with source; withdrawal removes it', () async {
+  test('legacy strike snippets never create personal route warnings', () async {
     final service = _service();
     addTearDown(service.close);
     final report = await service.check(_plan(), now: _now, origin: _place, mode: TravelMode.transit);
-    final strike = report.insights.firstWhere((i) => i.id.startsWith('travel:strike:'));
-    expect(strike.body.ko, contains('전체 운행 중단 여부는 확인되지 않았습니다'));
-    expect(strike.sources.single.url, 'https://news.example/strike');
+    expect(report.insights.any((i) => i.id.startsWith('travel:strike:')), isFalse);
     final withdrawn = _service(withdrawn: true);
     addTearDown(withdrawn.close);
     final after = await withdrawn.check(_plan(), now: _now, origin: _place, mode: TravelMode.transit);
@@ -331,11 +329,6 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Check latest information'), findsOneWidget);
     expect(find.textContaining('Some sources could not be checked'), findsOneWidget);
-    await tester.scrollUntilVisible(
-      find.textContaining('Nearby event: possible traffic impact'),
-      200,
-      scrollable: find.byType(Scrollable).last,
-    );
-    expect(find.textContaining('Nearby event: possible traffic impact'), findsOneWidget);
+    expect(find.textContaining('Nearby event: possible traffic impact'), findsNothing);
   });
 }

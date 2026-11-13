@@ -416,6 +416,7 @@ ThemeData buildTheme(Brightness brightness) {
 }
 
 IconData categoryIcon(EventCategory c) => switch (c) {
+      EventCategory.contest => Icons.emoji_events_outlined,
       EventCategory.conference => Icons.co_present_outlined,
       EventCategory.hackathon => Icons.code_rounded,
       EventCategory.concert => Icons.music_note_outlined,

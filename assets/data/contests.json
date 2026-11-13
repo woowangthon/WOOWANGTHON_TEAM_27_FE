@@ -1,0 +1,602 @@
+{
+  "generatedAt": "2026-11-12T05:17:16.824851Z",
+  "snapshotKind": "manual-public-html-check",
+  "automatedCollectionEnabled": false,
+  "sources": [
+    {
+      "id": "sotong-contest",
+      "name": "소통24 공모전",
+      "access": "manual-public-html-check-not-openapi",
+      "reuseConditions": "unconfirmed",
+      "license": null,
+      "count": 14,
+      "verifiedAt": "2026-11-12T03:32:09.000Z"
+    },
+    {
+      "id": "contest-aim",
+      "name": "매경 AI 광고 공모전 공식 사이트",
+      "access": "manual-public-html-check-not-openapi",
+      "reuseConditions": "unconfirmed",
+      "license": null,
+      "count": 1,
+      "verifiedAt": "2026-11-12T03:32:09.000Z"
+    },
+    {
+      "id": "contest-hana",
+      "name": "하나증권 공모전 공식 사이트",
+      "access": "manual-public-html-check-not-openapi",
+      "reuseConditions": "unconfirmed",
+      "license": null,
+      "count": 1,
+      "verifiedAt": "2026-11-12T03:32:09.000Z"
+    },
+    {
+      "id": "contest-kaeri",
+      "name": "한국원자력연구원 공식 공고",
+      "access": "manual-public-html-check-not-openapi",
+      "reuseConditions": "unconfirmed",
+      "license": null,
+      "count": 1,
+      "verifiedAt": "2026-11-12T03:32:09.000Z"
+    }
+  ],
+  "events": [
+    {
+      "id": "sotong-contest-75a49f54e62349c681559e0624e8a533",
+      "title": {
+        "ko": "우체국물류지원단 공식 캐릭터 네이밍 공모전",
+        "en": "우체국물류지원단 공식 캐릭터 네이밍 공모전"
+      },
+      "description": {
+        "ko": "우체국물류지원단 공식 캐릭터 네이밍 공모전\n우체국물류지원단\n참가자격: 만 14세 이상 국민 누구나(우체국물류지원단 임직원 포함)\n접수기간: 2026. 11. 12.(목) 08:00 ~ 11. 16.(월) 17:00",
+        "en": "우체국물류지원단 공식 캐릭터 네이밍 공모전\n우체국물류지원단\n참가자격: 만 14세 이상 국민 누구나(우체국물류지원단 임직원 포함)\n접수기간: 2026. 11. 12.(목) 08:00 ~ 11. 16.(월) 17:00"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-11-11T23:00:00.000Z",
+      "end": "2026-11-16T08:00:00.000Z",
+      "venue": "우체국물류지원단",
+      "city": "전국",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=75a49f54e62349c681559e0624e8a533&pagetype=bbs",
+      "registerUrl": "https://m.site.naver.com/2kHcR",
+      "deadline": "2026-11-16T08:00:00.000Z",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "datetime",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "만 14세 이상 국민 누구나(우체국물류지원단 임직원 포함)",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-1e7d47e2ad6b4669b97c94e3550f695d",
+      "title": {
+        "ko": "2026 내가 소개하는 서울 숏폼 공모전",
+        "en": "2026 내가 소개하는 서울 숏폼 공모전"
+      },
+      "description": {
+        "ko": "2026 내가 소개하는 서울 숏폼 공모전\n서울특별시 홍보기획관 홍보담당관\n참가자격: 국내 거주 내외국인 누구나\n접수기간: '26. 11. 9.(월) ~ '26. 11. 27.(금) 17시까지\n최종 수상작 발표 : '26. 12. 14.(월) 예정",
+        "en": "2026 내가 소개하는 서울 숏폼 공모전\n서울특별시 홍보기획관 홍보담당관\n참가자격: 국내 거주 내외국인 누구나\n접수기간: '26. 11. 9.(월) ~ '26. 11. 27.(금) 17시까지\n최종 수상작 발표 : '26. 12. 14.(월) 예정"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-11-09T00:00:00.000",
+      "end": "2026-11-27T08:00:00.000Z",
+      "venue": "서울특별시 홍보기획관 홍보담당관",
+      "city": "전국",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=1e7d47e2ad6b4669b97c94e3550f695d&pagetype=bbs",
+      "registerUrl": "https://docs.google.com/forms/d/e/1FAIpQLSeuV6mUToA4uSV5JmKynHAF05J6Iv2tNJucmGg61I3II0sJYw/viewform?usp=dialog",
+      "deadline": "2026-11-27T08:00:00.000Z",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "datetime",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "국내 거주 내외국인 누구나",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-bc239c48e8be4a58b4b397526cc41d73",
+      "title": {
+        "ko": "AI 미디어 콘텐츠 공모전 2026 「AI·스마트도시·YOUR STORY」",
+        "en": "AI 미디어 콘텐츠 공모전 2026 「AI·스마트도시·YOUR STORY」"
+      },
+      "description": {
+        "ko": "AI 미디어 콘텐츠 공모전 2026 「AI·스마트도시·YOUR STORY」\n경상북도 경산시 건설안전국 도시과\n참가자격: 누구나 (개인·팀 참여 가능, 중복 참가 불가)\n접수기간: 2026. 11. 9.(월) ~ 11. 23.(월)",
+        "en": "AI 미디어 콘텐츠 공모전 2026 「AI·스마트도시·YOUR STORY」\n경상북도 경산시 건설안전국 도시과\n참가자격: 누구나 (개인·팀 참여 가능, 중복 참가 불가)\n접수기간: 2026. 11. 9.(월) ~ 11. 23.(월)"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-11-09T00:00:00.000",
+      "end": "2026-11-23T00:00:00.000",
+      "venue": "경상북도 경산시 건설안전국 도시과",
+      "city": "미확인",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=bc239c48e8be4a58b4b397526cc41d73&pagetype=bbs",
+      "registerUrl": "http://aiart.gbgs.art",
+      "deadline": "2026-11-23T00:00:00.000",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "date",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "누구나 (개인·팀 참여 가능, 중복 참가 불가)",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-f2754a2aa7aa4ad0863cc1cf7ae424f1",
+      "title": {
+        "ko": "2027 서울국제정원박람회 작가정원 작품공모",
+        "en": "2027 서울국제정원박람회 작가정원 작품공모"
+      },
+      "description": {
+        "ko": "2027 서울국제정원박람회 작가정원 작품공모\n서울특별시 정원도시국 조경과\n참가자격: ○ 관련 분야 전문가 누구나 참여 가능\n○ 개인 참여를 원칙으로 하며, 공동참여자 최대 1인과 공동작업 가능.\n○ 다음 사항을 수행할 수 있어야 한다.\n- 당선된 디자인에 따라 실제 정원 조성이 가능한 자\n- 정원 조성기간 중 시공 현장에 상주 가능한 자\n- 박람회 기간 중 개막식 및 주요 행사에 참석이 가능한 자\n- 박람회 기간 중 정원의 유지관리가 가능한 자\n접수기간: 2026. 12. 7.(월) ~ 12. 9.(수) 16시까지",
+        "en": "2027 서울국제정원박람회 작가정원 작품공모\n서울특별시 정원도시국 조경과\n참가자격: ○ 관련 분야 전문가 누구나 참여 가능\n○ 개인 참여를 원칙으로 하며, 공동참여자 최대 1인과 공동작업 가능.\n○ 다음 사항을 수행할 수 있어야 한다.\n- 당선된 디자인에 따라 실제 정원 조성이 가능한 자\n- 정원 조성기간 중 시공 현장에 상주 가능한 자\n- 박람회 기간 중 개막식 및 주요 행사에 참석이 가능한 자\n- 박람회 기간 중 정원의 유지관리가 가능한 자\n접수기간: 2026. 12. 7.(월) ~ 12. 9.(수) 16시까지"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-12-07T00:00:00.000",
+      "end": "2026-12-09T07:00:00.000Z",
+      "venue": "서울특별시 정원도시국 조경과",
+      "city": "미확인",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=f2754a2aa7aa4ad0863cc1cf7ae424f1&pagetype=bbs",
+      "deadline": "2026-12-09T07:00:00.000Z",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "upcoming",
+      "deadlinePrecision": "datetime",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "○ 관련 분야 전문가 누구나 참여 가능\n○ 개인 참여를 원칙으로 하며, 공동참여자 최대 1인과 공동작업 가능.\n○ 다음 사항을 수행할 수 있어야 한다.\n- 당선된 디자인에 따라 실제 정원 조성이 가능한 자\n- 정원 조성기간 중 시공 현장에 상주 가능한 자\n- 박람회 기간 중 개막식 및 주요 행사에 참석이 가능한 자\n- 박람회 기간 중 정원의 유지관리가 가능한 자",
+      "audience": "restricted",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-8037a14302ac4da2b612886023875e5d",
+      "title": {
+        "ko": "안산 4·16세월호참사 추모시설 명칭 공모전",
+        "en": "안산 4·16세월호참사 추모시설 명칭 공모전"
+      },
+      "description": {
+        "ko": "안산 4·16세월호참사 추모시설 명칭 공모전\n국무총리 · 4.16재단\n참가자격: 대한민국 국민 누구나(1인 1작품 응모가능)\n접수기간: 2026.11.5.(목) 10:00 ~ 11.20.(금) 17:00",
+        "en": "안산 4·16세월호참사 추모시설 명칭 공모전\n국무총리 · 4.16재단\n참가자격: 대한민국 국민 누구나(1인 1작품 응모가능)\n접수기간: 2026.11.5.(목) 10:00 ~ 11.20.(금) 17:00"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-11-05T01:00:00.000Z",
+      "end": "2026-11-20T08:00:00.000Z",
+      "venue": "국무총리 · 4.16재단",
+      "city": "전국",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=8037a14302ac4da2b612886023875e5d&pagetype=bbs",
+      "registerUrl": "https://416foundation.org/416park_name",
+      "deadline": "2026-11-20T08:00:00.000Z",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "datetime",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "대한민국 국민 누구나(1인 1작품 응모가능)",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-c7d9657fec8c4697bf31fca832707b1b",
+      "title": {
+        "ko": "효성그룹과 함께 기록하는 화포천습지 생물다양성 사진 공모전",
+        "en": "효성그룹과 함께 기록하는 화포천습지 생물다양성 사진 공모전"
+      },
+      "description": {
+        "ko": "효성그룹과 함께 기록하는 화포천습지 생물다양성 사진 공모전\n김해시 · (사)김해화포천생태관광협회\n참가자격: 전 국민 누구나(개인에 한해 참여 가능)\n접수기간: 2026. 11. 5.(목) ~ 12. 4.(금) *18:00시까지",
+        "en": "효성그룹과 함께 기록하는 화포천습지 생물다양성 사진 공모전\n김해시 · (사)김해화포천생태관광협회\n참가자격: 전 국민 누구나(개인에 한해 참여 가능)\n접수기간: 2026. 11. 5.(목) ~ 12. 4.(금) *18:00시까지"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-11-05T00:00:00.000",
+      "end": "2026-12-04T09:00:00.000Z",
+      "venue": "김해시 · (사)김해화포천생태관광협회",
+      "city": "전국",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=c7d9657fec8c4697bf31fca832707b1b&pagetype=bbs",
+      "deadline": "2026-12-04T09:00:00.000Z",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "datetime",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "전 국민 누구나(개인에 한해 참여 가능)",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-0ce40f7915ea4508b0adb486129eef9c",
+      "title": {
+        "ko": "2026년 KEIT 대국민 혁신아이디어 공모전",
+        "en": "2026년 KEIT 대국민 혁신아이디어 공모전"
+      },
+      "description": {
+        "ko": "2026년 KEIT 대국민 혁신아이디어 공모전\n한국산업기술기획평가원\n참가자격: 대한민국 국민 누구나 (개인 또는 팀 단위) ※ 팀 단위로 참여할 시 최대 3명까지 가능\n접수기간: 2026. 11.4.(수) ~ 11.17.(화) 18시까지",
+        "en": "2026년 KEIT 대국민 혁신아이디어 공모전\n한국산업기술기획평가원\n참가자격: 대한민국 국민 누구나 (개인 또는 팀 단위) ※ 팀 단위로 참여할 시 최대 3명까지 가능\n접수기간: 2026. 11.4.(수) ~ 11.17.(화) 18시까지"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-11-04T00:00:00.000",
+      "end": "2026-11-17T09:00:00.000Z",
+      "venue": "한국산업기술기획평가원",
+      "city": "전국",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=0ce40f7915ea4508b0adb486129eef9c&pagetype=bbs",
+      "registerUrl": "https://www.keit.re.kr/menu.es?mid=a10606010000",
+      "deadline": "2026-11-17T09:00:00.000Z",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "datetime",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "대한민국 국민 누구나 (개인 또는 팀 단위) ※ 팀 단위로 참여할 시 최대 3명까지 가능",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-f2db9e90960f47e2a8dbec3377cdf33e",
+      "title": {
+        "ko": "국립청주해양과학관 개관 기념 대국민 슬로건 공모전",
+        "en": "국립청주해양과학관 개관 기념 대국민 슬로건 공모전"
+      },
+      "description": {
+        "ko": "국립청주해양과학관 개관 기념 대국민 슬로건 공모전\n국립청주해양과학관\n참가자격: 대한민국 국민 누구나 (1인 1작품 제한)\n접수기간: 2026. 11. 2.(월) ~ 11. 15.(일)",
+        "en": "국립청주해양과학관 개관 기념 대국민 슬로건 공모전\n국립청주해양과학관\n참가자격: 대한민국 국민 누구나 (1인 1작품 제한)\n접수기간: 2026. 11. 2.(월) ~ 11. 15.(일)"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-11-02T00:00:00.000",
+      "end": "2026-11-15T00:00:00.000",
+      "venue": "국립청주해양과학관",
+      "city": "전국",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=f2db9e90960f47e2a8dbec3377cdf33e&pagetype=bbs",
+      "registerUrl": "https://naver.me/xjY5ag3p",
+      "deadline": "2026-11-15T00:00:00.000",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "date",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "대한민국 국민 누구나 (1인 1작품 제한)",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-5db45c30918c49ea889097e1d0927caa",
+      "title": {
+        "ko": "2026년 제6회 진료정보교류 사업 우수사례 공모전",
+        "en": "2026년 제6회 진료정보교류 사업 우수사례 공모전"
+      },
+      "description": {
+        "ko": "2026년 제6회 진료정보교류 사업 우수사례 공모전\n한국보건의료정보원\n참가자격: 진료정보교류 서비스 이용 경험이 있는 의료기관 종사자 및 국민\n접수기간: 2026. 10. 30.~ 11. 16. / 18일간 ※ 마감일 내 도착한 건에 한하여 인정",
+        "en": "2026년 제6회 진료정보교류 사업 우수사례 공모전\n한국보건의료정보원\n참가자격: 진료정보교류 서비스 이용 경험이 있는 의료기관 종사자 및 국민\n접수기간: 2026. 10. 30.~ 11. 16. / 18일간 ※ 마감일 내 도착한 건에 한하여 인정"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-10-30T00:00:00.000",
+      "end": "2026-11-16T00:00:00.000",
+      "venue": "한국보건의료정보원",
+      "city": "미확인",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=5db45c30918c49ea889097e1d0927caa&pagetype=bbs",
+      "deadline": "2026-11-16T00:00:00.000",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "date",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "진료정보교류 서비스 이용 경험이 있는 의료기관 종사자 및 국민",
+      "audience": "restricted",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-10cd564877b04abcb22c35cf62054cb6",
+      "title": {
+        "ko": "국가무형유산 상설공연 창작 콘텐츠 개발을 위한 대국민 아이디어 발굴대회",
+        "en": "국가무형유산 상설공연 창작 콘텐츠 개발을 위한 대국민 아이디어 발굴대회"
+      },
+      "description": {
+        "ko": "국가무형유산 상설공연 창작 콘텐츠 개발을 위한 대국민 아이디어 발굴대회\n국가유산청 무형유산국 무형유산예능과\n참가자격: 대한민국 국민 누구나 (개인 또는 단체)\n접수기간: 2026. 11. 9. (월) 9:00 ~ 11. 18. (수) 17:00",
+        "en": "국가무형유산 상설공연 창작 콘텐츠 개발을 위한 대국민 아이디어 발굴대회\n국가유산청 무형유산국 무형유산예능과\n참가자격: 대한민국 국민 누구나 (개인 또는 단체)\n접수기간: 2026. 11. 9. (월) 9:00 ~ 11. 18. (수) 17:00"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-11-09T00:00:00.000Z",
+      "end": "2026-11-18T08:00:00.000Z",
+      "venue": "국가유산청 무형유산국 무형유산예능과",
+      "city": "전국",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=10cd564877b04abcb22c35cf62054cb6&pagetype=bbs",
+      "registerUrl": "https://naver.me/xHE0wMoQ",
+      "deadline": "2026-11-18T08:00:00.000Z",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "datetime",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "대한민국 국민 누구나 (개인 또는 단체)",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-0d570c051bd54ff5b1056d1b7ac891e1",
+      "title": {
+        "ko": "식중독 예방 숏폼 영상 공모전",
+        "en": "식중독 예방 숏폼 영상 공모전"
+      },
+      "description": {
+        "ko": "식중독 예방 숏폼 영상 공모전\n식품의약품안전처 식중독예방과\n참가자격: 대한민국 국민 누구나(개인 또는 팀)\n접수기간: 2026. 10. 26.(월) ~ 11. 23.(월) 23:59까지",
+        "en": "식중독 예방 숏폼 영상 공모전\n식품의약품안전처 식중독예방과\n참가자격: 대한민국 국민 누구나(개인 또는 팀)\n접수기간: 2026. 10. 26.(월) ~ 11. 23.(월) 23:59까지"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-10-26T00:00:00.000",
+      "end": "2026-11-23T14:59:00.000Z",
+      "venue": "식품의약품안전처 식중독예방과",
+      "city": "전국",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=0d570c051bd54ff5b1056d1b7ac891e1&pagetype=bbs",
+      "deadline": "2026-11-23T14:59:00.000Z",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "datetime",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "대한민국 국민 누구나(개인 또는 팀)",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-a80de8d7090348d689cffb81b055a62d",
+      "title": {
+        "ko": "한국도로공사 AI 활용 아이디어 공모전",
+        "en": "한국도로공사 AI 활용 아이디어 공모전"
+      },
+      "description": {
+        "ko": "한국도로공사 AI 활용 아이디어 공모전\n한국도로공사\n참가자격: 대한민국 국민 누구나(개인 또는 3인 이내 팀)\n공모전 신청(국민생각함 한국도로공사 검색)\n접수기간: 2026. 10. 19.(월) ～ 11. 15.(일) [4주간]\n확인사항: 목록 종료일 11/16과 본문 11/15가 다름. 제출 안내와 함께 기재된 본문 공모기간을 사용하며 원문 재확인 필요.",
+        "en": "한국도로공사 AI 활용 아이디어 공모전\n한국도로공사\n참가자격: 대한민국 국민 누구나(개인 또는 3인 이내 팀)\n공모전 신청(국민생각함 한국도로공사 검색)\n접수기간: 2026. 10. 19.(월) ～ 11. 15.(일) [4주간]\n확인사항: 목록 종료일 11/16과 본문 11/15가 다름. 제출 안내와 함께 기재된 본문 공모기간을 사용하며 원문 재확인 필요."
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-10-19T00:00:00.000",
+      "end": "2026-11-15T00:00:00.000",
+      "venue": "한국도로공사",
+      "city": "전국",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=a80de8d7090348d689cffb81b055a62d&pagetype=bbs",
+      "registerUrl": "https://www.epeople.go.kr/nep/thk/subj/SubjThinkList.npaid",
+      "deadline": "2026-11-15T00:00:00.000",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "date",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "대한민국 국민 누구나(개인 또는 3인 이내 팀)\n공모전 신청(국민생각함 한국도로공사 검색)",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-389795afacac4ec296a03cc53bba9a02",
+      "title": {
+        "ko": "서울특별시 행정서식, 뚝딱뚝딱! 개선 아이디어 공모전",
+        "en": "서울특별시 행정서식, 뚝딱뚝딱! 개선 아이디어 공모전"
+      },
+      "description": {
+        "ko": "서울특별시 행정서식, 뚝딱뚝딱! 개선 아이디어 공모전\n서울특별시 창의규제담당관\n참가자격: 행정서식 이용 경험이 있는 국민 누구나 (개인, 전국단위 공모). 개인 자격으로 응모, 팀 단위 제출 불가. 다수 제안 가능하나 개인당 시상 1건.\n접수기간: 2026. 10. 13. ~ 11. 20. (39일간) ※ 마감일 기준 23:59분 도달분까지 인정",
+        "en": "서울특별시 행정서식, 뚝딱뚝딱! 개선 아이디어 공모전\n서울특별시 창의규제담당관\n참가자격: 행정서식 이용 경험이 있는 국민 누구나 (개인, 전국단위 공모). 개인 자격으로 응모, 팀 단위 제출 불가. 다수 제안 가능하나 개인당 시상 1건.\n접수기간: 2026. 10. 13. ~ 11. 20. (39일간) ※ 마감일 기준 23:59분 도달분까지 인정"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-10-13T00:00:00.000",
+      "end": "2026-11-20T14:59:00.000Z",
+      "venue": "서울특별시 창의규제담당관",
+      "city": "전국",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=389795afacac4ec296a03cc53bba9a02&pagetype=bbs",
+      "deadline": "2026-11-20T14:59:00.000Z",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "datetime",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "행정서식 이용 경험이 있는 국민 누구나 (개인, 전국단위 공모). 개인 자격으로 응모, 팀 단위 제출 불가. 다수 제안 가능하나 개인당 시상 1건.",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-da99e9a3053a4baa9203d03972465487",
+      "title": {
+        "ko": "2026 상주시 대표축제 대국민 아이디어 공모전",
+        "en": "2026 상주시 대표축제 대국민 아이디어 공모전"
+      },
+      "description": {
+        "ko": "2026 상주시 대표축제 대국민 아이디어 공모전\n경상북도 상주시\n참가자격: 만 19세 이상 국민 누구나. 개인 또는 팀 단위 참가 가능. 축제 대행업체, 관광·문화 콘텐츠 기업, 관련 협회 등 법인·기관·단체 참가 가능하며 사업자등록증 등 증빙자료 제출.\n접수기간: 2026. 10. 1.(목) ~ 2027. 1. 15.(금)\n확인사항: 목록 9/7 시작과 공고 9/4 시작을 접수기간으로 사용하지 않음. 본문 접수 시작 10/1.",
+        "en": "2026 상주시 대표축제 대국민 아이디어 공모전\n경상북도 상주시\n참가자격: 만 19세 이상 국민 누구나. 개인 또는 팀 단위 참가 가능. 축제 대행업체, 관광·문화 콘텐츠 기업, 관련 협회 등 법인·기관·단체 참가 가능하며 사업자등록증 등 증빙자료 제출.\n접수기간: 2026. 10. 1.(목) ~ 2027. 1. 15.(금)\n확인사항: 목록 9/7 시작과 공고 9/4 시작을 접수기간으로 사용하지 않음. 본문 접수 시작 10/1."
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-10-01T00:00:00.000",
+      "end": "2027-01-15T00:00:00.000",
+      "venue": "경상북도 상주시",
+      "city": "전국",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=da99e9a3053a4baa9203d03972465487&pagetype=bbs",
+      "registerUrl": "https://sangjufestival.com/",
+      "deadline": "2027-01-15T00:00:00.000",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "date",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "만 19세 이상 국민 누구나. 개인 또는 팀 단위 참가 가능. 축제 대행업체, 관광·문화 콘텐츠 기업, 관련 협회 등 법인·기관·단체 참가 가능하며 사업자등록증 등 증빙자료 제출.",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "contest-aim-aim-2026-3",
+      "title": {
+        "ko": "2026 제3회 매경 AI 광고 공모전",
+        "en": "2026 제3회 매경 AI 광고 공모전"
+      },
+      "description": {
+        "ko": "2026 제3회 매경 AI 광고 공모전\n매경미디어\n참가자격: AI 영상 제작에 관심 있는 만 14세 이상. 학생부는 대학·대학원생과 중고생·24세 이하 청소년이 대상이며, 팀원 전원이 해당 자격을 갖추고 재학·휴학 또는 나이 증빙 필요. 일반 개인·팀 및 기업부 참가 가능.\n접수기간: 2026.11.09 ~ 2026.11.30\n확인사항: 기업부 참가비 20만원 별도. 학생부·일반부 참가비는 미확인. 마감 자정 표현의 경계가 불명확하여 날짜 정밀도만 저장.",
+        "en": "2026 제3회 매경 AI 광고 공모전\n매경미디어\n참가자격: AI 영상 제작에 관심 있는 만 14세 이상. 학생부는 대학·대학원생과 중고생·24세 이하 청소년이 대상이며, 팀원 전원이 해당 자격을 갖추고 재학·휴학 또는 나이 증빙 필요. 일반 개인·팀 및 기업부 참가 가능.\n접수기간: 2026.11.09 ~ 2026.11.30\n확인사항: 기업부 참가비 20만원 별도. 학생부·일반부 참가비는 미확인. 마감 자정 표현의 경계가 불명확하여 날짜 정밀도만 저장."
+      },
+      "category": "contest",
+      "tags": [
+        "contest",
+        "student"
+      ],
+      "start": "2026-11-09T00:00:00.000",
+      "end": "2026-11-30T00:00:00.000",
+      "venue": "매경미디어",
+      "city": "미확인",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://aimk.ai/",
+      "deadline": "2026-11-30T00:00:00.000",
+      "source": "contest-aim",
+      "sourceName": "매경 AI 광고 공모전 공식 사이트",
+      "price": "기업부 20만원 별도. 학생부·일반부는 원문 확인",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "date",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "AI 영상 제작에 관심 있는 만 14세 이상. 학생부는 대학·대학원생과 중고생·24세 이하 청소년이 대상이며, 팀원 전원이 해당 자격을 갖추고 재학·휴학 또는 나이 증빙 필요. 일반 개인·팀 및 기업부 참가 가능.",
+      "audience": "university",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "contest-hana-hana-2026-1",
+      "title": {
+        "ko": "제1회 하나증권 청년 금융 아이디어 공모전",
+        "en": "제1회 하나증권 청년 금융 아이디어 공모전"
+      },
+      "description": {
+        "ko": "제1회 하나증권 청년 금융 아이디어 공모전\n하나증권\n참가자격: 만 19세 이상이며 고등학교 졸업 이상 학력 필요. 대학 재학생·졸업예정자 포함, 전공 무관. 개인만 참가하며 팀은 불가. 1인 1주제 1아이디어. 본선 PT는 12월 23일 하나증권 본사에서 진행.\n접수기간: 2026.11.02 ~ 11.30 17:00",
+        "en": "제1회 하나증권 청년 금융 아이디어 공모전\n하나증권\n참가자격: 만 19세 이상이며 고등학교 졸업 이상 학력 필요. 대학 재학생·졸업예정자 포함, 전공 무관. 개인만 참가하며 팀은 불가. 1인 1주제 1아이디어. 본선 PT는 12월 23일 하나증권 본사에서 진행.\n접수기간: 2026.11.02 ~ 11.30 17:00"
+      },
+      "category": "contest",
+      "tags": [
+        "contest",
+        "student"
+      ],
+      "start": "2026-11-02T00:00:00.000",
+      "end": "2026-11-30T08:00:00.000Z",
+      "venue": "하나증권",
+      "city": "미확인",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://www.hanaw.com/contest/contest.html",
+      "registerUrl": "https://hanaw-hr.recruiter.co.kr/career/jobs/131271",
+      "deadline": "2026-11-30T08:00:00.000Z",
+      "source": "contest-hana",
+      "sourceName": "하나증권 공모전 공식 사이트",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "datetime",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "만 19세 이상이며 고등학교 졸업 이상 학력 필요. 대학 재학생·졸업예정자 포함, 전공 무관. 개인만 참가하며 팀은 불가. 1인 1주제 1아이디어. 본선 PT는 12월 23일 하나증권 본사에서 진행.",
+      "audience": "university",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "contest-kaeri-kaeri-13142",
+      "title": {
+        "ko": "내가 만난 원자력 연구원 방문·체험수기 공모전",
+        "en": "내가 만난 원자력 연구원 방문·체험수기 공모전"
+      },
+      "description": {
+        "ko": "내가 만난 원자력 연구원 방문·체험수기 공모전\n한국원자력연구원\n참가자격: 한국원자력연구원 방문 또는 연구원의 프로그램·콘텐츠 체험 경험이 필요. 연령 제한 없이 국민 참여 가능. 개인당 1편, 만 14세 미만은 보호자 서명 필요.\n접수기간: 2026.10.15.(목)~11.30.(월)",
+        "en": "내가 만난 원자력 연구원 방문·체험수기 공모전\n한국원자력연구원\n참가자격: 한국원자력연구원 방문 또는 연구원의 프로그램·콘텐츠 체험 경험이 필요. 연령 제한 없이 국민 참여 가능. 개인당 1편, 만 14세 미만은 보호자 서명 필요.\n접수기간: 2026.10.15.(목)~11.30.(월)"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-10-15T00:00:00.000",
+      "end": "2026-11-30T00:00:00.000",
+      "venue": "한국원자력연구원",
+      "city": "미확인",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://www.kaeri.re.kr/board/view?linkId=13142&menuId=MENU00332",
+      "deadline": "2026-11-30T00:00:00.000",
+      "source": "contest-kaeri",
+      "sourceName": "한국원자력연구원 공식 공고",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "date",
+      "lastVerifiedAt": "2026-11-12T03:32:09.000Z",
+      "eligibilityText": "한국원자력연구원 방문 또는 연구원의 프로그램·콘텐츠 체험 경험이 필요. 연령 제한 없이 국민 참여 가능. 개인당 1편, 만 14세 미만은 보호자 서명 필요.",
+      "audience": "restricted",
+      "participationMode": "unknown"
+    }
+  ]
+}

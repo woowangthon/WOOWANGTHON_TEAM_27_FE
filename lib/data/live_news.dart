@@ -24,7 +24,8 @@ class NewsFeed {
     final strikes = <TransitStrike>[];
     for (final s in (j['strikes'] as List? ?? const [])) {
       try {
-        strikes.add(TransitStrike.fromJson((s as Map).cast<String, dynamic>()));
+        final strike = TransitStrike.fromJson((s as Map).cast<String, dynamic>());
+        if (strike.isDomestic) strikes.add(strike);
       } catch (_) {
         // 깨진 항목 하나가 전체를 멈추지 않게 한다.
       }

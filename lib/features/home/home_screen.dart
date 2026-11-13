@@ -450,7 +450,7 @@ class InsightCard extends ConsumerWidget {
     String? when;
     if (event != null && event.placeless && event.deadline != null) {
       // 배지가 이미 "Deadline"이면 — 반복하지 않는다.
-      final date = context.formatDate(event.deadline!);
+      final date = context.formatDate(event.isApplication ? event.applicationDate(event.deadline!) : event.deadline!);
       when = insight.kind == InsightKind.deadline ? date : '${l10n.kindDeadline} · $date';
     } else if (event != null) {
       final from = plan != null && event.start.isBefore(plan.start) ? plan.start : event.start;

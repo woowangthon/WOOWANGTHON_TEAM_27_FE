@@ -128,8 +128,8 @@ class _TravelImpactSheetState extends ConsumerState<TravelImpactSheet> {
             const SizedBox(height: Space.sm),
             Text(
               tr(
-                '현재 정체, 공식 도로 통제, 파업·운행 제한 보도와 실제 행사 일정을 비교합니다.',
-                'Check current congestion, road controls, strike reports and real event schedules.',
+                '현재 정체·공식 통제와 국내 보도에 명시된 교통 영향을 확인합니다. 이용 노선 또는 확인된 영향권이 겹칠 때 안내합니다.',
+                'Check live traffic, official restrictions and reported impacts in Korea against your transit line or verified affected area.',
               ),
             ),
             const SizedBox(height: Space.md),

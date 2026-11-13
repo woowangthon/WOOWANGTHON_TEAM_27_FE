@@ -14,8 +14,8 @@ enum DiscoverPeriod { today, weekend, week, month }
 
 enum DiscoverSort { match, soon }
 
-/// 행사의 광역 지역: 장소가 없는 공고는 "전국".
-String discoverRegionOf(RadarEvent e) => e.placeless ? '전국' : KoreaRegions.regionOf(e.location);
+/// 공고의 지역은 명시된 참가 지역만 사용한다.
+String discoverRegionOf(RadarEvent e) => e.placeless ? e.city : KoreaRegions.regionOf(e.location);
 
 /// 기간 [from, to) — 행사 기간이 겹치면 포함.
 (DateTime, DateTime) discoverPeriodRange(DiscoverPeriod p, DateTime today) => switch (p) {
@@ -94,7 +94,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
     final feed = ref.watch(eventFeedProvider);
     final now = ref.watch(nowProvider);
     final today = DateTime(now.year, now.month, now.day);
-    final all = ref.watch(eventsProvider).where((e) => !e.end.isBefore(today)).toList();
+    final all = ref.watch(eventsProvider).where((e) => e.applicationVisible(now) && !e.end.isBefore(today)).toList();
     final q = _query.trim().toLowerCase();
     final range = _period == null ? null : discoverPeriodRange(_period!, today);
 
@@ -105,7 +105,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
       if (_freeOnly && e.isFree != true) return false;
       if (_mineOnly && !e.tags.any(interests.contains)) return false;
       if (q.isNotEmpty) {
-        final hay = '${e.title.ko} ${e.title.en} ${e.venue} ${e.city}'.toLowerCase();
+        final hay = '${e.title.ko} ${e.title.en} ${e.venue} ${e.city} ${e.eligibilityText ?? ''}'.toLowerCase();
         if (!hay.contains(q)) return false;
       }
       return true;
@@ -395,7 +395,7 @@ class _PosterCard extends ConsumerWidget {
         onTap: () => showEventDetail(
           context,
           event,
-          onShowOnMap: () {
+          onShowOnMap: event.placeless ? null : () {
             ref.read(mapFocusProvider.notifier).focus(event.id);
             context.go('/map');
           },
@@ -450,7 +450,7 @@ class EventCard extends ConsumerWidget {
     final today = DateTime(now.year, now.month, now.day);
     // 몇 달씩 이어지는 전시/강좌: 지난 시작일 대신 종료일.
     final ongoing = event.start.isBefore(today);
-    final tileDate = ongoing ? event.end : event.start;
+    final tileDate = event.isApplication && event.deadline != null ? event.applicationDate(event.deadline!) : ongoing ? event.end : event.start;
     final seen = ref.watch(seenProvider).contains('event:${event.id}');
     return AnimatedOpacity(
       duration: Motion.of(context, Motion.normal),
@@ -460,7 +460,7 @@ class EventCard extends ConsumerWidget {
           onTap: () => showEventDetail(
             context,
             event,
-            onShowOnMap: () {
+            onShowOnMap: event.placeless ? null : () {
               ref.read(mapFocusProvider.notifier).focus(event.id);
               context.go('/map');
             },
@@ -470,7 +470,7 @@ class EventCard extends ConsumerWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                DateTile(tileDate, monthLabel: '${ongoing ? '~' : ''}${DateFormat.MMM(context.lang).format(tileDate)}'),
+                DateTile(tileDate, monthLabel: '${event.isApplication ? '' : ongoing ? '~' : ''}${DateFormat.MMM(context.lang).format(tileDate)}'),
                 const SizedBox(width: Space.md),
                 Expanded(
                   child: Column(
@@ -479,14 +479,16 @@ class EventCard extends ConsumerWidget {
                       // 카테고리 · 상태 — 차분한 글자; "무료"는 색으로만 구분.
                       QuietTags([
                         QuietTag(context.categoryLabel(event.category), icon: categoryIcon(event.category)),
-                        if (ongoing) QuietTag(l10n.ongoing),
+                        if (event.isApplication) QuietTag(event.applicationStale(now) ? l10n.verificationDelayed : switch(event.applicationStatusAt(now)) { 'open' => l10n.applicationOpen, 'upcoming' => l10n.applicationUpcoming, _ => l10n.applicationUnknown })
+                        else if (ongoing) QuietTag(l10n.ongoing),
                         if (event.isFree == true) QuietTag(l10n.free, color: context.palette.primary),
                         if (event.isSample) QuietTag(l10n.sampleData),
                       ]),
                       const SizedBox(height: 6),
                       Text(context.tr(event.title), style: t.titleSmall, maxLines: 2, overflow: TextOverflow.ellipsis),
                       const SizedBox(height: 4),
-                      MetaRow(Icons.place_outlined, '${event.venue} · ${event.city}'),
+                      MetaRow(event.placeless ? Icons.apartment_outlined : Icons.place_outlined, '${event.venue} · ${event.city}'),
+                      if(event.isApplication) Text('${l10n.applicationDeadline}: ${context.formatDate(tileDate)}', style:t.labelSmall),
                       if (matched.isNotEmpty) ...[
                         const SizedBox(height: Space.sm),
                         QuietTags([

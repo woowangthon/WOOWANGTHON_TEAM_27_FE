@@ -1,0 +1,156 @@
+{
+  "generatedAt": "2026-11-12T00:00:00.000Z",
+  "previewOnly": true,
+  "sources": [
+    {
+      "id": "sotong-contest",
+      "name": "소통24 공모전",
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewListPage.do?menu_id=527&pagetype=bbs",
+      "access": "public-html-not-openapi",
+      "reuseConditions": "unconfirmed",
+      "license": null,
+      "status": "success",
+      "attemptedAt": "2026-11-12T00:00:00.000Z",
+      "lastSuccessAt": "2026-11-12T00:00:00.000Z",
+      "pages": 1,
+      "seenCount": 6,
+      "detailRequests": 6,
+      "errors": [],
+      "preservedPrevious": false,
+      "count": 4
+    }
+  ],
+  "events": [
+    {
+      "id": "sotong-contest-75a49f54e62349c681559e0624e8a533",
+      "title": {
+        "ko": "우체국물류지원단 공식 캐릭터 네이밍 공모전",
+        "en": "우체국물류지원단 공식 캐릭터 네이밍 공모전"
+      },
+      "description": {
+        "ko": "우체국물류지원단 공식 캐릭터 네이밍 공모전\n우체국물류지원단\n참가자격: 만 14세 이상 국민 누구나(우체국물류지원단 임직원 포함)\n접수기간: 2026. 11. 12.(목) 08:00 ~ 11. 16.(월) 17:00",
+        "en": "우체국물류지원단 공식 캐릭터 네이밍 공모전\n우체국물류지원단\n참가자격: 만 14세 이상 국민 누구나(우체국물류지원단 임직원 포함)\n접수기간: 2026. 11. 12.(목) 08:00 ~ 11. 16.(월) 17:00"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-11-11T23:00:00.000Z",
+      "end": "2026-11-16T08:00:00.000Z",
+      "venue": "우체국물류지원단",
+      "city": "전국",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=75a49f54e62349c681559e0624e8a533&pagetype=bbs",
+      "registerUrl": "https://m.site.naver.com/2kHcR",
+      "deadline": "2026-11-16T08:00:00.000Z",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "datetime",
+      "lastVerifiedAt": "2026-11-12T00:00:00.000Z",
+      "eligibilityText": "만 14세 이상 국민 누구나(우체국물류지원단 임직원 포함)",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-f2754a2aa7aa4ad0863cc1cf7ae424f1",
+      "title": {
+        "ko": "2027 서울국제정원박람회 작가정원 작품공모",
+        "en": "2027 서울국제정원박람회 작가정원 작품공모"
+      },
+      "description": {
+        "ko": "2027 서울국제정원박람회 작가정원 작품공모\n서울특별시 정원도시국 조경과\n참가자격: ○ 관련 분야 전문가 누구나 참여 가능\n○ 개인 참여를 원칙으로 하며, 공동참여자 최대 1인과 공동작업 가능.\n○ 다음 사항을 수행할 수 있어야 한다.\n- 당선된 디자인에 따라 실제 정원 조성이 가능한 자\n- 정원 조성기간 중 시공 현장에 상주 가능한 자\n- 박람회 기간 중 개막식 및 주요 행사에 참석이 가능한 자\n- 박람회 기간 중 정원의 유지관리가 가능한 자\n4.\n접수기간: 2026. 12. 7.(월) ~ 12. 9.(수) 16시까지\n3.",
+        "en": "2027 서울국제정원박람회 작가정원 작품공모\n서울특별시 정원도시국 조경과\n참가자격: ○ 관련 분야 전문가 누구나 참여 가능\n○ 개인 참여를 원칙으로 하며, 공동참여자 최대 1인과 공동작업 가능.\n○ 다음 사항을 수행할 수 있어야 한다.\n- 당선된 디자인에 따라 실제 정원 조성이 가능한 자\n- 정원 조성기간 중 시공 현장에 상주 가능한 자\n- 박람회 기간 중 개막식 및 주요 행사에 참석이 가능한 자\n- 박람회 기간 중 정원의 유지관리가 가능한 자\n4.\n접수기간: 2026. 12. 7.(월) ~ 12. 9.(수) 16시까지\n3."
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-12-07T00:00:00.000",
+      "end": "2026-12-09T07:00:00.000Z",
+      "venue": "서울특별시 정원도시국 조경과",
+      "city": "미확인",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=f2754a2aa7aa4ad0863cc1cf7ae424f1&pagetype=bbs",
+      "deadline": "2026-12-09T07:00:00.000Z",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "upcoming",
+      "deadlinePrecision": "datetime",
+      "lastVerifiedAt": "2026-11-12T00:00:00.000Z",
+      "eligibilityText": "○ 관련 분야 전문가 누구나 참여 가능\n○ 개인 참여를 원칙으로 하며, 공동참여자 최대 1인과 공동작업 가능.\n○ 다음 사항을 수행할 수 있어야 한다.\n- 당선된 디자인에 따라 실제 정원 조성이 가능한 자\n- 정원 조성기간 중 시공 현장에 상주 가능한 자\n- 박람회 기간 중 개막식 및 주요 행사에 참석이 가능한 자\n- 박람회 기간 중 정원의 유지관리가 가능한 자\n4.",
+      "audience": "restricted",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-1e7d47e2ad6b4669b97c94e3550f695d",
+      "title": {
+        "ko": "2026 내가 소개하는 서울 숏폼 공모전",
+        "en": "2026 내가 소개하는 서울 숏폼 공모전"
+      },
+      "description": {
+        "ko": "2026 내가 소개하는 서울 숏폼 공모전\n서울특별시 홍보기획관 홍보담당관\n참가자격: 국내 거주 내외국인 누구나\n4.\n접수기간: '26. 11. 9.(월) ~ '26. 11. 27.(금) 17시까지\n최종 수상작 발표 : '26. 12. 14.(월) 예정\n3.",
+        "en": "2026 내가 소개하는 서울 숏폼 공모전\n서울특별시 홍보기획관 홍보담당관\n참가자격: 국내 거주 내외국인 누구나\n4.\n접수기간: '26. 11. 9.(월) ~ '26. 11. 27.(금) 17시까지\n최종 수상작 발표 : '26. 12. 14.(월) 예정\n3."
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-11-09T00:00:00.000",
+      "end": "2026-11-27T08:00:00.000Z",
+      "venue": "서울특별시 홍보기획관 홍보담당관",
+      "city": "전국",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=1e7d47e2ad6b4669b97c94e3550f695d&pagetype=bbs",
+      "registerUrl": "https://docs.google.com/forms/d/e/1FAIpQLSeuV6mUToA4uSV5JmKynHAF05J6Iv2tNJucmGg61I3II0sJYw/viewform?usp=dialog",
+      "deadline": "2026-11-27T08:00:00.000Z",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "datetime",
+      "lastVerifiedAt": "2026-11-12T00:00:00.000Z",
+      "eligibilityText": "국내 거주 내외국인 누구나\n4.",
+      "audience": "general",
+      "participationMode": "unknown"
+    },
+    {
+      "id": "sotong-contest-bc239c48e8be4a58b4b397526cc41d73",
+      "title": {
+        "ko": "AI 미디어 콘텐츠 공모전 2026 「AI·스마트도시·YOUR STORY」",
+        "en": "AI 미디어 콘텐츠 공모전 2026 「AI·스마트도시·YOUR STORY」"
+      },
+      "description": {
+        "ko": "AI 미디어 콘텐츠 공모전 2026 「AI·스마트도시·YOUR STORY」\n경상북도 경산시 건설안전국 도시과\n참가자격: 누구나 (개인·팀 참여 가능, 중복 참가 불가)\n□\n접수기간: 2026. 11. 9.(월) ~ 11. 23.(월)\n□",
+        "en": "AI 미디어 콘텐츠 공모전 2026 「AI·스마트도시·YOUR STORY」\n경상북도 경산시 건설안전국 도시과\n참가자격: 누구나 (개인·팀 참여 가능, 중복 참가 불가)\n□\n접수기간: 2026. 11. 9.(월) ~ 11. 23.(월)\n□"
+      },
+      "category": "contest",
+      "tags": [
+        "contest"
+      ],
+      "start": "2026-11-09T00:00:00.000",
+      "end": "2026-11-23T00:00:00.000",
+      "venue": "경상북도 경산시 건설안전국 도시과",
+      "city": "미확인",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "url": "https://modu.go.kr/front/epilogue/epilogueNewViewPage.do?menu_id=527&bbs_id=bc239c48e8be4a58b4b397526cc41d73&pagetype=bbs",
+      "registerUrl": "http://aiart.gbgs.art",
+      "deadline": "2026-11-23T00:00:00.000",
+      "source": "sotong-contest",
+      "sourceName": "소통24 공모전",
+      "placeless": true,
+      "applicationStatus": "open",
+      "deadlinePrecision": "date",
+      "lastVerifiedAt": "2026-11-12T00:00:00.000Z",
+      "eligibilityText": "누구나 (개인·팀 참여 가능, 중복 참가 불가)\n□",
+      "audience": "general",
+      "participationMode": "unknown"
+    }
+  ]
+}

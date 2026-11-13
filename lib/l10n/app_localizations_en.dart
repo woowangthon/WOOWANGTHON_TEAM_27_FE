@@ -1168,4 +1168,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planRouteSearch => 'Find transit route';
+
+  @override
+  String get categoryContest => 'Contest';
+
+  @override
+  String get applicationDeadline => 'Application deadline';
+
+  @override
+  String get eligibilityLabel => 'Eligibility';
+
+  @override
+  String get eligibilityUnknown => 'Check original eligibility';
+
+  @override
+  String get verificationDelayed =>
+      'Update delayed · check application status at source';
+
+  @override
+  String get verifiedAtLabel => 'Last verified';
+
+  @override
+  String get applicationOpen => 'Applications open';
+
+  @override
+  String get applicationUpcoming => 'Applications upcoming';
+
+  @override
+  String get applicationClosed => 'Applications closed';
+
+  @override
+  String get applicationCancelled => 'Cancelled';
+
+  @override
+  String get applicationUnknown => 'Application status unconfirmed';
 }

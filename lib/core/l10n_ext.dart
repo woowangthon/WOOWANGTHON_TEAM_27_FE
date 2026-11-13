@@ -13,6 +13,7 @@ extension L10nX on BuildContext {
   String formatDateTime(DateTime d) => DateFormat.MMMEd(lang).add_Hm().format(d);
 
   String categoryLabel(EventCategory c) => switch (c) {
+        EventCategory.contest => l10n.categoryContest,
         EventCategory.conference => l10n.categoryConference,
         EventCategory.hackathon => l10n.categoryHackathon,
         EventCategory.concert => l10n.categoryConcert,

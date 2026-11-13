@@ -503,7 +503,7 @@ class _MiniEventCard extends ConsumerWidget {
     final now = ref.watch(nowProvider);
     final ongoing = event.start.isBefore(DateTime(now.year, now.month, now.day));
     final when = event.placeless && event.deadline != null
-        ? '${l10n.kindDeadline} ${DateFormat.MMMd(context.lang).format(event.deadline!)}'
+        ? '${l10n.kindDeadline} ${DateFormat.MMMd(context.lang).format(event.isApplication ? event.applicationDate(event.deadline!) : event.deadline!)}'
         : ongoing
         ? '~${DateFormat.MMMd(context.lang).format(event.end)}'
         : DateFormat.MMMEd(context.lang).format(event.start);
@@ -550,7 +550,7 @@ class _MiniEventCard extends ConsumerWidget {
                       Text(context.tr(event.title), style: t.labelLarge, maxLines: 2, overflow: TextOverflow.ellipsis),
                       const SizedBox(height: 2),
                       Text(
-                        '$when · ${event.placeless ? l10n.nationwide : event.city}',
+                        '$when · ${event.city}',
                         style: t.labelSmall,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
