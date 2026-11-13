@@ -4,7 +4,9 @@ import 'package:liferadar_core/liferadar_core.dart';
 
 import '../../core/l10n_ext.dart';
 import '../../core/toast.dart';
+import '../../data/calendar_added.dart';
 import '../../data/calendar_controller.dart';
+import '../../services/calendar_api.dart';
 import '../../data/providers.dart';
 
 /// 행사를 Google 캘린더에 추가한다. 연결되지 않았다면 Google 권한 창이 열린다.
@@ -26,10 +28,18 @@ Future<bool> addEventToCalendar(BuildContext context, WidgetRef ref, RadarEvent 
     });
     title = '${l10n.kindDeadline}: $title';
   }
+  final added = ref.read(calendarAddedProvider.notifier);
   try {
     await ref.read(calendarProvider.notifier).addEvent(target, title: title);
+    await added.mark(event.id);
     Toast.show(l10n.addedToCalendar);
     return true;
+  } on CalendarAlreadyAdded {
+    await added.mark(event.id);
+    Toast.show(l10n.calendarAlreadyAdded, type: ToastType.info);
+    return true;
+  } on CalendarAddInProgress {
+    return false; // 첫 요청이 끝나면 그쪽이 결과를 알린다
   } catch (e) {
     final notConfigured = e.toString().contains('not-configured');
     Toast.show(

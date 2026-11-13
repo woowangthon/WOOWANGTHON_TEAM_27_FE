@@ -39,6 +39,22 @@ class CalendarApi {
     ];
   }
 
+  /// 이 LifeRadar 행사가 이미 캘린더에 있으면 그 일정 링크(없으면 빈 문자열), 없으면 null.
+  /// 추가할 때 붙인 비공개 속성(liferadarEventId)으로 찾는다 — 다른 기기에서 추가한 것도 찾는다.
+  Future<String?> findAdded(String liferadarEventId) async {
+    final uri = Uri.parse(_base).replace(queryParameters: {
+      'privateExtendedProperty': 'liferadarEventId=$liferadarEventId',
+      'maxResults': '1',
+      'showDeleted': 'false',
+    });
+    final res = await _client.get(uri, headers: _headers);
+    _check(res);
+    final items = (jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>)['items'] as List? ?? const [];
+    final live = items.where((i) => i['status'] != 'cancelled').toList();
+    if (live.isEmpty) return null;
+    return live.first['htmlLink'] as String? ?? '';
+  }
+
   /// LifeRadar 행사를 사용자 캘린더에 추가한다. 생성된 일정 링크를 반환한다.
   Future<String?> insert(RadarEvent e, {required String title}) async {
     final res = await _client.post(
@@ -172,6 +188,16 @@ class CalendarApiException implements Exception {
   final String message;
   @override
   String toString() => message;
+}
+
+/// 같은 행사가 이미 캘린더에 있다 — 다시 넣지 않는다.
+class CalendarAlreadyAdded extends CalendarApiException {
+  const CalendarAlreadyAdded() : super('already-added');
+}
+
+/// 같은 행사를 추가하는 중이다 (버튼을 여러 번 누름) — 두 번째 요청은 무시한다.
+class CalendarAddInProgress extends CalendarApiException {
+  const CalendarAddInProgress() : super('in-progress');
 }
 
 class CalendarAuthExpired extends CalendarApiException {

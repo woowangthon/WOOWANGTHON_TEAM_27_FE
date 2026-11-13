@@ -1389,4 +1389,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileStageNone => 'No stage set';
+
+  @override
+  String get calendarAlreadyAdded => 'Already in your calendar';
+
+  @override
+  String get calendarAddedLabel => 'Added to calendar';
+
+  @override
+  String get planSavedCalendar => 'Plan saved to Google Calendar';
 }

@@ -230,6 +230,7 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
   // ───────── 저장 / 삭제 ─────────
 
   Future<void> _save() async {
+    if (_saving) return;
     final l10n = context.l10n;
     final title = _title.text.trim();
     setState(() {
@@ -267,9 +268,11 @@ class _PlanEditorSheetState extends ConsumerState<PlanEditorSheet> {
       }
       // 이동 방법은 기기에만 저장한다 (캘린더 ID가 바뀌어도 제목+시작 시각으로 찾는다).
       await ref.read(planTravelProvider.notifier).save(_travelFor(plan), previousPlanId: _plan?.id);
-      navigator.pop();
-      Toast.show(l10n.planSaved);
+      Toast.show(_toCalendar || _isCalendarPlan ? l10n.planSavedCalendar : l10n.planSaved);
+      // 저장하는 동안 사용자가 창을 닫았을 수도 있다 — 그때 pop하면 아래 화면이 닫힌다.
+      if (mounted) navigator.pop();
     } catch (e) {
+      Toast.show(l10n.planSaveError(friendlyError(l10n, e)), type: ToastType.error);
       if (mounted) {
         setState(() {
           _saving = false;
