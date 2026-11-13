@@ -186,7 +186,10 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
                   ),
                 ),
               ),
-              SectionHeader(dayLabel(selected)),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(Space.gutter, Space.xxl, Space.gutter, Space.sm),
+                child: Align(alignment: Alignment.centerLeft, child: DayPill(dayLabel(selected), today: DateUtils.isSameDay(selected, today))),
+              ),
               if (dayPlans.isEmpty)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
@@ -215,7 +218,10 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
               )
             else
               for (final entry in groups.entries) ...[
-                SectionHeader(dayLabel(entry.key)),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(Space.gutter, Space.xxl, Space.gutter, Space.sm),
+                  child: Align(alignment: Alignment.centerLeft, child: DayPill(dayLabel(entry.key), today: DateUtils.isSameDay(entry.key, today))),
+                ),
                 for (var i = 0; i < entry.value.length; i++) ...[
                   planTile(entry.value[i], i),
                   if (i + 1 < entry.value.length) PlanRouteConnector(from: entry.value[i], to: entry.value[i + 1]),
@@ -285,7 +291,10 @@ class _CalendarCard extends ConsumerWidget {
       );
     }
 
-    return Card(
+    // 3D 정적 블록 (테두리 대신 아래 입술).
+    return Press3D(
+      face: p.surface,
+      lip: cardLip(context),
       child: Padding(
         padding: const EdgeInsets.all(Space.lg),
         child: Column(
@@ -338,8 +347,10 @@ class _PlanCard extends ConsumerWidget {
             _ => p.primary,
           };
 
-    return Card(
-      child: InkWell(
+    // 3D 블록 (알림 탭과 같은 모양) — 누르면 살짝 내려간다.
+    return Press3D(
+        face: p.surface,
+        lip: cardLip(context),
         onTap: () => showPlanDetail(context, plan),
         child: Padding(
           padding: const EdgeInsets.all(Space.lg),
@@ -404,7 +415,6 @@ class _PlanCard extends ConsumerWidget {
             ],
           ),
         ),
-      ),
     );
   }
 }

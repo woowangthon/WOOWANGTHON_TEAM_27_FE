@@ -126,7 +126,7 @@ Google 로그인 → `calendar.events` 권한 → 향후 90일 일정 읽기 →
 | `Radii` | `sm 8 · md 12 · lg 16 · xl 24` |
 | `Motion` | `Motion.of(context, d)` — "동작 줄이기"면 0 |
 
-공용 컴포넌트: `ExpandableText`(N줄 + 더 보기), `Pressable`(누름 축소), `AmbientGlow`(배경 빛), `FadeSlideIn`, `Shimmer`·`SkeletonCard`, `Pill`, `MetaRow`, `EmptyState`, `GlassSurface`(liquid glass), `GlassSegmented`, `DetailSheet`, `MarqueeText`, `QuietTags`, `SmoothSize`. 홈 카드의 **일정 연결 줄**은 신호가 어떤 캘린더 일정과 왜 연결되는지(날짜·제목·거리)를 보여줍니다 — 계산하지 않은 값(추천 시간·이동 시간)은 만들지 않습니다.
+공용 컴포넌트: `Press3D`(아래 입술이 있는 3D 블록, 누르면 내려감 — 카드는 모두 이것, 열어 본 카드는 `lip: null`로 평평), `cardLip`/`lipColor`(입술 색, 다크 모드는 더 어둡게), `DayPill`(날짜 묶음 제목), `ExpandableText`(N줄 + 더 보기), `Pressable`(누름 축소), `AmbientGlow`(배경 빛), `FadeSlideIn`, `Shimmer`·`SkeletonCard`, `Pill`, `MetaRow`, `EmptyState`, `GlassSurface`(liquid glass), `GlassSegmented`, `DetailSheet`, `MarqueeText`, `QuietTags`, `SmoothSize`. 홈 카드의 **일정 연결 줄**은 신호가 어떤 캘린더 일정과 왜 연결되는지(날짜·제목·거리)를 보여줍니다 — 계산하지 않은 값(추천 시간·이동 시간)은 만들지 않습니다.
 
 ### 낙관적 UI (먼저 보여주고, 뒤에서 저장)
 

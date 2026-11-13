@@ -147,12 +147,9 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(Space.gutter, Space.xl, Space.gutter, Space.sm),
-                        child: Row(
-                          children: [
-                            _DayPill(dayLabel(entry.key), today: entry.key == today),
-                            const SizedBox(width: Space.sm),
-                            Text('${entry.value.length}', style: t.labelLarge!.copyWith(color: context.palette.textMuted)),
-                          ],
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: DayPill(dayLabel(entry.key), today: entry.key == today, count: entry.value.length),
                         ),
                       ),
                     ),
@@ -199,8 +196,12 @@ Color _topicColor(BuildContext context, AlertTopic t) => switch (t) {
   AlertTopic.crowd => context.palette.primary, // 브랜드 #5865F2
 };
 
-/// 3D "입술" — 같은 색을 어둡게 한 아래 그림자 (Duolingo 버튼처럼).
-Color _lip(Color c) => Color.lerp(c, Colors.black, 0.22)!;
+/// 요약 카드는 두 모드 모두 같은 선명한 브랜드 그라데이션 + 흰 글자 (다크에서 연보라로 바래지 않게).
+const _summaryGradient = LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [Color(0xFF5865F2), Color(0xFF8E5CF7)],
+);
 
 /// 맨 위 요약: 큰 숫자 하나 + 종류별 비율 막대. 알림이 없으면 "조용한 날".
 class _Summary extends StatelessWidget {
@@ -214,21 +215,21 @@ class _Summary extends StatelessWidget {
     final p = context.palette;
     final t = context.textStyles;
     final calm = total == 0;
-    final fg = calm ? p.text : p.onPrimary;
+    final fg = calm ? p.text : Colors.white;
+    final dark = Theme.of(context).brightness == Brightness.dark;
 
     return AnimatedContainer(
       duration: Motion.of(context, Motion.normal),
       padding: const EdgeInsets.all(Space.xl),
       decoration: BoxDecoration(
-        gradient: calm ? null : p.brandGradient,
+        gradient: calm ? null : _summaryGradient,
         color: calm ? p.surface : null,
         borderRadius: BorderRadius.circular(Radii.xl),
-
         boxShadow: calm
-            ? [BoxShadow(color: p.border, offset: const Offset(0, 4))]
+            ? [BoxShadow(color: lipColor(context, p.surface, light: 0.08), offset: const Offset(0, 3))]
             : [
-                BoxShadow(color: _lip(p.primary), offset: const Offset(0, 5)),
-                BoxShadow(color: p.primary.withValues(alpha: 0.30), blurRadius: 24, offset: const Offset(0, 14)),
+                BoxShadow(color: dark ? const Color(0xFF2A3190) : const Color(0xFF3F4AB8), offset: const Offset(0, 4)),
+                if (!dark) BoxShadow(color: p.primary.withValues(alpha: 0.16), blurRadius: 16, offset: const Offset(0, 8)),
               ],
       ),
       child: Column(
@@ -325,77 +326,6 @@ class _Summary extends StatelessWidget {
   }
 }
 
-/// 눌리는 3D 블록 — 아래쪽 "입술"(어두운 그림자)이 있고, 누르면 그만큼 내려간다.
-class _Press3D extends StatefulWidget {
-  const _Press3D({required this.child, required this.face, required this.lip, this.onTap, this.radius = Radii.lg, this.depth = 4});
-  final Widget child;
-  final Color face, lip;
-  final VoidCallback? onTap;
-  final double radius, depth;
-
-  @override
-  State<_Press3D> createState() => _Press3DState();
-}
-
-class _Press3DState extends State<_Press3D> {
-  bool _down = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final d = _down ? 0.0 : widget.depth;
-    final duration = Motion.of(context, const Duration(milliseconds: 90));
-    return GestureDetector(
-      onTapDown: widget.onTap == null ? null : (_) => setState(() => _down = true),
-      onTapCancel: () => setState(() => _down = false),
-      onTapUp: (_) => setState(() => _down = false),
-      onTap: widget.onTap == null
-          ? null
-          : () {
-              HapticFeedback.selectionClick();
-              widget.onTap!();
-            },
-      child: AnimatedContainer(
-        duration: duration,
-        margin: EdgeInsets.only(top: widget.depth - d),
-        decoration: BoxDecoration(
-          color: widget.face,
-          borderRadius: BorderRadius.circular(widget.radius),
-          boxShadow: [
-            BoxShadow(color: widget.lip, offset: Offset(0, d)),
-            if (!_down) BoxShadow(color: widget.lip.withValues(alpha: 0.18), blurRadius: 16, offset: Offset(0, d + 6)),
-          ],
-        ),
-        child: widget.child,
-      ),
-    );
-  }
-}
-
-/// 날짜 묶음 제목 — 오늘은 브랜드 색으로 채운 알약.
-class _DayPill extends StatelessWidget {
-  const _DayPill(this.label, {required this.today});
-  final String label;
-  final bool today;
-
-  @override
-  Widget build(BuildContext context) {
-    final p = context.palette;
-    final face = today ? p.primary : p.primarySoft;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Space.md, vertical: 5),
-      decoration: BoxDecoration(
-        color: face,
-        borderRadius: BorderRadius.circular(999),
-        boxShadow: [BoxShadow(color: today ? _lip(p.primary) : p.primary.withValues(alpha: 0.18), offset: const Offset(0, 3))],
-      ),
-      child: Text(
-        label,
-        style: context.textStyles.labelLarge!.copyWith(color: today ? p.onPrimary : p.primaryStrong, fontWeight: FontWeight.w800),
-      ),
-    );
-  }
-}
-
 class _TopicChip extends StatelessWidget {
   const _TopicChip({required this.label, required this.count, required this.selected, required this.onTap, this.icon, this.color});
   final String label;
@@ -412,10 +342,10 @@ class _TopicChip extends StatelessWidget {
     final fg = selected ? Colors.white : p.text;
     return Padding(
       padding: const EdgeInsets.only(right: Space.sm, bottom: 4),
-      child: _Press3D(
+      child: Press3D(
         onTap: onTap,
         face: selected ? c : p.surface,
-        lip: selected ? _lip(c) : p.border,
+        lip: lipColor(context, selected ? c : p.surface, light: selected ? 0.2 : 0.08),
         radius: 999,
         depth: 3,
         child: Padding(
@@ -452,13 +382,14 @@ class _AlertTile extends ConsumerWidget {
     final event = alert.eventIds.isEmpty ? null : ref.watch(eventByIdProvider(alert.eventIds.first));
     final headline = context.tr(event?.title ?? alert.title);
 
-    return _Press3D(
+    return Press3D(
       onTap: () {
         ref.read(seenProvider.notifier).mark(['insight:${alert.id}']);
         openSignal(context, ref, alert);
       },
       face: p.surface,
-      lip: unseen ? color.withValues(alpha: 0.55) : p.border,
+      // 새 알림: 종류 색의 입술 / 읽은 알림: 입술 없이 평평 (열어 본 카드와 같은 규칙).
+      lip: unseen ? lipColor(context, color, light: 0.0, dark: 0.35).withValues(alpha: 0.45) : null,
       child: Padding(
         padding: const EdgeInsets.all(Space.md),
         child: Row(
@@ -470,7 +401,7 @@ class _AlertTile extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: unseen ? color : color.withValues(alpha: 0.18),
                 shape: BoxShape.circle,
-                boxShadow: unseen ? [BoxShadow(color: _lip(color), offset: const Offset(0, 3))] : null,
+                boxShadow: unseen ? [BoxShadow(color: lipColor(context, color), offset: const Offset(0, 2))] : null,
               ),
               child: Icon(alertTopicIcon(topic), color: unseen ? Colors.white : color, size: 23),
             ),

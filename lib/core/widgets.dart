@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'l10n_ext.dart';
 import 'theme.dart';
@@ -1007,6 +1008,136 @@ class _ExpandableTextState extends State<ExpandableText> {
           ],
         );
       },
+    );
+  }
+}
+
+
+/// 3D 블록의 "입술" 색 — 면 색을 어둡게 한 것. 다크 모드에서는 더 어둡게 해 배경과 어울리게.
+Color lipColor(BuildContext context, Color face, {double light = 0.2, double dark = 0.45}) =>
+    Color.lerp(face, Colors.black, Theme.of(context).brightness == Brightness.dark ? dark : light)!;
+
+/// 일반 카드의 입술 색 — 밝을 때는 브랜드 색이 살짝 섞인 회청색, 어두울 때는 면보다 어두운 색.
+Color cardLip(BuildContext context) {
+  final p = context.palette;
+  return Theme.of(context).brightness == Brightness.dark
+      ? lipColor(context, p.surface, dark: 0.5)
+      : Color.lerp(p.border, p.primary, 0.22)!;
+}
+
+/// 눌리는 3D 블록 (알림 탭에서 시작한 앱 공통 모양): 아래쪽 입술 그림자가 있고,
+/// 누르면 그만큼 내려가며 살짝 작아진다. [onTap]이 없으면 평평한 정적 블록.
+/// [lip]이 null이면 입술 없이 평평 (예: 이미 열어 본 카드).
+class Press3D extends StatefulWidget {
+  const Press3D({
+    super.key,
+    required this.child,
+    required this.face,
+    this.lip,
+    this.onTap,
+    this.radius = Radii.lg,
+    this.depth = 3,
+    this.haptic = true,
+  });
+  final Widget child;
+  final Color face;
+  final Color? lip;
+  final VoidCallback? onTap;
+  final double radius, depth;
+  final bool haptic;
+
+  @override
+  State<Press3D> createState() => _Press3DState();
+}
+
+class _Press3DState extends State<Press3D> {
+  bool _down = false;
+
+  void _set(bool v) {
+    if (_down != v && mounted) setState(() => _down = v);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final lip = widget.lip;
+    final depth = lip == null ? 0.0 : widget.depth;
+    final d = _down ? 0.0 : depth;
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final duration = Motion.of(context, const Duration(milliseconds: 90));
+    final block = AnimatedContainer(
+      duration: duration,
+      curve: Curves.easeOut,
+      margin: EdgeInsets.only(top: depth - d),
+      decoration: BoxDecoration(
+        color: widget.face,
+        borderRadius: BorderRadius.circular(widget.radius),
+        boxShadow: [
+          if (lip != null) BoxShadow(color: lip, offset: Offset(0, d)),
+          // 은은한 바닥 그림자 — 다크 모드에서는 생략 (어두운 배경에서 탁해 보인다).
+          if (lip != null && !_down && !dark)
+            BoxShadow(color: lip.withValues(alpha: 0.10), blurRadius: 10, offset: Offset(0, d + 3)),
+        ],
+      ),
+      child: ClipRRect(borderRadius: BorderRadius.circular(widget.radius), child: widget.child),
+    );
+    if (widget.onTap == null) return block;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTapDown: (_) => _set(true),
+      onTapCancel: () => _set(false),
+      onTapUp: (_) => _set(false),
+      onTap: () {
+        if (widget.haptic) HapticFeedback.selectionClick();
+        widget.onTap!();
+      },
+      child: AnimatedScale(
+        scale: _down ? 0.985 : 1,
+        duration: duration,
+        child: block,
+      ),
+    );
+  }
+}
+
+
+/// 날짜 묶음 제목 알약 (알림 탭·내 일정 공통) — 오늘은 브랜드 색으로 채우고 입술 그림자.
+class DayPill extends StatelessWidget {
+  const DayPill(this.label, {super.key, this.today = false, this.count});
+  final String label;
+  final bool today;
+  final int? count;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final face = today ? p.primary : p.primarySoft;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Flexible(
+          child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: Space.md, vertical: 5),
+          decoration: BoxDecoration(
+            color: face,
+            borderRadius: BorderRadius.circular(999),
+            boxShadow: [BoxShadow(color: lipColor(context, face), offset: const Offset(0, 2))],
+          ),
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: context.textStyles.labelLarge!.copyWith(
+              color: today ? p.onPrimary : p.primaryStrong,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+        ),
+        if (count != null) ...[
+          const SizedBox(width: Space.sm),
+          Text('$count', style: context.textStyles.labelLarge!.copyWith(color: p.textMuted)),
+        ],
+      ],
     );
   }
 }

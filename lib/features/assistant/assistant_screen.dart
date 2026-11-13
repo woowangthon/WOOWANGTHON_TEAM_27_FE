@@ -544,18 +544,13 @@ class _MiniEventCard extends ConsumerWidget {
         ? '~${DateFormat.MMMd(context.lang).format(event.end)}'
         : DateFormat.MMMEd(context.lang).format(event.start);
 
-    return Pressable(
-      child: SizedBox(
+    return SizedBox(
         width: 168,
-        child: Material(
-          color: p.surface,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Radii.lg),
-            side: BorderSide(color: p.border),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: () => showEventDetail(
+        // 3D 블록 (앱 공통 카드 모양).
+        child: Press3D(
+          face: p.surface,
+          lip: cardLip(context),
+          onTap: () => showEventDetail(
               context,
               event,
               onShowOnMap: () {
@@ -596,9 +591,7 @@ class _MiniEventCard extends ConsumerWidget {
                 ),
               ],
             ),
-          ),
         ),
-      ),
     );
   }
 }
