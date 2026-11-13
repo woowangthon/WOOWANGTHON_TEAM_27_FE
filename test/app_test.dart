@@ -120,7 +120,7 @@ void main() {
   testWidgets('관심사가 저장되어 있으면 홈이 열리고 언어가 바뀐다', (tester) async {
     await pumpApp(tester, interests: ['ai']);
 
-    expect(find.text('Signals for you'), findsOneWidget);
+    expect(find.text('Events for you'), findsOneWidget);
     // InsightEngine: 부산 출장 + 아시아드 콘서트 → 첫 카드
     expect(find.textContaining('Large concert in Busan'), findsWidgets);
 
@@ -133,7 +133,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byIcon(Icons.radar_outlined).last);
     await tester.pumpAndSettle();
-    expect(find.text('나를 위한 신호'), findsOneWidget);
+    expect(find.text('나를 위한 이벤트'), findsOneWidget);
     expect(find.textContaining('부산 대형 콘서트'), findsWidgets);
   });
 
@@ -227,8 +227,8 @@ void main() {
 
   testWidgets('홈: 통계 = 필터, "Due soon"은 마감만 보여준다', (tester) async {
     await pumpApp(tester, interests: ['ai', 'startup', 'music']);
-    // 기본값 — "All signals" 선택됨
-    final allCell = find.bySemanticsLabel(RegExp(r'^All signals \d+'));
+    // 기본값 — "All events" 선택됨
+    final allCell = find.bySemanticsLabel(RegExp(r'^All events \d+'));
     expect(tester.getSemantics(allCell), isSemantics(isSelected: true, isButton: true));
 
     await tester.tap(find.text('Due soon'));
@@ -240,7 +240,7 @@ void main() {
 
   testWidgets('홈: 옆으로 밀면 필터가 바뀌고, 필터 줄은 위에 고정된다', (tester) async {
     await pumpApp(tester, interests: ['ai', 'startup', 'music']);
-    expect(find.text('Signals for you'), findsOneWidget);
+    expect(find.text('Events for you'), findsOneWidget);
     // 왼쪽으로 밀기 → 다음 필터 (Due soon)
     await tester.fling(find.byType(CustomScrollView), const Offset(-300, 0), 1200);
     await tester.pumpAndSettle();

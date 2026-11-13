@@ -161,7 +161,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeGreeting.
   ///
   /// In en, this message translates to:
-  /// **'Signals for you'**
+  /// **'Events for you'**
   String get homeGreeting;
 
   /// No description provided for @homeSubtitle.
@@ -1217,7 +1217,7 @@ abstract class AppLocalizations {
   /// No description provided for @statAll.
   ///
   /// In en, this message translates to:
-  /// **'All signals'**
+  /// **'All events'**
   String get statAll;
 
   /// No description provided for @statSoon.

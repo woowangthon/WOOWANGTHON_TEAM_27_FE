@@ -502,7 +502,7 @@ class _MiniEventCard extends ConsumerWidget {
     final l10n = context.l10n;
     final now = ref.watch(nowProvider);
     final ongoing = event.start.isBefore(DateTime(now.year, now.month, now.day));
-    final when = event.placeless && event.deadline != null
+    final when = (event.isApplication || event.placeless) && event.deadline != null
         ? '${l10n.kindDeadline} ${DateFormat.MMMd(context.lang).format(event.isApplication ? event.applicationDate(event.deadline!) : event.deadline!)}'
         : ongoing
         ? '~${DateFormat.MMMd(context.lang).format(event.end)}'
@@ -601,7 +601,9 @@ class _ActionCard extends ConsumerWidget {
     final p = context.palette;
     final t = context.textStyles;
     final isCal = action.type == AssistantActionType.addToCalendar;
-    final title = context.tr(event.title);
+    final title = isCal && event.isApplication
+        ? '${l10n.applicationDeadline} · ${context.tr(event.title)}'
+        : context.tr(event.title);
 
     Future<void> run() async {
       if (isCal) {

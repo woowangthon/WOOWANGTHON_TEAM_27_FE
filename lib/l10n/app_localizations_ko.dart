@@ -44,7 +44,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tabDiscover => '발견';
 
   @override
-  String get homeGreeting => '나를 위한 신호';
+  String get homeGreeting => '나를 위한 이벤트';
 
   @override
   String get homeSubtitle => '내 일정과 관심사 주변에서 일어난 변화';
@@ -622,7 +622,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get statForPlans => '내 일정';
 
   @override
-  String get statAll => '전체 신호';
+  String get statAll => '전체 이벤트';
 
   @override
   String get statSoon => '마감 임박';

@@ -44,7 +44,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabDiscover => 'Discover';
 
   @override
-  String get homeGreeting => 'Signals for you';
+  String get homeGreeting => 'Events for you';
 
   @override
   String get homeSubtitle => 'What changed around your plans and interests';
@@ -634,7 +634,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statForPlans => 'My plans';
 
   @override
-  String get statAll => 'All signals';
+  String get statAll => 'All events';
 
   @override
   String get statSoon => 'Due soon';

@@ -5,11 +5,30 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:liferadar/data/ai_insights.dart';
+import 'package:liferadar/data/calendar_controller.dart';
+import 'package:liferadar/data/providers.dart';
+import 'package:liferadar/features/event/event_detail_sheet.dart';
 import 'package:liferadar_core/demo.dart';
 import 'package:liferadar/features/assistant/assistant_screen.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 
 import 'app_test.dart' show pumpApp;
+import 'contest_test.dart' as fixtures show contest, now;
+
+class _RecordingCalendar extends CalendarController {
+  final added = <RadarEvent>[];
+  final titles = <String>[];
+
+  @override
+  CalendarState build() => const CalendarState(status: CalendarStatus.connected);
+
+  @override
+  Future<String?> addEvent(RadarEvent event, {required String title}) async {
+    added.add(event);
+    titles.add(title);
+    return null;
+  }
+}
 
 /// Gemini 응답을 흉내 낸다 (실제 호출 없음).
 GeminiClient _fakeGemini(Map<String, Object> data) => GeminiClient(
@@ -42,6 +61,51 @@ Future<void> _open(WidgetTester tester) async {
 }
 
 void main() {
+  for (final useAi in [true, false]) {
+    testWidgets('Deadline notices expose detail and confirmed calendar action, AI=$useAi', (tester) async {
+      final calendar = _RecordingCalendar();
+      final notice = fixtures.contest();
+      final stale = RadarEvent.fromJson({
+        ...notice.toJson(),
+        'id': 'stale-notice',
+        'title': {'ko': '오래된 공고', 'en': 'Stale notice'},
+        'lastVerifiedAt': fixtures.now.subtract(const Duration(days: 4)).toIso8601String(),
+      });
+      await pumpApp(tester, now: fixtures.now, interests: ['ai'], overrides: [
+        eventsProvider.overrideWithValue([notice, stale]),
+        calendarProvider.overrideWith(() => calendar),
+        geminiApiProvider.overrideWithValue(useAi
+            ? _fakeGemini({'reply': '마감 임박한 공고를 확인해 보세요.', 'event_ids': <String>[], 'actions': <Object>[]})
+            : GeminiClient(apiKey: '')),
+      ]);
+      await _open(tester);
+      await tester.enterText(find.byType(TextField), '마감 임박한 공고 알려줘');
+      await tester.pump();
+      await tester.tap(find.byIcon(Icons.arrow_upward_rounded));
+      await tester.pumpAndSettle();
+      expect(find.text('Contest fixture'), findsOneWidget);
+      expect(find.text('Stale notice'), findsNothing);
+      expect(find.textContaining('Application deadline'), findsOneWidget);
+      expect(find.text('View on map?'), findsNothing);
+      expect(calendar.added, isEmpty);
+
+      await tester.ensureVisible(find.text('Contest fixture'));
+      await tester.tap(find.text('Contest fixture'));
+      await tester.pumpAndSettle();
+      expect(find.byType(EventDetailSheet), findsOneWidget);
+      Navigator.of(tester.element(find.byType(EventDetailSheet))).pop();
+      await tester.pumpAndSettle();
+
+      final add = find.widgetWithText(FilledButton, 'Add');
+      await tester.ensureVisible(add);
+      await tester.tap(add);
+      await tester.pumpAndSettle();
+      expect(calendar.added.single.id, notice.id);
+      expect(calendar.titles.single, 'Application deadline: Contest fixture');
+      expect(find.text('Added'), findsOneWidget);
+    });
+  }
+
   test('Unrelated chat and unavailable categories do not return top events', () {
     final now = DateTime(2026, 11, 6);
     for (final question in ['바보', '안녕하세요', '없는행사이름']) {

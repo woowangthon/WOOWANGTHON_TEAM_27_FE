@@ -131,15 +131,34 @@ class AssistantController extends Notifier<List<AssistantMessage>> {
       }
     }
     if (!ref.mounted || conversation != _conversation) return;
+    // Deadline queries always expose the verified search results, even when
+    // the model replies with prose but omits event IDs or proposed actions.
+    final deadlineEvents = query.deadlineSoon
+        ? candidates.take(Assistant.maxCards).toList()
+        : const <RadarEvent>[];
+    final eventIds = query.deadlineSoon
+        ? deadlineEvents.map((e) => e.id).toList()
+        : reply.eventIds;
+    final actions = query.deadlineSoon
+        ? [
+            for (final e in deadlineEvents)
+              if (e.applicationActionable(now))
+                AssistantAction(AssistantActionType.addToCalendar, e.id),
+            for (final action in reply.actions)
+              if (action.type == AssistantActionType.showOnMap &&
+                  deadlineEvents.any((e) => e.id == action.eventId && !e.placeless))
+                action,
+          ]
+        : reply.actions;
     state = [
       for (final m in state)
         if (!m.loading) m,
       AssistantMessage(
         fromUser: false,
         text: reply.text,
-        eventIds: reply.eventIds,
-        actions: reply.actions,
-        actionStatus: [for (final _ in reply.actions) ActionStatus.pending],
+        eventIds: eventIds,
+        actions: actions,
+        actionStatus: [for (final _ in actions) ActionStatus.pending],
         fromAi: reply.fromAi,
         understood: query.describe(lang: lang),
       ),

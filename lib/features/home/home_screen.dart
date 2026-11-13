@@ -51,9 +51,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final name =
         ref.watch(profileNameProvider) ?? (session == null || session.isGuest ? null : session.name?.split(' ').first);
 
-    final trafficStates = ref.watch(trafficFeedProvider).sourceStatesAt(now.toUtc());
-    final delayedSources = trafficStates.entries.where((e) => e.value is Map && {'unavailable', 'partial'}.contains(e.value['status'])).map((e) => e.key).join(', ');
-
     final counts = {
       HomeFilter.plans: forPlans.length,
       HomeFilter.all: all.length,
@@ -133,10 +130,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
             child: CustomScrollView(
               slivers: [
-                if (delayedSources.isNotEmpty) SliverToBoxAdapter(child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Space.gutter, vertical: Space.sm),
-                  child: Text(context.tr(LocalizedText(ko: '교통 정보 갱신 지연 · $delayedSources · 통제 없음으로 해석하지 마세요.', en: 'Traffic update delayed · $delayedSources · this does not mean no road controls.'))),
-                )),
                 // ── 제목 ──
                 SliverToBoxAdapter(
                   child: Padding(
