@@ -43,7 +43,7 @@ TravelImpactService _service({
     http.Response ok(Object value) => http.Response.bytes(utf8.encode(jsonEncode(value)), 200);
     if (outage) return http.Response('unavailable', 503);
     final generated = (stale ? _now.subtract(const Duration(days: 5)) : _now).toUtc().toIso8601String();
-    if (request.url.path.endsWith('selectAccList.do'))
+    if (request.url.path.endsWith('selectAccList.do')) {
       return ok({
         'rows': [
           if (restricted && utf8.decode(request.bodyBytes).contains('sIngYn=Y'))
@@ -63,9 +63,10 @@ TravelImpactService _service({
             },
         ],
       });
+    }
     if (request.url.path.endsWith('traffic-v2.json')) return http.Response('not found', 404);
     if (request.url.path.endsWith('traffic.json')) return ok({'generatedAt': generated, 'notices': []});
-    if (request.url.path.endsWith('news.json'))
+    if (request.url.path.endsWith('news.json')) {
       return ok({
         'generatedAt': generated,
         'strikes': [
@@ -83,7 +84,8 @@ TravelImpactService _service({
           ).toJson(),
         ],
       });
-    if (request.url.path.endsWith('events.json'))
+    }
+    if (request.url.path.endsWith('events.json')) {
       return ok({
         'generatedAt': generated,
         'events': [
@@ -103,7 +105,8 @@ TravelImpactService _service({
           ).toJson(),
         ],
       });
-    if (request.url.host == 'apis-navi.kakaomobility.com')
+    }
+    if (request.url.host == 'apis-navi.kakaomobility.com') {
       return ok({
         'routes': [
           {
@@ -124,7 +127,8 @@ TravelImpactService _service({
           },
         ],
       });
-    if (request.url.host == 'routes.googleapis.com')
+    }
+    if (request.url.host == 'routes.googleapis.com') {
       return ok({
         'routes': [
           if (!noTransitRoute)
@@ -149,6 +153,7 @@ TravelImpactService _service({
             },
         ],
       });
+    }
     return http.Response('unknown source', 404);
   }),
 );

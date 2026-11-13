@@ -132,8 +132,9 @@ class TravelImpactController extends Notifier<Map<String, TravelImpactReport>> {
       if (report != null &&
           report.matches(plan, ref.read(tripsByPlanIdProvider)[plan.id]) &&
           _signatures[plan.id] == _signature(plan) &&
-          now.difference(report.checkedAt) < const Duration(minutes: 5))
+          now.difference(report.checkedAt) < const Duration(minutes: 5)) {
         continue;
+      }
       await check(plan, force: false);
     }
   }

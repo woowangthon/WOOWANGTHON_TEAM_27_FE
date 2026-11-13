@@ -63,13 +63,14 @@ class _TravelImpactSheetState extends ConsumerState<TravelImpactSheet> {
           .check(widget.plan, origin: _origin, mode: _mode, trip: widget.trip);
       if (mounted) setState(() => _report = report);
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         setState(
           () => _error = tr(
             '조회하지 못했습니다. 연결 상태와 일정 장소를 확인해 주세요.',
             'Could not check. Verify your connection and plan location.',
           ),
         );
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -82,12 +83,13 @@ class _TravelImpactSheetState extends ConsumerState<TravelImpactSheet> {
       useSafeArea: true,
       builder: (_) => const PlaceSearchSheet(),
     );
-    if (place != null && mounted)
+    if (place != null && mounted) {
       setState(() {
         _origin = place.location;
         _originName = place.name;
         _report = null;
       });
+    }
   }
 
   Future<void> _myLocation() async {

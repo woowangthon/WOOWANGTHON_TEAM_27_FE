@@ -67,7 +67,9 @@ class SignalNotifier {
     bool important(Insight i) {
       if (ref.read(liveEventsEnabledProvider) &&
           (plans[i.planId]?.source == 'sample' ||
-            i.eventIds.any((id) => ref.read(eventByIdProvider(id))?.isSample == true))) return false;
+            i.eventIds.any((id) => ref.read(eventByIdProvider(id))?.isSample == true))) {
+        return false;
+      }
       if (i.feedback == InsightFeedback.dislike || i.feedback == InsightFeedback.hidden) return false;
       if (i.notificationEligible == false) return false;
       // Corrections are allowed even if the edited appointment is now in the past.
