@@ -128,6 +128,10 @@ Google 로그인 → `calendar.events` 권한 → 향후 90일 일정 읽기 →
 
 공용 컴포넌트: `ExpandableText`(N줄 + 더 보기), `Pressable`(누름 축소), `AmbientGlow`(배경 빛), `FadeSlideIn`, `Shimmer`·`SkeletonCard`, `Pill`, `MetaRow`, `EmptyState`, `GlassSurface`(liquid glass), `GlassSegmented`, `DetailSheet`, `MarqueeText`, `QuietTags`, `SmoothSize`. 홈 카드의 **일정 연결 줄**은 신호가 어떤 캘린더 일정과 왜 연결되는지(날짜·제목·거리)를 보여줍니다 — 계산하지 않은 값(추천 시간·이동 시간)은 만들지 않습니다.
 
+### 낙관적 UI (먼저 보여주고, 뒤에서 저장)
+
+👍/👎, 캘린더에 행사 추가, 일정 저장(캘린더), 캘린더 일정 삭제는 **화면을 먼저 바꾸고 성공 토스트를 띄운 뒤** 요청을 `unawaited`로 보낸다. 실패하면 화면을 되돌리고 토스트를 오류로 바꾼다 (같은 자리의 토스트가 대체된다). 캘린더 저장이 실패한 새 일정은 기기에 남긴다 (입력을 잃지 않게). 창이 닫힌 뒤에도 쓸 notifier는 닫히기 전에 잡아 둔다 (위젯의 `ref`는 dispose 후 못 쓴다).
+
 ### 토스트 규칙
 
 사용자가 한 동작의 결과는 모두 `Toast.show(message, type:)`로 알린다 (`core/toast.dart`, 화면 위에서 내려오는 알약).
@@ -187,6 +191,8 @@ flutter test --platform chrome test/google_api_test.dart   # 웹(dart2js) 전용
 | `A circle cannot have a border radius` (디버그만) | `copyWith(borderRadius: null)`은 radius를 지우지 않음 → 새 `BoxDecoration` |
 | Gemini `404 no longer available` / `429 quota` | 구형 모델 미지원 / 무료 할당량 초과 → `GeminiClient`가 예비 모델로 전환, 실패 시 규칙 문장 |
 | 웹에서 행사 포스터가 안 보임 | 이미지 서버 CORS 없음 → `<img>` 대체 전략 |
+| 👍를 누르면 홈 카드가 모두 사라졌다 다시 나타남 | 순위가 바뀌어 카드 순서가 달라졌는데, 키가 목록의 직접 자식(Padding)이 아니라 안쪽에 있어 카드를 새로 만들었다 → 키를 바깥으로, 화면에 있는 동안 순서 유지(`_stable`) |
+| 앱 시작·새로 고침 때 잠깐 멈춤 | 수백 KB 피드 JSON 해석을 메인 스레드에서 → `EventFeed.parseInBackground` (`compute`) |
 | 일정이 바뀌면 몇 초간 멈춤 | 장소별 날씨 예보가 따로 도착할 때마다 `InsightEngine`을 다시 돌렸다 → `planWeatherProvider`가 0.4초 모아 한 번에, 교통 영향 확인 결과는 `engineInsightsProvider` 밖에서 합친다. 캘린더 쓰기 뒤 `sync()`는 기다리지 않는다 |
 | 바텀 시트 아래쪽이 떠 있는 내비게이션에 가려짐 | `showModalBottomSheet(useRootNavigator: true)` |
 | 탭을 다시 열 때 `setState() called during build` (Riverpod) | 가려진 탭이 보는 provider를 다른 파생 provider가 다시 보면 resume 중 갱신된다 → 파생값은 함수로 계산 (`alertsFrom`) |

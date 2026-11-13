@@ -84,13 +84,17 @@ class EventFeed {
     );
   }
 
+  /// 큰 JSON(수백 KB) 해석은 백그라운드 isolate에서 — 앱 시작의 첫 화면을 늦추지 않게.
+  /// 웹은 isolate가 없어 같은 스레드에서 한다.
+  static Future<EventFeed> parseInBackground(String raw) => kIsWeb ? Future.value(parse(raw)) : compute(parse, raw);
+
   /// 에셋이 없거나 손상되었으면 빈 피드 (앱은 샘플로 동작한다).
   static Future<EventFeed> load([AssetBundle? bundle]) async {
     try {
       final b = bundle ?? rootBundle;
-      final feed = parse(await b.loadString(asset));
+      final feed = await parseInBackground(await b.loadString(asset));
       try {
-        return feed.withMissingContestSourceFrom(parse(await b.loadString(contestsAsset)));
+        return feed.withMissingContestSourceFrom(await parseInBackground(await b.loadString(contestsAsset)));
       } catch (_) {
         return feed;
       }

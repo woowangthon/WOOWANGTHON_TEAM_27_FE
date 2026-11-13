@@ -633,5 +633,6 @@
   "visitDayTitle": "Which day will you go? Only that day is added",
   "visitDayConfirm": "Add this day",
   "avatarTitle": "Profile picture",
-  "avatarChanged": "Profile picture updated"
+  "avatarChanged": "Profile picture updated",
+  "planSavedLocalOnly": "Couldn't reach Google Calendar — saved on this device"
 }

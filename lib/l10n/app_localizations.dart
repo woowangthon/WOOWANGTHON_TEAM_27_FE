@@ -2659,6 +2659,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Profile picture updated'**
   String get avatarChanged;
+
+  /// No description provided for @planSavedLocalOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach Google Calendar — saved on this device'**
+  String get planSavedLocalOnly;
 }
 
 class _AppLocalizationsDelegate

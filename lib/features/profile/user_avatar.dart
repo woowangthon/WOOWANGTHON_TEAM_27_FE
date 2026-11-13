@@ -17,8 +17,11 @@ const avatarPresets = <(IconData, List<Color>)>[
   (Icons.rocket_launch_rounded, [Color(0xFFF97316), Color(0xFFEF4444)]),
 ];
 
+/// 처음 들어온 모든 사용자의 아바타 — 로켓 (도전·시작).
+const defaultAvatar = 'preset:3';
+
 /// 고른 아바타 (계정별): 'preset:0'..'preset:3' 또는 'photo'(Google 사진).
-/// 아무것도 고르지 않았으면 Google 사진이 있으면 사진, 없으면 첫 번째 기본 아바타.
+/// 아무것도 고르지 않았으면 모두 로켓 아바타로 시작한다 (Google 사진은 직접 고를 수 있다).
 final avatarChoiceProvider = NotifierProvider<AvatarChoiceController, String?>(AvatarChoiceController.new);
 
 class AvatarChoiceController extends Notifier<String?> {
@@ -45,7 +48,7 @@ class UserAvatar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final photo = ref.watch(sessionProvider)?.photoUrl;
     final choice = ref.watch(avatarChoiceProvider);
-    final usePhoto = photo != null && (choice == null || choice == 'photo');
+    final usePhoto = photo != null && choice == 'photo';
     if (usePhoto) {
       return ClipOval(
         child: Image.network(
@@ -57,7 +60,7 @@ class UserAvatar extends ConsumerWidget {
         ),
       );
     }
-    final index = int.tryParse((choice ?? 'preset:0').replaceFirst('preset:', '')) ?? 0;
+    final index = int.tryParse((choice ?? defaultAvatar).replaceFirst('preset:', '')) ?? 3;
     return AvatarArt(index: index.clamp(0, avatarPresets.length - 1), size: size);
   }
 }
@@ -140,7 +143,7 @@ class _AvatarPicker extends ConsumerWidget {
     final l10n = context.l10n;
     final p = context.palette;
     final photo = ref.watch(sessionProvider)?.photoUrl;
-    final choice = ref.watch(avatarChoiceProvider) ?? (photo != null ? 'photo' : 'preset:0');
+    final choice = ref.watch(avatarChoiceProvider) ?? defaultAvatar;
 
     Future<void> pick(String v) async {
       await ref.read(avatarChoiceProvider.notifier).choose(v);

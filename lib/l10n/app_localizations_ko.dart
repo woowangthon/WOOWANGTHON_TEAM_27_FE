@@ -1374,4 +1374,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get avatarChanged => '프로필 사진을 바꿨어요';
+
+  @override
+  String get planSavedLocalOnly => '캘린더에 저장하지 못해 이 기기에 저장했어요';
 }

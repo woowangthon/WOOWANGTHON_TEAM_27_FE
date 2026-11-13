@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liferadar_core/liferadar_core.dart';
@@ -26,8 +28,11 @@ Future<bool> deletePlanWithConfirm(BuildContext context, WidgetRef ref, Plan pla
   if (!ok) return false;
   try {
     if (plan.source == 'gcal') {
-      Toast.progress(l10n.planDeleting);
-      await ref.read(calendarProvider.notifier).deletePlan(plan);
+      // 목록에서 바로 지우고(deletePlan이 먼저 지운다) 캘린더 요청은 뒤에서.
+      // 실패하면 일정이 다시 나타나고 토스트가 오류로 바뀐다.
+      unawaited(ref.read(calendarProvider.notifier).deletePlan(plan).catchError((Object e) {
+        Toast.show(l10n.planSaveError(friendlyError(l10n, e)), type: ToastType.error);
+      }));
     } else {
       await ref.read(plansProvider.notifier).removeLocal(plan.id);
     }

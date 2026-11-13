@@ -429,5 +429,6 @@
   "visitDayTitle": "언제 갈까요? 그날 하루만 캘린더에 넣어요",
   "visitDayConfirm": "이날 추가",
   "avatarTitle": "프로필 사진",
-  "avatarChanged": "프로필 사진을 바꿨어요"
+  "avatarChanged": "프로필 사진을 바꿨어요",
+  "planSavedLocalOnly": "캘린더에 저장하지 못해 이 기기에 저장했어요"
 }

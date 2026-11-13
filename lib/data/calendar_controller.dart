@@ -181,6 +181,9 @@ class CalendarController extends Notifier<CalendarState> {
     }
   }
 
+  /// 저장 요청 전에 목록에 먼저 보여준다 (실패하면 호출한 쪽이 이전 값으로 되돌린다).
+  void preview(Plan p) => _replaceCalendarPlans((list) => [...list.where((x) => x.id != p.id), p]);
+
   void _replaceCalendarPlans(List<Plan> Function(List<Plan>) edit) {
     final current = ref.read(plansProvider).where((x) => x.source == 'gcal').toList();
     ref.read(plansProvider.notifier).setPlans(edit(current));

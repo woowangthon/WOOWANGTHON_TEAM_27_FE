@@ -18,6 +18,18 @@ import 'l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // 예상하지 못한 오류가 앱을 멈추거나 회색 화면을 남기지 않게.
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details); // 디버그: 콘솔, 릴리스: 기록만
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    debugPrint('Uncaught: ${error.runtimeType}: $error');
+    return true; // 처리됨 — 앱은 계속 동작한다
+  };
+  if (kReleaseMode) {
+    // 화면 일부를 그리다 실패하면 빨간/회색 오류 대신 빈 칸.
+    ErrorWidget.builder = (_) => const SizedBox.shrink();
+  }
   // 웹: SDK는 web/index.html에서 로드한다 (initialize 불필요).
   if (!kIsWeb && Env.hasKakaoMapKey) {
     await KakaoMapSdk.instance.initialize(Env.kakaoNativeAppKey);
