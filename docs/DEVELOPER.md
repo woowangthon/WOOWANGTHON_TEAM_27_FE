@@ -64,8 +64,11 @@ lib/
 │   ├── profile.dart          # 지금 상황(LifeStage)·자기소개 글, 계정별 저장
 │   ├── calendar_controller.dart  # Google 로그인·캘린더 읽기/쓰기
 │   ├── notifications.dart    # 중요 신호 → 시스템 알림 (신호당 1회)
+│   ├── alerts.dart           # 알림 탭: 일정 경고(planAlert)만, 종류(도로·대중교통·날씨·혼잡), 같은 제목 한 줄
+│   ├── plan_travel.dart      # 일정별 이동 방법(버스·지하철·기차·비행기·자동차·노선·출발) → TripContext
+│   ├── plan_routes.dart      # 두 일정 사이 저장 경로 + 이동 방법 → tripsByPlanIdProvider
 │   └── session.dart, interests.dart, seen.dart, location.dart
-├── features/                 # 화면: welcome, auth, onboarding(+나를 소개하기), home, assistant, map, route, plans, discover, event, profile, shell
+├── features/                 # 화면: welcome, auth, onboarding(+나를 소개하기), home, alerts, assistant, map, route, plans, discover, event, profile(홈 아바타로 push), shell
 ├── services/                 # 외부 API: google_api(Routes·Weather), kakao_api, calendar_api
 └── l10n/                     # ko / en (gen_l10n)
 assets/data/events.json       # 오프라인용 행사 스냅숏 (BE가 생성)
@@ -123,7 +126,20 @@ Google 로그인 → `calendar.events` 권한 → 향후 90일 일정 읽기 →
 | `Radii` | `sm 8 · md 12 · lg 16 · xl 24` |
 | `Motion` | `Motion.of(context, d)` — "동작 줄이기"면 0 |
 
-공용 컴포넌트: `Pressable`(누름 축소), `AmbientGlow`(배경 빛), `FadeSlideIn`, `Shimmer`·`SkeletonCard`, `Pill`, `MetaRow`, `EmptyState`, `GlassSurface`(liquid glass), `GlassSegmented`, `DetailSheet`, `MarqueeText`, `QuietTags`, `SmoothSize`. 홈 카드의 **일정 연결 줄**은 신호가 어떤 캘린더 일정과 왜 연결되는지(날짜·제목·거리)를 보여줍니다 — 계산하지 않은 값(추천 시간·이동 시간)은 만들지 않습니다.
+공용 컴포넌트: `ExpandableText`(N줄 + 더 보기), `Pressable`(누름 축소), `AmbientGlow`(배경 빛), `FadeSlideIn`, `Shimmer`·`SkeletonCard`, `Pill`, `MetaRow`, `EmptyState`, `GlassSurface`(liquid glass), `GlassSegmented`, `DetailSheet`, `MarqueeText`, `QuietTags`, `SmoothSize`. 홈 카드의 **일정 연결 줄**은 신호가 어떤 캘린더 일정과 왜 연결되는지(날짜·제목·거리)를 보여줍니다 — 계산하지 않은 값(추천 시간·이동 시간)은 만들지 않습니다.
+
+### 토스트 규칙
+
+사용자가 한 동작의 결과는 모두 `Toast.show(message, type:)`로 알린다 (`core/toast.dart`, 화면 위에서 내려오는 알약).
+
+| type | 색 | 언제 |
+|---|---|---|
+| `success` | 초록 | 저장·추가·연결 완료 |
+| `info` | 회색 | 삭제·해제·읽음 처리·새로 고침 같은 중립 결과 |
+| `warning` | 주황 | 권한 거절, 만료, 오래된 입력 |
+| `error` | 빨강 | 실패 (`friendlyError`로 원인만 짧게) |
+
+화면 안의 오류 문구가 있어도 토스트를 함께 띄운다 (시트를 닫아도 결과가 보이게). 긴 설명은 화면에 다 쓰지 않고 `ExpandableText` 또는 `SignalWhyBlock`의 **더 보기**로 접는다.
 
 ## 6. 다국어
 
@@ -140,7 +156,9 @@ flutter test --platform chrome test/google_api_test.dart   # 웹(dart2js) 전용
 | 테스트 | 내용 |
 |---|---|
 | `app_test.dart` | 첫 실행 → 로그인(게스트) → 이름 → 관심사·지금 상황 → 홈, 나를 소개하기 제안 적용, 언어 전환, 발견 순서, 홈 필터, 상세 시트 높이, 👍/👎 확인, 계정 삭제, 빈 상태 |
-| `plans_test.dart` | 계정별 관심사, 일정 추가·수정·삭제(확인 창), 캘린더 요청 본문, 월간 보기 |
+| `plans_test.dart` | 계정별 관심사, 일정 추가·수정·삭제(확인 창), 캘린더 요청 본문, 월간 보기, 내 정보의 관심사 칩 |
+| `plan_travel_test.dart` | 이동 방법: 노선 나누기, 출발 시각 확인/후보 구간, 비행기 제외, 저장·복원·캘린더 ID 변경, TripContext 연결. 알림 종류 분류·일정 경고만·같은 제목 한 줄 |
+| `plan_routes_test.dart` | 두 일정 사이 경로 저장·무효화 |
 | `assistant_test.dart` | AI 비서: 키가 없으면 조건 검색으로 실제 카드, 가짜 Gemini 응답의 제안은 [취소]로 끝나고 후보 밖 id는 화면에 없음 |
 | `filters_test.dart` | 발견 기간 필터(이번 주말), 경로 필터(전체·내 관심사·관심사 하나·카테고리) |
 | `live_news_test.dart`, `live_traffic_test.dart` | 뉴스 파업 피드(활성 파업만), ITS 기기 조회·TOPIS 병합·캐시 유지 |
@@ -168,6 +186,8 @@ flutter test --platform chrome test/google_api_test.dart   # 웹(dart2js) 전용
 | `A circle cannot have a border radius` (디버그만) | `copyWith(borderRadius: null)`은 radius를 지우지 않음 → 새 `BoxDecoration` |
 | Gemini `404 no longer available` / `429 quota` | 구형 모델 미지원 / 무료 할당량 초과 → `GeminiClient`가 예비 모델로 전환, 실패 시 규칙 문장 |
 | 웹에서 행사 포스터가 안 보임 | 이미지 서버 CORS 없음 → `<img>` 대체 전략 |
+| 바텀 시트 아래쪽이 떠 있는 내비게이션에 가려짐 | `showModalBottomSheet(useRootNavigator: true)` |
+| 탭을 다시 열 때 `setState() called during build` (Riverpod) | 가려진 탭이 보는 provider를 다른 파생 provider가 다시 보면 resume 중 갱신된다 → 파생값은 함수로 계산 (`alertsFrom`) |
 | `Route` 이름 충돌 | Flutter `Route` vs Kakao `Route` → `import ... as km` |
 
 ## 9. 작업 규칙
