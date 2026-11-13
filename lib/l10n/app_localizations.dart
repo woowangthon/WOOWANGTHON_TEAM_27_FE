@@ -2605,6 +2605,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No stage set'**
   String get profileStageNone;
+
+  /// No description provided for @calendarAlreadyAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Already in your calendar'**
+  String get calendarAlreadyAdded;
+
+  /// No description provided for @calendarAddedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to calendar'**
+  String get calendarAddedLabel;
+
+  /// No description provided for @planSavedCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan saved to Google Calendar'**
+  String get planSavedCalendar;
 }
 
 class _AppLocalizationsDelegate

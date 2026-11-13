@@ -7,6 +7,7 @@ import '../../core/theme.dart';
 import '../../core/widgets.dart';
 import '../../core/share.dart';
 import 'event_actions.dart';
+import '../../data/calendar_added.dart';
 import '../../data/providers.dart';
 import 'package:liferadar_core/liferadar_core.dart';
 import '../weather/weather_chip.dart';
@@ -65,9 +66,13 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
   }
 
   Future<void> _addToCalendar() async {
+    if (_adding) return;
     setState(() => _adding = true);
-    await addEventToCalendar(context, ref, event);
-    if (mounted) setState(() => _adding = false);
+    final ok = await addEventToCalendar(context, ref, event);
+    if (!mounted) return;
+    setState(() => _adding = false);
+    // 넣었으면(또는 이미 있었으면) 창을 닫는다 — 결과는 토스트로 남는다.
+    if (ok) Navigator.of(context).maybePop();
   }
 
   @override
@@ -81,10 +86,14 @@ class _EventDetailSheetState extends ConsumerState<EventDetailSheet> {
     final now = ref.watch(nowProvider);
     final ongoing = event.start.isBefore(DateTime(now.year, now.month, now.day));
 
+    final already = ref.watch(calendarAddedProvider).contains(event.id);
     final addButton = FilledButton.icon(
       onPressed: _adding || !event.applicationActionable(now) ? null : _addToCalendar,
-      icon: _adding ? AppSpinner(color: p.textMuted) : const Icon(Icons.event_available_outlined),
-      label: Text(_adding ? l10n.addingToCalendar : l10n.addToCalendar),
+      style: already ? FilledButton.styleFrom(backgroundColor: p.primarySoft, foregroundColor: p.primary) : null,
+      icon: _adding
+          ? AppSpinner(color: p.textMuted)
+          : Icon(already ? Icons.event_available_rounded : Icons.event_available_outlined),
+      label: Text(_adding ? l10n.addingToCalendar : already ? l10n.calendarAddedLabel : l10n.addToCalendar),
     );
 
     return DetailSheet(

@@ -1347,4 +1347,13 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get profileStageNone => '상황 미선택';
+
+  @override
+  String get calendarAlreadyAdded => '이미 캘린더에 있는 일정이에요';
+
+  @override
+  String get calendarAddedLabel => '캘린더에 추가됨';
+
+  @override
+  String get planSavedCalendar => '일정을 저장하고 Google 캘린더에도 넣었어요';
 }

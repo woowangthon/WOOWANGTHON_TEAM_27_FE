@@ -624,5 +624,8 @@
   "profileTitle": "Profile",
   "profileSettings": "App settings",
   "profileHelp": "About",
-  "profileStageNone": "No stage set"
+  "profileStageNone": "No stage set",
+  "calendarAlreadyAdded": "Already in your calendar",
+  "calendarAddedLabel": "Added to calendar",
+  "planSavedCalendar": "Plan saved to Google Calendar"
 }

@@ -420,5 +420,8 @@
   "profileTitle": "내 정보",
   "profileSettings": "앱 설정",
   "profileHelp": "도움말·정보",
-  "profileStageNone": "상황 미선택"
+  "profileStageNone": "상황 미선택",
+  "calendarAlreadyAdded": "이미 캘린더에 있는 일정이에요",
+  "calendarAddedLabel": "캘린더에 추가됨",
+  "planSavedCalendar": "일정을 저장하고 Google 캘린더에도 넣었어요"
 }

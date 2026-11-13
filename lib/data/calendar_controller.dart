@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -51,6 +53,10 @@ final calendarProvider = NotifierProvider<CalendarController, CalendarState>(Cal
 class CalendarController extends Notifier<CalendarState> {
   String? _token;
   final Map<String, Place?> _geocodeCache = {};
+  // 추가 중인 행사 id — 같은 행사를 동시에 두 번 넣지 않는다.
+  final _adding = <String>{};
+  bool _syncing = false;
+  bool _syncAgain = false;
 
   @override
   CalendarState build() => const CalendarState();
@@ -87,6 +93,28 @@ class CalendarController extends Notifier<CalendarState> {
   Future<void> sync() async {
     final token = _token;
     if (token == null) return;
+    // 이미 불러오는 중이면 끝난 뒤 한 번만 더 (요청이 겹쳐 쌓이지 않게).
+    if (_syncing) {
+      _syncAgain = true;
+      return;
+    }
+    _syncing = true;
+    try {
+      await _syncOnce(token);
+    } finally {
+      _syncing = false;
+    }
+    if (_syncAgain) {
+      _syncAgain = false;
+      await sync();
+    }
+  }
+
+  /// 쓰기 후 새로 불러오기는 기다리지 않는다 — 모든 일정의 장소를 다시 찾느라
+  /// 수 초가 걸려 버튼이 멈춘 것처럼 보였다.
+  void _syncInBackground() => unawaited(sync());
+
+  Future<void> _syncOnce(String token) async {
     state = CalendarState(status: CalendarStatus.syncing, lastSync: state.lastSync);
     try {
       final events = await CalendarApi(token).upcoming();
@@ -102,28 +130,54 @@ class CalendarController extends Notifier<CalendarState> {
   }
 
   /// LifeRadar 행사를 캘린더에 추가한다. 연결되지 않았다면 먼저 권한을 요청한다.
+  /// 이미 캘린더에 있으면 [CalendarAlreadyAdded], 같은 행사를 추가하는 중이면 [CalendarAddInProgress].
   Future<String?> addEvent(RadarEvent event, {required String title}) async {
     if (!isGoogleSignInConfigured) throw const CalendarApiException('not-configured');
-    if (_token == null) await _authorize();
+    if (!_adding.add(event.id)) throw const CalendarAddInProgress();
     try {
-      final link = await CalendarApi(_token!).insert(event, title: title);
-      await sync();
+      if (_token == null) await _authorize();
+      Future<String?> once() async {
+        final api = CalendarApi(_token!);
+        if (await api.findAdded(event.id) != null) throw const CalendarAlreadyAdded();
+        return api.insert(event, title: title);
+      }
+
+      String? link;
+      try {
+        link = await once();
+      } on CalendarAuthExpired {
+        await _authorize(); // 한 번 다시 시도한다
+        link = await once();
+      }
+      _syncInBackground();
       return link;
-    } on CalendarAuthExpired {
-      await _authorize(); // 한 번 다시 시도한다
-      final link = await CalendarApi(_token!).insert(event, title: title);
-      await sync();
-      return link;
+    } finally {
+      _adding.remove(event.id);
     }
   }
 
   /// 일정을 Google 캘린더에 기록(새로 만들거나 기존 일정 수정)한 뒤 동기화한다.
-  Future<void> savePlan(Plan plan) => _withApi((api) => api.savePlan(plan, eventId: plan.calendarEventId));
+  /// 목록에는 바로 반영하고(장소 하나만 찾음), 전체 새로 불러오기는 뒤에서 한다.
+  Future<void> savePlan(Plan plan) async {
+    CalendarEvent? saved;
+    await _withApi((api) async => saved = await api.savePlan(plan, eventId: plan.calendarEventId));
+    if (saved != null) {
+      final p = await _toPlan(saved!);
+      _replaceCalendarPlans((list) => [...list.where((x) => x.id != p.id), p]);
+    }
+  }
 
   /// 캘린더의 일정을 삭제한다.
   Future<void> deletePlan(Plan plan) async {
     final id = plan.calendarEventId;
-    if (id != null) await _withApi((api) => api.delete(id));
+    if (id == null) return;
+    await _withApi((api) => api.delete(id));
+    _replaceCalendarPlans((list) => list.where((x) => x.id != plan.id).toList());
+  }
+
+  void _replaceCalendarPlans(List<Plan> Function(List<Plan>) edit) {
+    final current = ref.read(plansProvider).where((x) => x.source == 'gcal').toList();
+    ref.read(plansProvider.notifier).setPlans(edit(current));
   }
 
   /// 토큰이 없으면 권한을 요청하고, 만료되었으면 한 번 다시 시도한다. 이후 동기화.
@@ -136,7 +190,7 @@ class CalendarController extends Notifier<CalendarState> {
       await _authorize();
       await action(CalendarApi(_token!));
     }
-    await sync();
+    _syncInBackground();
   }
 
   Future<void> disconnect() async {
