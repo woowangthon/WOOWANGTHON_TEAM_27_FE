@@ -13,7 +13,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-        // flutter_local_notifications talabi
+        // flutter_local_notifications 요구 사항
         isCoreLibraryDesugaringEnabled = true
     }
 
@@ -26,7 +26,7 @@ android {
         applicationId = "com.liferadar.liferadar"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = maxOf(flutter.minSdkVersion, 23) // Kakao Map SDK talabi
+        minSdk = maxOf(flutter.minSdkVersion, 23) // 카카오맵 SDK 요구 사항
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
